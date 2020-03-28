@@ -1,0 +1,44 @@
+<template>
+    <AppHeader fixed>
+      <SidebarToggler class="d-lg-none" display="md" mobile />
+      <b-link class="navbar-brand" to="/welcome">
+        <img class="navbar-brand-full" src="img/brand/logo.svg" width="89" height="25" alt="CoViD-19">
+        <img class="navbar-brand-minimized" src="img/brand/sygnet.svg" width="30" height="30" alt="CoViD-19">
+      </b-link>
+      <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen=false />
+      <b-navbar-nav class="d-md-down-none">
+        <b-nav-item class="px-3" to="/need/help"><b>Need help?</b></b-nav-item>
+        <b-nav-item class="px-3" to="/can/help"><b>Can help?</b></b-nav-item>
+        <b-nav-item class="px-3" to="/register">Register</b-nav-item>
+        <b-nav-item class="px-3" to="/volunteer">Volunteer</b-nav-item>
+        <b-nav-item class="px-3" to="/donate">Donate</b-nav-item>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto" style="margin-right:20px;">
+        <b-nav-item class="d-md-down-none">
+            <b-nav-item class="px-3" to="/moderator">Moderator</b-nav-item>
+        </b-nav-item>
+        <b-nav-item class="d-md-down-none">
+            <b-nav-item class="px-3" to="/admin">Admin</b-nav-item>
+        </b-nav-item>
+        <b-nav-item class="d-md-down-none">
+            <b-nav-item class="px-3" to="/about">About</b-nav-item>
+        </b-nav-item>
+      </b-navbar-nav>
+    </AppHeader>
+</template>
+
+<script>
+
+import { Header as AppHeader, SidebarToggler, AsideToggler } from '@coreui/vue'
+import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+
+export default {
+  name: 'DefaultHeader',
+  components: {
+    AsideToggler,
+    AppHeader,
+    DefaultHeaderDropdownAccnt,
+    SidebarToggler
+  }
+}
+</script>
