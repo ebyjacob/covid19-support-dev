@@ -28,9 +28,29 @@ const routes = [
         name: 'about',
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
       },
+      {
+        path: 'need/support',
+        name: 'request-support',
+        component: () => import(/* webpackChunkName: "suppport" */ '../views/help/RequestSupport.vue')
+      },
+      {
+        path: 'can/support',
+        name: 'offer-support',
+        component: () => import(/* webpackChunkName: "suppport" */ '../views/help/OfferSupport.vue')
+      },
+      {
+        path: 'donate',
+        name: 'donate',
+        component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donate.vue')
+      },
+      {
+        path: 'sorry',
+        name: 'sorry',
+        component: NotFound
+      },
       { 
         path: '*', 
-        component: NotFound 
+        redirect: '/sorry' 
       }    
     ]
   }

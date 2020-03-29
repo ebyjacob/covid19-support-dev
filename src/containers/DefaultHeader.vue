@@ -7,21 +7,20 @@
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen=false />
       <b-navbar-nav class="d-md-down-none">
-        <b-nav-item class="px-3" to="/need/help"><b>Need help?</b></b-nav-item>
-        <b-nav-item class="px-3" to="/can/help"><b>Can help?</b></b-nav-item>
-        <b-nav-item class="px-3" to="/register">Register</b-nav-item>
-        <b-nav-item class="px-3" to="/volunteer">Volunteer</b-nav-item>
-        <b-nav-item class="px-3" to="/donate">Donate</b-nav-item>
+        <b-nav-item class="px-3" to="/need/support"><b class="text-primary">Need Support?</b></b-nav-item>
+        <b-nav-item class="px-3" to="/can/support"><b>Can Support?</b></b-nav-item>
+        <b-nav-item class="px-3" to="/donate"><b>Donate</b></b-nav-item>
+        <b-nav-item class="px-3" to="/support-requests">Support Requests</b-nav-item>
+        <b-nav-item class="px-3" to="/volunteers">Volunteers</b-nav-item>
+        <b-nav-item class="px-3" to="/donations">Donations</b-nav-item>
+        <b-nav-item class="px-3" to="/about">About</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto" style="margin-right:20px;">
         <b-nav-item class="d-md-down-none">
-            <b-nav-item class="px-3" to="/moderator">Moderator</b-nav-item>
+            <b-nav-item class="px-3" to="/login">Login</b-nav-item>
         </b-nav-item>
         <b-nav-item class="d-md-down-none">
-            <b-nav-item class="px-3" to="/admin">Admin</b-nav-item>
-        </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-            <b-nav-item class="px-3" to="/about">About</b-nav-item>
+            <b-nav-item class="px-3" to="/register">Register</b-nav-item>
         </b-nav-item>
       </b-navbar-nav>
     </AppHeader>
