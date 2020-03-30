@@ -24,9 +24,24 @@ const routes = [
         component: Welcome
       },
       {
+        path: 'login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "auth" */ '../views/Login.vue')
+      },
+      {
         path: 'about',
         name: 'about',
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+      },
+      {
+        path: 'contact',
+        name: 'contact',
+        component: () => import(/* webpackChunkName: "contact" */ '../views/ContactUs.vue')
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import(/* webpackChunkName: "user" */ '../views/user/Profile.vue')
       },
       {
         path: 'need/support',
@@ -37,6 +52,21 @@ const routes = [
         path: 'can/support',
         name: 'offer-support',
         component: () => import(/* webpackChunkName: "suppport" */ '../views/help/OfferSupport.vue')
+      },
+      {
+        path: 'support-requests',
+        name: 'support-requests',
+        component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequests.vue')
+      },
+      {
+        path: 'volunteers',
+        name: 'volunteers',
+        component: () => import(/* webpackChunkName: "volunteers" */ '../views/help/Volunteers.vue')
+      },
+      {
+        path: 'donations',
+        name: 'donations',
+        component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donations.vue')
       },
       {
         path: 'donate',

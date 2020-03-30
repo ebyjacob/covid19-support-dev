@@ -5,7 +5,7 @@
               <div class="col-sm-12">
                   <div class="card mt-4">
                     <div class="card-body">
-                        <h4>About this app</h4>
+                        <h4>List of All Donations goes here with filter, sorting, actions etc..</h4>
                     </div>
                 </div>
               </div>

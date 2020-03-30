@@ -15,7 +15,6 @@
         </div>
       </main>
     </div>
-    <DefaultFooter />
   </div>
 </template>
 
