@@ -2,10 +2,17 @@
   <div>
     <div class="container-fluid mt-4">
       <div class="row">
+        <div class="col-sm-12">
+          <div class="jumbotran border p-4 my-4 bg-warning text-dark text-center">
+            <h1>Let's make a difference</h1>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-sm-4">
           <div class="card">
             <div class="card-body bg-primary text-center p-4">
-              <router-link to="/need/help" class="text-white">
+              <router-link to="/need/support" class="text-white">
                 <h4><i class="fa fa-life-ring fa-lg my-2"></i></h4>
                 <h4>Need Help?</h4>
               </router-link>
@@ -15,7 +22,7 @@
         <div class="col-sm-4">
           <div class="card">
             <div class="card-body bg-primary text-center p-4">
-              <router-link to="/can/help" class="text-white">
+              <router-link to="/can/support" class="text-white">
                 <h4><i class="fa fa-heart fa-lg my-2"></i></h4>
                 <h4>Can Help?</h4>
               </router-link>
