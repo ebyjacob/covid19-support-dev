@@ -1,15 +1,33 @@
 <template>
-  <div class="container mt-4">
-    <div class="row  justify-content-center">
-      <div class="col-sm-8">
+  <div class="container pt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Login with username & password</div>
+          <div class="card-header">Register</div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div
+              v-if="status==='submitted'"
+              class="alert alert-success"
+            >Registration done successfully</div>
             <form action="#" @submit.prevent="submit">
               <div class="form-group row">
+                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                <div class="col-md-6">
+                  <input
+                    id="name"
+                    type="name"
+                    class="form-control"
+                    name="name"
+                    value
+                    required
+                    autofocus
+                    v-model="form.name"
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
                 <div class="col-md-6">
                   <input
                     id="email"
@@ -26,7 +44,6 @@
 
               <div class="form-group row">
                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-
                 <div class="col-md-6">
                   <input
                     id="password"
@@ -37,11 +54,16 @@
                     v-model="form.password"
                   />
                 </div>
+                <div class="col-md-1">
+                  <span @click="togglePassword">
+                    <i class="fa fa-eye"></i>
+                  </span>
+                </div>
               </div>
 
               <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">Login</button>
+                  <a @click="submit" class="btn btn-primary text-white">Register</a>
                 </div>
               </div>
             </form>
@@ -49,19 +71,9 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Login with social credentials</div>
-          <div class="card-body text-center">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <a class="btn btn-primary text-white p-2" @click="signInWithGoogle">Signin With Google</a>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
+
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
@@ -69,10 +81,12 @@ export default {
   data() {
     return {
       form: {
+        name: "",
         email: "",
         password: ""
       },
-      error: null
+      error: null,
+      status: "new"
     };
   },
   computed: {
@@ -81,30 +95,33 @@ export default {
     })
   },
   methods: {
+    togglePassword() {
+      var x = document.getElementById("password");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    },
     submit() {
       firebase
         .auth()
-        .signInWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          this.$store.dispatch("fetchUser", result.user);
-          this.$router.replace({ name: "profile" });
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
-    },
-    signInWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      const auth = firebase.auth().signInWithPopup(provider);
-      auth
+        .createUserWithEmailAndPassword(this.form.email, this.form.password)
         .then(result => {
-          if (result && result.user) {
-            this.$store.dispatch("fetchUser", result.user);
-            this.$router.replace({ name: "Home" });
-          }
+          this.status = "submitted";
+          this.error = null;
+          result.user
+            .updateProfile({
+              displayName: this.form.name
+            })
+            .then(msg => {
+              this.$store.dispatch("fetchUser", result.user);
+              this.$router.replace({ name: "profile" });
+            });
         })
         .catch(err => {
           this.error = err.message;
+          this.status = "error";
         });
     }
   }

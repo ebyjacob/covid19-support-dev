@@ -39,6 +39,9 @@
       </template>
       <template v-else>
         <b-nav-item class="d-md-down-none">
+          <b-nav-item class="px-3" to="/register">Register</b-nav-item>
+        </b-nav-item>
+        <b-nav-item class="d-md-down-none">
           <b-nav-item class="px-3" to="/login">Login</b-nav-item>
         </b-nav-item>
       </template>
