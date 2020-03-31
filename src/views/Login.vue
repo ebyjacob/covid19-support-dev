@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <div class="row  justify-content-center">
+    <div class="row justify-content-center">
       <div class="col-sm-8">
         <div class="card">
           <div class="card-header">Login with username & password</div>
@@ -54,8 +54,9 @@
         <div class="card">
           <div class="card-header">Login with social credentials</div>
           <div class="card-body text-center">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <a class="btn btn-primary text-white p-2" @click="signInWithGoogle">Signin With Google</a>
+            <a class="btn btn-primary text-white p-2" @click="signInWithGoogle">
+              <i class="fa fa-google"></i> Sign in With Google
+            </a>
           </div>
         </div>
       </div>
@@ -82,12 +83,17 @@ export default {
   },
   methods: {
     submit() {
-      firebase
+      const auth = firebase
         .auth()
-        .signInWithEmailAndPassword(this.form.email, this.form.password)
+        .signInWithEmailAndPassword(this.form.email, this.form.password);
+      auth
         .then(data => {
-          this.$store.dispatch("fetchUser", result.user);
-          this.$router.replace({ name: "profile" });
+          if (data && data.user) {
+            this.$store.dispatch("fetchUser", data.user);
+            this.$router.replace({ name: "profile" });
+          } else {
+            this.error = "Unknown error";
+          }
         })
         .catch(err => {
           this.error = err.message;
@@ -100,7 +106,7 @@ export default {
         .then(result => {
           if (result && result.user) {
             this.$store.dispatch("fetchUser", result.user);
-            this.$router.replace({ name: "Home" });
+            this.$router.replace({ name: "profile" });
           }
         })
         .catch(err => {

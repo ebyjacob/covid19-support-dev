@@ -64,6 +64,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequests.vue')
       },
       {
+        path: 'support-request/:supportrequestid',
+        name: 'supportrequest',
+        component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequest.vue')
+      },
+      {
         path: 'volunteers',
         name: 'volunteers',
         component: () => import(/* webpackChunkName: "volunteers" */ '../views/help/Volunteers.vue')
@@ -72,6 +77,11 @@ const routes = [
         path: 'donations',
         name: 'donations',
         component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donations.vue')
+      },
+      {
+        path: 'donation/:donationid',
+        name: 'donation',
+        component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donation.vue')
       },
       {
         path: 'donate',

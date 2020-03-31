@@ -71,6 +71,17 @@
         </div>
       </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">Social Login</div>
+                <div class="card-body">
+                    Already have social account? <br/><br/>
+                    Login with your <router-link to="login"> <i class="fa fa-google"></i> Google Account here</router-link>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </template>
 
