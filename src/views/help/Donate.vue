@@ -2,7 +2,7 @@
   <div>
     <div class="container mt-4">
       <div class="animated fadeIn">
-        <div v-if="user && user.loggedIn">
+        <div>
           <div class="row">
             <div class="col-sm-12">
               <div class="card">
@@ -143,21 +143,6 @@
             </div>
           </div>
         </div>
-        <div v-else>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="card">
-                <div class="card-body pt-4">
-                  Thanks for your interst. Kindly
-                  <router-link to="/login">login</router-link>before making donations. This will help you to track your donations and people can contact you.
-                  <div class="mt-3">
-                    <router-link class="btn btn-primary" to="/login">login</router-link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -233,8 +218,8 @@ export default {
             this.status = "error";
           });
       } else {
-          this.error = "Enter title and description";
-          this.status = "error";
+        this.error = "Enter title and description";
+        this.status = "error";
       }
     }
   }
