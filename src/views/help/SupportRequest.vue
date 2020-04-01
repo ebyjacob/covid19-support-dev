@@ -13,7 +13,9 @@
                 </div>
                 <div class="row my-4" v-if="supportrequest.request.status === 'pickedup'">
                   <div class="col-sm-4">Pickup Status</div>
-                  <div class="col-sm-8">Picked up by {{supportrequest.picked_up_by}} on {{new Date(supportrequest.picked_up_on.seconds* 1000)}}</div>
+                  <div
+                    class="col-sm-8"
+                  >Picked up by {{supportrequest.picked_up_by}} on {{new Date(supportrequest.picked_up_on.seconds* 1000)}}</div>
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Details</div>
@@ -41,13 +43,25 @@
         </div>
         <div class="row">
           <div class="col-sm-12 text-right">
-            <div class="card" v-if="supportrequest && supportrequest.request">
+            <div class="card" v-if="supportrequest && supportrequest.request && (supportrequest.request.status === '' || supportrequest.request.status==='new')">
               <div class="card-body">
                 <button
                   class="btn btn-primary mr-4"
                   v-if="supportrequest.request.status === '' || supportrequest.request.status==='new'"
                   @click="pickupJobMyself"
                 >Assign to myself</button>
+              </div>
+            </div>
+            <div
+              class="card"
+              v-if="supportrequest && supportrequest.request && supportrequest.picked_up_by === user.data.email"
+            >
+              <div class="card-body">
+                <button
+                  class="btn btn-primary mr-4"
+                  v-if="supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress'"
+                  @click="releaseJob"
+                >Release Job</button>
                 <button
                   class="btn btn-primary mr-4"
                   v-if="supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress'"
@@ -203,6 +217,34 @@ export default {
               request: _.set(this.supportrequest.request, "status", "pickedup"),
               picked_up_by: this.user.data.email,
               picked_up_on: new Date()
+            },
+            { merge: true }
+          )
+          .then(result => {
+            console.log(result);
+            this.fetchJob();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    releaseJob() {
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.email &&
+        this.$route.params.supportrequestid
+      ) {
+        var db = firebase.firestore();
+        var docRef = db
+          .collection("support_requests")
+          .doc(this.$route.params.supportrequestid);
+        docRef
+          .set(
+            {
+              request: _.set(this.supportrequest.request, "status", "new"),
+              picked_up_by: ""
             },
             { merge: true }
           )
