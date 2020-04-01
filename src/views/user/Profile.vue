@@ -10,7 +10,7 @@
         <div class="row mt-4">
           <div class="col-sm-12" v-if="myassignments">
             <div class="card">
-              <div class="card-header">My Assignments</div>
+              <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
                 <div v-for="myassignment in myassignments" :key="myassignment.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
