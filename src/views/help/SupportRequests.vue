@@ -8,19 +8,18 @@
               <div class="card-header">All Support Requests</div>
               <div class="card-body">
                 <div v-for="supportrequest in supportrequests" :key="supportrequest.id">
-                  <span class="text-primary" style="font-size:24px;font-weight:bold;">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
-                    >{{supportrequest.data.request.title}}</router-link>
-                  </span> - <span style="font-size:16px;font-weight:light;">{{supportrequest.data.request.status || 'new'}}</span>
+                    >{{supportrequest.data.request.title || 'No Title'}}</router-link>
+                  </span> - <span style="font-size:16px;font-weight:light;">{{supportrequest.data.request.status || 'new'}}</span> - <router-link
+                    :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                  >More details</router-link>
                   <br />
                   For {{ supportrequest.data.contact.name || supportrequest.data.contact.email }} by
                   <i>{{supportrequest.data.user_displayName || supportrequest.data.user_email || 'Unknown User' }}</i>
                   <br />
                   <p>{{supportrequest.data.request.detail}}</p>
-                  <router-link
-                    :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
-                  >More details</router-link>
                   <hr />
                 </div>
               </div>
