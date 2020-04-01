@@ -22,3 +22,4 @@ yarn-error.log*
 .notes.md
 
 .firebase/
+firebase-debug.log
