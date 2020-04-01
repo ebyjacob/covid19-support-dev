@@ -221,7 +221,6 @@ export default {
             { merge: true }
           )
           .then(result => {
-            console.log(result);
             this.fetchJob();
           })
           .catch(err => {
