@@ -4,11 +4,11 @@
       <div class="row" v-if="user && user.loggedIn">
         <div class="col-sm-12">
           <div class="card mt-4">
-            <div class="card-body" v-if="donation && donation.request">
-              <h4 class="text-primary">{{donation.request.title}}</h4><br/>
-              {{donation.request.detail}}
+            <div class="card-body" v-if="supportrequest && supportrequest.request">
+              <h4 class="text-primary">{{supportrequest.request.title}}</h4><br/>
+              {{supportrequest.request.detail}}
               <br /><br/>
-              {{donation}}
+              {{supportrequest}}
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      donation: {}
+      supportrequest: {}
     };
   },
   computed: {
@@ -48,7 +48,7 @@ export default {
         .doc(this.$route.params.supportrequestid)
         .get()
         .then(docRef => {
-          this.donation = docRef.data();
+          this.supportrequest = docRef.data();
         })
         .catch(err => {
           console.log(err);
