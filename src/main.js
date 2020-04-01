@@ -18,9 +18,11 @@ firebase.auth().onAuthStateChanged(user => {
         user.moderator = idtoken.claims.moderator;
         user.verifiedvolunteer = idtoken.claims.verifiedvolunteer;
       }
+      store.dispatch("fetchUser", user);
     });
+  } else {
+    store.dispatch("fetchUser", user);
   }
-  store.dispatch("fetchUser", user);
 });
 
 Vue.config.productionTip = false

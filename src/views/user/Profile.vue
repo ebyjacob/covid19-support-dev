@@ -8,7 +8,7 @@
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-sm-12" v-if="myassignments">
+          <div class="col-sm-8" v-if="myassignments">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
@@ -21,11 +21,32 @@
                   <router-link
                     :to="{ name: 'supportrequest', params: { supportrequestid: myassignment.id }}"
                   >More details</router-link>
+                  Status : {{myassignment.data.request.status}}
                   <br />
                   For {{ myassignment.data.contact.name || myassignment.data.contact.email }} by
                   <i>{{myassignment.data.user_displayName || myassignment.data.user_email || 'Unknown User' }}</i>
-                  <br/><br/>
+                  <br />
+                  <br />
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-header">
+                My Roles
+              </div>
+              <div class="card-body">
+                Admin ?
+                <span v-if="user.data.admin">yes</span>
+                <span v-else>No</span>
+                <br />Moderator ?
+                <span v-if="user.data.moderator">yes</span>
+                <span v-else>No</span>
+                <br />Verified Volunteer ?
+                <span v-if="user.data.verifiedvolunteer">yes</span>
+                <span v-else>No</span>
+                <br />
               </div>
             </div>
           </div>
@@ -40,12 +61,13 @@
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
                     >{{mysupportrequest.data.request.title}}</router-link>
-                  </span>&nbsp;&nbsp;--&nbsp;&nbsp;<router-link
+                  </span>&nbsp;&nbsp;--&nbsp;&nbsp;
+                  <router-link
                     :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
                   >More details</router-link>
                   <br />
                   For {{ mysupportrequest.data.contact.name || mysupportrequest.data.contact.email }} by
-                  <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>                  
+                  <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>
                   <hr />
                 </div>
               </div>
