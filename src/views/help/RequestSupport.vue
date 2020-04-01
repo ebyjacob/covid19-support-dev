@@ -260,7 +260,11 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button type="button" class="btn btn-primary" @click="submitRequest">Agree & Submit Request</button>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        @click="submitRequest"
+                      >Agree & Submit Request</button>
                     </div>
                   </div>
                 </div>
@@ -282,8 +286,13 @@ export default {
       form: {
         request: {
           title: "",
-          detail: ""
+          detail: "",
+          status: "new"
         },
+        picked_up_by: "",
+        picked_up_on: new Date(),
+        assigned_groups: [],
+        tags: [],
         requesting_for: "self",
         contact: {
           name: "",

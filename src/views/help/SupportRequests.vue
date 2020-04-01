@@ -2,36 +2,31 @@
   <div>
     <div class="container mt-4">
       <div v-if="user && user.loggedIn">
-        <div class="row">
-          <div class="col-md-12">
-            <h4>Support Requests</h4>
-          </div>
-        </div>
-        <!-- <div class="row mt-4">
-          <div class="col-sm-12"  v-if="mysupportrequests">
+        <div class="row mt-4">
+          <div class="col-sm-12"  v-if="supportrequests">
             <div class="card">
-              <div class="card-header">Your Support Requests</div>
+              <div class="card-header">All Support Requests</div>
               <div class="card-body">
-                <div v-for="mysupportrequest in mysupportrequests" :key="mysupportrequest.id">
+                <div v-for="supportrequest in supportrequests" :key="supportrequest.id">
                   <span class="text-primary" style="font-size:24px;font-weight:bold;">
                     <router-link
-                      :to="{ name: 'support-request', params: { supportrequestid: mysupportrequest.id }}"
-                    >{{mysupportrequest.data.request.title}}</router-link>
-                  </span>
+                      :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                    >{{supportrequest.data.request.title}}</router-link>
+                  </span> - <span style="font-size:16px;font-weight:light;">{{supportrequest.data.request.status || 'new'}}</span>
                   <br />
-                  For {{ mysupportrequest.data.contact.name || mysupportrequest.data.contact.email }} by
-                  <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>
+                  For {{ supportrequest.data.contact.name || supportrequest.data.contact.email }} by
+                  <i>{{supportrequest.data.user_displayName || supportrequest.data.user_email || 'Unknown User' }}</i>
                   <br />
-                  <p>{{mysupportrequest.data.request.detail}}</p>
+                  <p>{{supportrequest.data.request.detail}}</p>
                   <router-link
-                    :to="{ name: 'support-request', params: { supportrequestid: mysupportrequest.id }}"
+                    :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
                   >More details</router-link>
                   <hr />
                 </div>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
       <div class="row" v-else>
         <div class="col-sm-12">
@@ -48,13 +43,13 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      mysupportrequests: null
+      supportrequests: null
     };
   },
   created() {
     var db = firebase.firestore();
     db.collection("support_requests")
-      .where("user_email", "==", this.user.data.email)
+      .orderBy("timestamp","desc")
       .get()
       .then(querySnapshot => {
         let support_requests = [];
@@ -64,7 +59,7 @@ export default {
             data: doc.data()
           });
         });
-        this.mysupportrequests = support_requests;
+        this.supportrequests = support_requests;
       });
   },
   computed: {
