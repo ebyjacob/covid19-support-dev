@@ -95,7 +95,7 @@
             <div class="card-body">
               <div class="row mb-2">
                 <div class="col-sm-12">
-                  <h5 class="text-primary">Add New admin</h5>
+                  <h5 class="text-primary">Verify volunteer</h5>
                 </div>
               </div>
               <div class="row">
@@ -103,11 +103,11 @@
                   <fieldset role="group" class="b-form-group form-group">
                     <div role="group" class>
                       <input
-                        id="newadminemail"
+                        id="newvolunteeremail"
                         type="text"
-                        placeholder="New admin email"
+                        placeholder="Volunteer email"
                         class="form-control"
-                        v-model="newadminemail"
+                        v-model="newvolunteeremail"
                       />
                     </div>
                   </fieldset>
@@ -121,7 +121,7 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="text-right mr-4">
-                    <button type="button" class="btn btn-primary" @click="addAdmin">Add admin</button>
+                    <button type="button" class="btn btn-primary" @click="verifyVolunteer">Verify Volunteer</button>
                   </div>
                 </div>
               </div>
@@ -141,7 +141,8 @@ export default {
       error: null,
       status: "new",
       newadminemail: "",
-      newmoderatoremail: ""
+      newmoderatoremail: "",
+      newvolunteeremail: ""
     };
   },
   computed: {
@@ -215,6 +216,39 @@ export default {
         })
         .catch(() => {
           this.newmoderatoremail = "";
+        });
+    },
+    verifyVolunteer() {
+      const verifyVolunteer = firebase.functions().httpsCallable("verifyVolunteer");
+      verifyVolunteer({
+        email: this.newvolunteeremail
+      })
+        .then(msg => {
+          if (
+            msg &&
+            msg.data &&
+            msg.data.data &&
+            msg.data.data.indexOf("Volunteer") > -1 &&
+            msg.data.data.indexOf("marked as verified") > -1
+          ) {
+            this.status = "submitted";
+            this.error = null;
+            setTimeout(() => {
+              this.status = "new";
+              this.error = null;
+            }, 5 * 1000);
+          } else {
+            this.status = "error";
+            this.error = "error";
+            setTimeout(() => {
+              this.status = "new";
+              this.error = null;
+            }, 5 * 1000);
+          }
+          this.newvolunteeremail = "";
+        })
+        .catch(() => {
+          this.newvolunteeremail = "";
         });
     }
   }
