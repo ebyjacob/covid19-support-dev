@@ -89,6 +89,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donate.vue')
       },
       {
+        path: 'admin',
+        name: 'admin',
+        component: () => import(/* webpackChunkName: "admin" */ '../views/admin/Admin.vue')
+      },
+      {
+        path: 'users/manage',
+        name: 'manageusers',
+        component: () => import(/* webpackChunkName: "admin" */ '../views/admin/ManageUsers.vue')
+      },
+      {
         path: 'sorry',
         name: 'sorry',
         component: NotFound

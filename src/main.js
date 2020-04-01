@@ -10,6 +10,16 @@ import './registerServiceWorker'
 firebase.initializeApp(config.firebase_config);
 
 firebase.auth().onAuthStateChanged(user => {
+  let currentUser = firebase.auth().currentUser;
+  if (currentUser) {
+    currentUser.getIdTokenResult().then(idtoken => {
+      if (idtoken && idtoken.claims) {
+        user.admin = idtoken.claims.admin;
+        user.moderator = idtoken.claims.moderator;
+        user.verifiedvolunteer = idtoken.claims.verifiedvolunteer;
+      }
+    });
+  }
   store.dispatch("fetchUser", user);
 });
 
