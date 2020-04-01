@@ -24,7 +24,7 @@
                   <br />
                   For {{ myassignment.data.contact.name || myassignment.data.contact.email }} by
                   <i>{{myassignment.data.user_displayName || myassignment.data.user_email || 'Unknown User' }}</i>
-                  
+                  <br/><br/>
                 </div>
               </div>
             </div>
@@ -33,22 +33,19 @@
         <div class="row mt-4">
           <div class="col-sm-6" v-if="mysupportrequests">
             <div class="card">
-              <div class="card-header">Your Support Requests</div>
+              <div class="card-header">Support Requests created by you</div>
               <div class="card-body">
                 <div v-for="mysupportrequest in mysupportrequests" :key="mysupportrequest.id">
-                  <span class="text-primary" style="font-size:24px;font-weight:bold;">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
                     >{{mysupportrequest.data.request.title}}</router-link>
-                  </span>
-                  <br />
-                  For {{ mysupportrequest.data.contact.name || mysupportrequest.data.contact.email }} by
-                  <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>
-                  <br />
-                  <p>{{mysupportrequest.data.request.detail}}</p>
-                  <router-link
+                  </span>&nbsp;&nbsp;--&nbsp;&nbsp;<router-link
                     :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
                   >More details</router-link>
+                  <br />
+                  For {{ mysupportrequest.data.contact.name || mysupportrequest.data.contact.email }} by
+                  <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>                  
                   <hr />
                 </div>
               </div>
@@ -56,10 +53,10 @@
           </div>
           <div class="col-sm-6" v-if="mydonations">
             <div class="card">
-              <div class="card-header">Your Donation Requests</div>
+              <div class="card-header">Donation Requests created by you</div>
               <div class="card-body">
                 <div v-for="donation in mydonations" :key="donation.id">
-                  <span class="text-primary" style="font-size:24px;font-weight:bold;">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'donation', params: { donationid: donation.id }}"
                     >{{donation.data.donation.title}}</router-link>
