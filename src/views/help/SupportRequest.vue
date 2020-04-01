@@ -19,7 +19,7 @@
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Details</div>
-                  <div class="col-sm-8">{{supportrequest.request.detail}}</div>
+                  <div class="col-sm-8">{{supportrequest.request.detail || 'No details provided'}}</div>
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Requested for</div>
@@ -43,7 +43,10 @@
         </div>
         <div class="row">
           <div class="col-sm-12 text-right">
-            <div class="card" v-if="supportrequest && supportrequest.request && (supportrequest.request.status === '' || supportrequest.request.status==='new')">
+            <div
+              class="card"
+              v-if="supportrequest && supportrequest.request && (supportrequest.request.status === '' || supportrequest.request.status==='new')"
+            >
               <div class="card-body">
                 <button
                   class="btn btn-primary mr-4"
@@ -54,17 +57,15 @@
             </div>
             <div
               class="card"
-              v-if="supportrequest && supportrequest.request && supportrequest.picked_up_by === user.data.email"
+              v-if="supportrequest && supportrequest.request && supportrequest.picked_up_by === user.data.email && (supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress')"
             >
               <div class="card-body">
                 <button
                   class="btn btn-primary mr-4"
-                  v-if="supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress'"
                   @click="releaseJob"
                 >Release Job</button>
                 <button
                   class="btn btn-primary mr-4"
-                  v-if="supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress'"
                   @click="markJobAsCompleted"
                 >Complete Job</button>
               </div>
@@ -211,10 +212,17 @@ export default {
         var docRef = db
           .collection("support_requests")
           .doc(this.$route.params.supportrequestid);
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Job picked up",
+          timestamp: new Date()
+        })
         docRef
           .set(
             {
               request: _.set(this.supportrequest.request, "status", "pickedup"),
+              comments: newcomments,
               picked_up_by: this.user.data.email,
               picked_up_on: new Date()
             },
@@ -235,6 +243,12 @@ export default {
         this.user.data.email &&
         this.$route.params.supportrequestid
       ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Released Job",
+          timestamp: new Date()
+        })
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -242,6 +256,7 @@ export default {
         docRef
           .set(
             {
+              comments: newcomments,
               request: _.set(this.supportrequest.request, "status", "new"),
               picked_up_by: ""
             },
@@ -263,6 +278,12 @@ export default {
         this.user.data.email &&
         this.$route.params.supportrequestid
       ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Completed Job",
+          timestamp: new Date()
+        })
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -275,6 +296,7 @@ export default {
                 "status",
                 "completed"
               ),
+              comments: newcomments,
               completed_by: this.user.data.email,
               completed_on: new Date()
             },
