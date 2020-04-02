@@ -74,6 +74,21 @@ const routes = [
         component: () => import(/* webpackChunkName: "volunteers" */ '../views/help/Volunteers.vue')
       },
       {
+        path: 'groups',
+        name: 'groups',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Groups.vue')
+      },
+      {
+        path: 'group/:groupid',
+        name: 'group',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Group.vue')
+      },
+      {
+        path: 'groups/create',
+        name: 'groups-create',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Create.vue')
+      },
+      {
         path: 'donations',
         name: 'donations',
         component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donations.vue')
