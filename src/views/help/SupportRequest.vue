@@ -60,14 +60,8 @@
               v-if="supportrequest && supportrequest.request && supportrequest.picked_up_by === user.data.email && (supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress')"
             >
               <div class="card-body">
-                <button
-                  class="btn btn-primary mr-4"
-                  @click="releaseJob"
-                >Release Job</button>
-                <button
-                  class="btn btn-primary mr-4"
-                  @click="markJobAsCompleted"
-                >Complete Job</button>
+                <button class="btn btn-primary mr-4" @click="releaseJob">Release Job</button>
+                <button class="btn btn-primary mr-4" @click="markJobAsCompleted">Complete Job</button>
               </div>
             </div>
           </div>
@@ -115,6 +109,21 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" v-if="user && user.data && user.data.admin">
+          <div class="col-sm-12">
+            <div
+              class="card"
+              v-if="supportrequest && supportrequest.request && user && user.data && user.data.admin"
+            >
+              <div class="card-body">
+                <button
+                  class="btn btn-danger mr-4"
+                  @click="deleteJob"
+                >Delete Job</button>
               </div>
             </div>
           </div>
@@ -217,7 +226,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Job picked up",
           timestamp: new Date()
-        })
+        });
         docRef
           .set(
             {
@@ -248,7 +257,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Released Job",
           timestamp: new Date()
-        })
+        });
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -283,7 +292,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Completed Job",
           timestamp: new Date()
-        })
+        });
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -305,6 +314,36 @@ export default {
           .then(result => {
             console.log(result);
             this.fetchJob();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    deleteJob() {
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.email &&
+        this.$route.params.supportrequestid &&
+        this.user.data.admin
+      ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Completed Job",
+          timestamp: new Date()
+        });
+        var db = firebase.firestore();
+        var docRef = db
+          .collection("support_requests")
+          .doc(this.$route.params.supportrequestid);
+        docRef
+          .delete()
+          .then(result => {
+            this.$router.replace({
+              name: "support-requests"
+            });
           })
           .catch(err => {
             console.log(err);
