@@ -153,9 +153,10 @@ export default {
   created() {},
   methods: {
     addAdmin() {
-      const addAdmin = firebase.functions().httpsCallable("addAdmin");
+      const addAdmin = firebase.functions().httpsCallable("assignRole");
       addAdmin({
-        email: this.newadminemail
+        email: this.newadminemail,
+        typeofrole: `admin`
       })
         .then(msg => {
           if (
@@ -186,9 +187,10 @@ export default {
         });
     },
     addModerator() {
-      const addAdmin = firebase.functions().httpsCallable("addModerator");
-      addAdmin({
-        email: this.newmoderatoremail
+      const addModerator = firebase.functions().httpsCallable("assignRole");
+      addModerator({
+        email: this.newmoderatoremail,
+        typeofrole: `moderator`
       })
         .then(msg => {
           if (
@@ -219,9 +221,10 @@ export default {
         });
     },
     verifyVolunteer() {
-      const verifyVolunteer = firebase.functions().httpsCallable("verifyVolunteer");
+      const verifyVolunteer = firebase.functions().httpsCallable("assignRole");
       verifyVolunteer({
-        email: this.newvolunteeremail
+        email: this.newvolunteeremail,
+        typeofrole: `verifiedvolunteer`
       })
         .then(msg => {
           if (
@@ -254,6 +257,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>
