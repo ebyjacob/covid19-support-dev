@@ -168,7 +168,6 @@ export default {
             }, 5 * 1000);
           });
       } else {
-        alert(email);
         this.error = "Can't add to the group";
         this.successmessage = "";
         setTimeout(() => {
