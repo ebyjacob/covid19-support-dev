@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container mt-4">
-      <div v-if="user && user.loggedIn">
+      <div v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)">
         <div class="row mt-4">
           <div class="col-sm-12"  v-if="supportrequests">
             <div class="card">
@@ -29,7 +29,7 @@
       </div>
       <div class="row" v-else>
         <div class="col-sm-12">
-          <h4>You are not logged in</h4>
+          <h4>You are not logged in to view all Requests. Or you don't have permissions to view requests</h4>
         </div>
       </div>
     </div>

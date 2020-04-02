@@ -25,8 +25,6 @@
       <b-nav-item class="px-3" to="/support-requests" v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)">Support Requests</b-nav-item>
       <b-nav-item class="px-3" to="/volunteers"   v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator)">Volunteers</b-nav-item>
       <b-nav-item class="px-3" to="/donations"  v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator)">Donations</b-nav-item>
-      <b-nav-item class="px-3" to="/admin/messages"  v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator)">Messages</b-nav-item>
-      <b-nav-item class="px-3" to="/admin/manage"  v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer )">Manage Users</b-nav-item>
       <b-nav-item class="px-3" to="/about">About</b-nav-item>
       <b-nav-item class="px-3" to="/contact">Contact US</b-nav-item>
     </b-navbar-nav>
@@ -36,15 +34,15 @@
           <b-nav-item v-if="user" class="px-3">Hi <router-link to="/profile"><b>{{user.data.displayName}}</b></router-link></b-nav-item>
         </b-nav-item>
         <b-nav-item class="d-md-down-none">
+          <b-nav-item v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer )" class="px-3"><router-link to="/admin">Manage</router-link></b-nav-item>
+        </b-nav-item>
+        <b-nav-item class="d-md-down-none">
           <b-nav-item v-if="user" class="pr-3" @click.prevent="signOut">Signout</b-nav-item>
         </b-nav-item>
       </template>
-      <template v-else>
+      <template v-else> 
         <b-nav-item class="d-md-down-none">
-          <b-nav-item class="px-3" to="/register">Register</b-nav-item>
-        </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item class="px-3" to="/login">Login</b-nav-item>
+          <b-nav-item class="px-3" to="/login">Login / Register</b-nav-item>
         </b-nav-item>
       </template>
     </b-navbar-nav>

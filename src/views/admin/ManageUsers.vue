@@ -14,7 +14,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12">
+        <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin)">
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">
@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12">
+        <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator)">
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">
@@ -90,7 +90,7 @@
             </div>
           </div>
         </div>        
-        <div class="col-sm-12">
+        <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)">
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">

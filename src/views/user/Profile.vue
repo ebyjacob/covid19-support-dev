@@ -146,9 +146,13 @@ export default {
     }
   },
   created() {
-    this.fetchDonationsList();
-    this.fetchSupportRequests();
-    this.fetchMyAssigments();
+    if(this.user && this.user.loggedIn){
+      this.fetchDonationsList();
+      this.fetchSupportRequests();
+      this.fetchMyAssigments();
+    } else {
+      this.$router.replace({ name: "login" });
+    }
   },
   computed: {
     ...mapGetters({
