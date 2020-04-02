@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
-const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app' ];
+const superadmins = [ 'eby7jacob@gmail.com' , 'masteruser@covid19-support-dev-eby.web.app' ];
 
 export const helloWorld = functions.https.onRequest((request, response) => {
     response.set('Access-Control-Allow-Origin', '*');
