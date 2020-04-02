@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
-const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app' ];
+const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app', 'superadmin@covid19-support-dev.web.app' ];
 
 export const assignRole = functions.https.onCall((data,context)=>{
     if(data.typeofrole ===`admin`){
