@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <div class="row"  v-if="error || (status==='submitted')">
+    <div class="row" v-if="error || (status==='submitted')">
       <div class="col-sm-12">
         <div class="alert alert-danger" v-if="error">{{error}}</div>
         <div v-if="status==='submitted'" class="alert alert-success">Registration done successfully</div>
@@ -57,9 +57,9 @@
                   <button type="submit" class="btn btn-primary" @click="login">Login</button>
                 </div>
               </div>
-              <br/>
-              <br/>
-              <br/>
+              <br />
+              <br />
+              <br />
             </div>
           </div>
         </div>
@@ -219,9 +219,6 @@ export default {
           this.status = "error";
         });
     }
-  },
-  created(){
-    console.log("Login Page")
   }
 };
 </script>
