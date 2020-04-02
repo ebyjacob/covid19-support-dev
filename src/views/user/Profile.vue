@@ -8,7 +8,7 @@
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-sm-8" v-if="myassignments">
+          <div class="col-sm-12" v-if="myassignments">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
@@ -28,25 +28,6 @@
                   <br />
                   <br />
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="card">
-              <div class="card-header">
-                My Roles
-              </div>
-              <div class="card-body">
-                Admin ?
-                <span v-if="user.data.admin">yes</span>
-                <span v-else>No</span>
-                <br />Moderator ?
-                <span v-if="user.data.moderator">yes</span>
-                <span v-else>No</span>
-                <br />Verified Volunteer ?
-                <span v-if="user.data.verifiedvolunteer">yes</span>
-                <span v-else>No</span>
-                <br />
               </div>
             </div>
           </div>
