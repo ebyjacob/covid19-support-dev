@@ -153,7 +153,6 @@ export default {
         .where("picked_up_by", "==", this.user.data.email)
         .get()
         .then(querySnapshot => {
-          console.log(querySnapshot);
           let myassignments = [];
           querySnapshot.forEach(doc => {
             myassignments.push({

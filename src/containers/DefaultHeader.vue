@@ -25,6 +25,7 @@
       <b-nav-item class="px-3" to="/support-requests" v-if="user.loggedIn">Support Requests</b-nav-item>
       <b-nav-item class="px-3" to="/volunteers"   v-if="user.loggedIn">Volunteers</b-nav-item>
       <b-nav-item class="px-3" to="/donations"  v-if="user.loggedIn">Donations</b-nav-item>
+      <b-nav-item class="px-3" to="/admin/messages"  v-if="user.loggedIn">Messages</b-nav-item>
       <b-nav-item class="px-3" to="/about">About</b-nav-item>
       <b-nav-item class="px-3" to="/contact">Contact US</b-nav-item>
     </b-navbar-nav>

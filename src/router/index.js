@@ -99,6 +99,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "admin" */ '../views/admin/ManageUsers.vue')
       },
       {
+        path: 'admin/messages',
+        name: 'messageslist',
+        component: () => import(/* webpackChunkName: "admin" */ '../views/contactus/Messages.vue')
+      },
+      {
         path: 'sorry',
         name: 'sorry',
         component: NotFound
