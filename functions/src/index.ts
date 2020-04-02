@@ -5,20 +5,14 @@ admin.initializeApp();
 
 const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app' ];
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-    response.set('Access-Control-Allow-Origin', '*');
-    response.set('Access-Control-Allow-Headers','*');
-    response.send({ data: "Hello from Firebase!" });
-});
-
 export const addAdmin = functions.https.onCall((data,context)=>{
     if(data.email){
         return admin.auth().getUserByEmail(data.email).then(user =>{
             if(context.auth?.token.admin === true || superadmins.indexOf(data.email.toLowerCase()) > -1 ){
                 return admin.auth().setCustomUserClaims(user.uid,{
                     admin:true,
-                    moderator:context.auth?.token.moderator === true,
-                    verifiedvolunteer :context.auth?.token.verifiedvolunteer === true,
+                    moderator: user && user.customClaims && user.customClaims.moderator,
+                    verifiedvolunteer : user && user.customClaims && user.customClaims.verifiedvolunteer,
                 })
             }  else{
                 throw new Error("Only admins can cascade admin rights");
@@ -42,9 +36,9 @@ export const addModerator = functions.https.onCall((data,context)=>{
         return admin.auth().getUserByEmail(data.email).then(user =>{
             if(context.auth?.token.admin === true || context.auth?.token.moderator === true || superadmins.indexOf(data.email.toLowerCase()) > -1 ){
                 return admin.auth().setCustomUserClaims(user.uid,{
-                    admin:context.auth?.token.admin === true,
+                    admin: user && user.customClaims && user.customClaims.admin,
                     moderator:true,
-                    verifiedvolunteer :context.auth?.token.verifiedvolunteer === true,
+                    verifiedvolunteer :user && user.customClaims && user.customClaims.verifiedvolunteer,
                 })
             }  else{
                 throw new Error("Only admins / moderator can cascade moderator rights");
@@ -66,10 +60,10 @@ export const addModerator = functions.https.onCall((data,context)=>{
 export const verifyVolunteer = functions.https.onCall((data,context)=>{
     if(data.email){
         return admin.auth().getUserByEmail(data.email).then(user =>{
-            if(context.auth?.token.admin === true || context.auth?.token.moderator === true || context.auth?.token.verifiedvolunteer === true || superadmins.indexOf(data.email.toLowerCase()) > -1 ){
+            if(context.auth && context.auth.token && (context.auth.token.admin === true || context.auth?.token.moderator === true || context.auth?.token.verifiedvolunteer === true || superadmins.indexOf(data.email.toLowerCase()) > -1) ){
                 return admin.auth().setCustomUserClaims(user.uid,{
-                    admin:context.auth?.token.admin === true,
-                    moderator:context.auth?.token.moderator === true,
+                    admin: user && user.customClaims && user.customClaims.admin,
+                    moderator:user && user.customClaims && user.customClaims.moderator,
                     verifiedvolunteer :true,
                 })
             }  else{
