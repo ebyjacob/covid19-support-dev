@@ -45,14 +45,27 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="text-right mr-4">
-                    <button type="button" class="btn btn-primary" @click="addAdmin">Add admin</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      @click="addAdmin"
+                      v-if="!submitting_admin"
+                    >Add admin</button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      v-if="submitting_admin"
+                    >Submitting...</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator)">
+        <div
+          class="col-sm-12"
+          v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator)"
+        >
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">
@@ -83,14 +96,27 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="text-right mr-4">
-                    <button type="button" class="btn btn-primary" @click="addModerator">Add Moderator</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      @click="addModerator"
+                      v-if="!submitting_moderator"
+                    >Add Moderator</button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      v-if="submitting_moderator"
+                    >Submitting</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>        
-        <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)">
+        </div>
+        <div
+          class="col-sm-12"
+          v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
+        >
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">
@@ -121,7 +147,17 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="text-right mr-4">
-                    <button type="button" class="btn btn-primary" @click="verifyVolunteer">Verify Volunteer</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      @click="verifyVolunteer"
+                      v-if="!submitting_verifyvolunteer"
+                    >Verify Volunteer</button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      v-if="submitting_verifyvolunteer"
+                    >Submitting..</button>
                   </div>
                 </div>
               </div>
@@ -138,6 +174,9 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      submitting_admin: false,
+      submitting_moderator: false,
+      submitting_verifyvolunteer: false,
       error: null,
       status: "new",
       newadminemail: "",
@@ -153,12 +192,14 @@ export default {
   created() {},
   methods: {
     addAdmin() {
+      this.submitting_admin = true;
       const addAdmin = firebase.functions().httpsCallable("assignRole");
       addAdmin({
         email: this.newadminemail,
         typeofrole: `admin`
       })
         .then(msg => {
+          this.submitting_admin = false;
           if (
             msg &&
             msg.data &&
@@ -183,16 +224,19 @@ export default {
           this.newadminemail = "";
         })
         .catch(() => {
+          this.submitting_admin = false;
           this.newadminemail = "";
         });
     },
     addModerator() {
+      this.submitting_moderator = true;
       const addModerator = firebase.functions().httpsCallable("assignRole");
       addModerator({
         email: this.newmoderatoremail,
         typeofrole: `moderator`
       })
         .then(msg => {
+          this.submitting_moderator = false;
           if (
             msg &&
             msg.data &&
@@ -217,16 +261,19 @@ export default {
           this.newmoderatoremail = "";
         })
         .catch(() => {
+          this.submitting_moderator = false;
           this.newmoderatoremail = "";
         });
     },
     verifyVolunteer() {
+      this.submitting_verifyvolunteer = true;
       const verifyVolunteer = firebase.functions().httpsCallable("assignRole");
       verifyVolunteer({
         email: this.newvolunteeremail,
         typeofrole: `verifiedvolunteer`
       })
         .then(msg => {
+          this.submitting_verifyvolunteer = false;
           if (
             msg &&
             msg.data &&
@@ -251,6 +298,7 @@ export default {
           this.newvolunteeremail = "";
         })
         .catch(() => {
+          this.submitting_verifyvolunteer = false;
           this.newvolunteeremail = "";
         });
     }
