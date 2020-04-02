@@ -43,7 +43,8 @@
                 ></textarea>
               </div>
               <div class="col-sm-12 text-right">
-                <button class="btn btn-primary" @click="createGroup">Create Group</button>
+                <button class="btn btn-primary" @click="createGroup" v-if="!submitting">Create Group</button>
+                <button class="btn btn-secondary" v-else>Submitting...</button>
               </div>
             </div>
           </div>
@@ -65,6 +66,7 @@ export default {
         groupstatus: "active",
         members: []
       },
+      submitting: false,
       error: "",
       successmessage: ""
     };
@@ -84,6 +86,7 @@ export default {
       });
     },
     createGroup() {
+      this.submitting = true;
       if (this.user && this.user.loggedIn && this.user.data) {
         if (!this.form.groupname || !this.form.groupdescription) {
           this.error = `Enter all the required fields`;
@@ -98,6 +101,7 @@ export default {
             .then(docRef => {
               this.error = "";
               this.successmessage = `Group Created successfully. Group ID : ${docRef.id}. You will be redirected to the group shortly`;
+              this.submitting = false;
               setTimeout(() => {
                 this.goToGroupById(docRef.id);
               }, 3 * 1000);
@@ -105,10 +109,12 @@ export default {
             .catch(err => {
               this.error = "Error while creating the group. Try agin later.";
               this.successmessage = "";
+              this.submitting = false;
             });
         }
       } else {
         this.error = `You don't have permissions to create the group`;
+        this.submitting = false;
       }
     }
   }
