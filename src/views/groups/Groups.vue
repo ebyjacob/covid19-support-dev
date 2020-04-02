@@ -12,7 +12,12 @@
           <div class="card-body" v-if="groups.length>0">
             <div class="row my-2" v-for="(group,index) in groups" :key="index">
               <div class="col-sm-12">
-                <span><router-link :to="{ name:'group', params: {groupid: group.id}}"><b>{{group.data.groupname}}</b></router-link></span> - {{group.data.members.length}} members
+                <span>
+                  <router-link :to="{ name:'group', params: {groupid: group.id}}">
+                    <b>{{group.data.groupname}}</b>
+                  </router-link>
+                </span>
+                - {{group.data.members.length}} members
                 <p>{{group.data.groupdescription}}</p>
               </div>
             </div>

@@ -74,6 +74,17 @@
         </div>
       </div>
     </div>
+    <div v-if="user && user.data && user.data.admin && user.loggedIn">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <button class="btn btn-danger" @click="deleteGroup">Delete Group</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -177,7 +188,6 @@ export default {
       }
     },
     removeYouselffromtheGroup() {
-        console.log(this.user.data.email);
       if (this.user && this.user.data && this.group.members.indexOf(this.user.data.email) > -1) {
         this.group.members = this.group.members || [];
         this.group.members = this.group.members.filter(e=>e !== this.user.data.email);
@@ -209,6 +219,22 @@ export default {
           this.successmessage = ``;
           this.error = ``;
         }, 5 * 1000);
+      }
+    },
+    deleteGroup(){
+      if(this.user && this.user.data && this.user.data.admin && this.user.loggedIn && this.group ){
+        var db = firebase.firestore();
+        db.collection("groups")
+          .doc(this.$route.params.groupid)
+          .delete()
+          .then(docRef => {
+            this.$router.replace({
+              name: "groups"
+            });
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     }
   }
