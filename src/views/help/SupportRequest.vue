@@ -113,17 +113,12 @@
             </div>
           </div>
         </div>
-        <div class="row" v-if="user && user.data && user.data.admin">
+        <div class="row" v-if="isAdmin || canCloseJob">
           <div class="col-sm-12">
-            <div
-              class="card"
-              v-if="supportrequest && supportrequest.request && user && user.data && user.data.admin"
-            >
-              <div class="card-body">
-                <button
-                  class="btn btn-danger mr-4"
-                  @click="deleteJob"
-                >Delete Job</button>
+            <div class="card">
+              <div class="card-body text-right">
+                <button class="btn btn-danger mr-4" @click="deleteJob" v-if="isAdmin">Delete Job</button>
+                <button class="btn btn-danger mr-4" @click="markJobAsClosed" v-if="canCloseJob">Close Request</button>
               </div>
             </div>
           </div>
@@ -152,7 +147,31 @@ export default {
   computed: {
     ...mapGetters({
       user: "user"
-    })
+    }),
+    isLoggedInUser() {
+      return (
+        this.user &&
+        this.user.loggedIn &&
+        this.user.data &&
+        this.user.data.email
+      );
+    },
+    isAdmin(){
+      return this.isLoggedInUser && this.user.data.admin
+    },
+    isJobOwner() {
+      return (
+        this.isLoggedInUser &&
+        this.$route.params.supportrequestid &&
+        this.supportrequest &&
+        this.supportrequest.user_email === this.user.data.email
+      );
+    },
+    canCloseJob() {
+      return (
+        this.isJobOwner && ["new"].indexOf(this.supportrequest.request.status) > -1
+      );
+    }
   },
   created() {
     this.fetchJob();
@@ -318,6 +337,46 @@ export default {
           .catch(err => {
             console.log(err);
           });
+      }
+    },
+    markJobAsClosed() {
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.email &&
+        this.$route.params.supportrequestid &&
+        this.supportrequest &&
+        this.supportrequest.user_email === this.user.data.email
+      ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Closed Job",
+          timestamp: new Date()
+        });
+        var db = firebase.firestore();
+        var docRef = db
+          .collection("support_requests")
+          .doc(this.$route.params.supportrequestid);
+        docRef
+          .set(
+            {
+              request: _.set(this.supportrequest.request, "status", "closed"),
+              comments: newcomments,
+              completed_by: this.user.data.email,
+              completed_on: new Date()
+            },
+            { merge: true }
+          )
+          .then(result => {
+            console.log(result);
+            this.fetchJob();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        console.log("unable to mark job as closed");
       }
     },
     deleteJob() {
