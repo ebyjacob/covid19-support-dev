@@ -695,7 +695,7 @@ export default {
         this.form.requestor.country=response.data.result.country;
         this.form.requestor.postCode=response.data.result.postcode;
       }, (error)  =>  {
-        alert("Invalid PostCode");
+        this.error = "Invalid PostCode";
         this.seenOther=false;
         this.status = "error";
       })
@@ -716,7 +716,7 @@ export default {
       // stop here if form is invalid
       this.$v.$touch();
 
-      if (this.$v.form.contact.$invalid && this.$v.form.requestor.$invalid) {
+      if (this.$v.form.contact.$invalid && this.validateSelfAlone) {
          return;
       }
 
