@@ -66,6 +66,11 @@ const routes = [
       {
         path: 'support-requests',
         name: 'support-requests',
+        redirect: '/support-requests/bystatus/open'
+      },
+      {
+        path: 'support-requests/bystatus/:status',
+        name: 'support-requests-bystatus',
         component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequests.vue')
       },
       {
