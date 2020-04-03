@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container mt-4">
-      <div v-if="user && user.loggedIn">
+      <div v-if="user && user.loggedIn && supportrequest">
         <div class="row">
           <div class="col-sm-12">
             <div class="card mt-4">
@@ -131,7 +131,7 @@
       </div>
       <div class="row" v-else>
         <div class="col-sm-12">
-          <h4>You haven't logged in</h4>
+          <h4>Loading...</h4>
         </div>
       </div>
     </div>
