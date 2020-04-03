@@ -146,7 +146,7 @@ export default {
   data() {
     return {
       newcomment: "",
-      supportrequest: {}
+      supportrequest: null
     };
   },
   computed: {
