@@ -565,6 +565,15 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-12">
+              <div v-if="error" class="alert alert-danger">{{error}}</div>
+                <div
+                      v-if="status==='submitted'"
+                      class="alert alert-success"
+                    >Your request submitted successfully.</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -676,7 +685,7 @@ export default {
         this.seenSelf=true;
         this.form.contact.address=this.form.contact.houseNo+", "+this.form.contact.streetName;
         this.form.contact.town=response.data.result.admin_ward;
-        this.form.contact.city=response.data.result.european_electoral_region;
+        this.form.contact.city=response.data.result.primary_care_trust;
         this.form.contact.country=response.data.result.country;
         this.form.contact.postCode=response.data.result.postcode;
       }, (error)  =>  {
@@ -691,7 +700,7 @@ export default {
         this.seenOther=true;
         this.form.requestor.address=this.form.requestor.houseNo+", "+this.form.requestor.streetName;
         this.form.requestor.town=response.data.result.admin_ward;
-        this.form.requestor.city=response.data.result.european_electoral_region;
+        this.form.requestor.city=response.data.result.primary_care_trust;
         this.form.requestor.country=response.data.result.country;
         this.form.requestor.postCode=response.data.result.postcode;
       }, (error)  =>  {
@@ -716,7 +725,9 @@ export default {
       // stop here if form is invalid
       this.$v.$touch();
 
-      if (this.$v.form.contact.$invalid && this.validateSelfAlone) {
+      alert(this.$v.form.contact.$invalid +" "+ this.validateSelfAlone)
+
+      if (this.$v.form.contact.$invalid || this.validateSelfAlone) {
          return;
       }
 
