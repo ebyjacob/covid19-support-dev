@@ -10,11 +10,6 @@
         * Email
         * Google
 * create a firebase database with probably same name as your project
-* update the firebase database rules
-    * By navigating firebase --> Develop --> Database --> rules
-    * Initial Rules available in `backend/firebaserules.md` file
-* Create indices in firebase
-    * Not yet decided yet.
 
 ## Step 2 : Local dev Setup 
 
@@ -59,7 +54,7 @@ The above command will deploy dependent packages globally.
 
 * The above command will deploy following services in firebase
     * Hosting
-    * Database
+    * Database / Firestore
     * Functions
 
 * If you want to deploy specific components follow the commands specified in `package.json` script section
