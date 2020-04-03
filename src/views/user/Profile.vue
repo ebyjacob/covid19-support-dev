@@ -7,7 +7,7 @@
             <h4>Hi {{user.data.displayName}}!</h4>
           </div>
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4" v-if="user && user.data && user.data.verifiedvolunteer">
           <div class="col-sm-12" v-if="myassignments">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>

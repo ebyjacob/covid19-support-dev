@@ -36,7 +36,7 @@ const routes = [
       {
         path: 'signout',
         name: 'signout',
-        redirect: '/login'
+        component: () => import(/* webpackChunkName: "auth" */ '../views/Logout.vue')
       },
       {
         path: 'about',
