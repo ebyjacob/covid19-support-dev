@@ -724,9 +724,6 @@ export default {
       
       // stop here if form is invalid
       this.$v.$touch();
-
-      alert(this.$v.form.contact.$invalid +" "+ this.validateSelfAlone)
-
       if (this.$v.form.contact.$invalid || this.validateSelfAlone) {
          return;
       }
