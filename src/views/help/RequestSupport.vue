@@ -24,7 +24,6 @@
                         <b-form-select
                           id="basicSelect"
                           :plain="true" 
-                          @change="showCategory($event)"
                           :options="donation_categories"
                           value="Please select"
                           v-model="form.request.category"
@@ -198,7 +197,7 @@
                           :class="{ 'is-invalid': submitted && $v.form.contact.houseNo.$error }" 
                         />
                         <div v-if="submitted && $v.form.contact.houseNo.$error" class="invalid-feedback">
-                              <span v-if="!$v.form.contact.houseNo.numeric">Valid House Number is required</span>
+                              <span v-if="!$v.form.contact.houseNo.required">Valid House Number is required</span>
                         </div>
                       </div>
                     </fieldset>
@@ -348,9 +347,9 @@
                           placeholder="Full name of the person required support"
                           class="form-control"
                           v-model="form.requestor.name"
-                          :class="{ 'is-invalid': submitted && $v.form.requestor.name.$error }"
+                          :class="{ 'is-invalid': submitted  && submittedOther && $v.form.requestor.name.$error }"
                         />
-                        <div v-if="submitted && $v.form.requestor.name.$error" class="invalid-feedback">
+                        <div v-if="submitted && submittedOther && $v.form.requestor.name.$error" class="invalid-feedback">
                               <span v-if="!$v.form.requestor.name.required">Name is required</span>
 							                <span v-if="(!$v.form.requestor.name.validName) && ($v.form.requestor.name.required)">Name is invalid</span>
                         </div>
@@ -369,9 +368,9 @@
                           placeholder="Phone number"
                           class="form-control"
                           v-model="form.requestor.phone"
-                          :class="{ 'is-invalid': submitted && $v.form.requestor.phone.$error }"
+                          :class="{ 'is-invalid': submitted && submittedOther && $v.form.requestor.phone.$error }"
                         />
-                        <div v-if="submitted && $v.form.requestor.phone.$error" class="invalid-feedback">
+                        <div v-if="submitted && submittedOther && $v.form.requestor.phone.$error" class="invalid-feedback">
                               <span v-if="!$v.form.requestor.phone.required">Phone Numer is required</span>
 							                <span v-if="(!$v.form.requestor.phone.validPhoneNo) && ($v.form.requestor.phone.required)">Phone Numer is invalid</span>
                         </div>
@@ -388,9 +387,9 @@
                           placeholder="Email"
                           class="form-control"
                           v-model="form.requestor.email"
-                          :class="{ 'is-invalid': submitted && $v.form.requestor.email.$error }" 
+                          :class="{ 'is-invalid': submitted && submittedOther && $v.form.requestor.email.$error }" 
                         />
-                        <div v-if="submitted && $v.form.requestor.email.$error" class="invalid-feedback">
+                        <div v-if="submitted && submittedOther && $v.form.requestor.email.$error" class="invalid-feedback">
                               <span v-if="!$v.form.requestor.email.required">Email is required</span>
                               <span v-if="!$v.form.requestor.email.email">Email is invalid</span>
                         </div>
@@ -409,10 +408,10 @@
                           placeholder="House Number"
                           class="form-control"
                           v-model="form.requestor.houseNo"
-                          :class="{ 'is-invalid': submitted && $v.form.requestor.houseNo.$error }" 
+                          :class="{ 'is-invalid': submitted && submittedOther && $v.form.requestor.houseNo.$error }" 
                         />
-                        <div v-if="submitted && $v.form.requestor.houseNo.$error" class="invalid-feedback">
-                              <span v-if="!$v.form.requestor.houseNo.numeric">Valid House Number is required</span>
+                        <div v-if="submitted && submittedOther && $v.form.requestor.houseNo.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.requestor.houseNo.required">Valid House Number is required</span>
                         </div>
                       </div>
                     </fieldset>
@@ -427,9 +426,9 @@
                           placeholder="Street Name"
                           class="form-control"
                           v-model="form.requestor.streetName"
-                          :class="{ 'is-invalid': submitted && $v.form.requestor.streetName.$error }" 
+                          :class="{ 'is-invalid': submitted && submittedOther && $v.form.requestor.streetName.$error }" 
                         />
-                        <div v-if="submitted && $v.form.requestor.streetName.$error" class="invalid-feedback">
+                        <div v-if="submitted && submittedOther && $v.form.requestor.streetName.$error" class="invalid-feedback">
                               <span v-if="!$v.form.requestor.streetName.required">Street Name is required</span>
                         </div>
                       </div>
@@ -591,8 +590,9 @@ export default {
       seenSelf: false,
       seenOther: false,
       shouldDisabled: false,
-      showCatOther: false,
       submitted: false,
+      submittedOther: false,
+      validateSelfAlone: false,
       donation_categories: [
         "General",
         "Food",
@@ -657,25 +657,19 @@ export default {
                 email: { required, email },
                 name: { required, validName},
                 phone: { required, validPhoneNo },
-                houseNo: { numeric },
+                houseNo: { required },
                 streetName: { required }               
              },
              requestor: {
                 email: { required, email },
                 name: { required, validName},
                 phone: { required, validPhoneNo },
-                houseNo: { numeric },
+                houseNo: { required },
                 streetName: { required }               
              }
          }    
   },
   methods: {
-    showCategory: function (event) {
-      if (event == "Other")
-      this.showCatOther= true;
-      else
-      this.showCatOther= false;
-    },
     validateSelfRequest: function () {
       axios.get("https://api.postcodes.io/postcodes/"+this.form.contact.postCode)
       .then((response)  =>  {
@@ -687,8 +681,6 @@ export default {
         this.form.contact.postCode=response.data.result.postcode;
       }, (error)  =>  {
         this.seenSelf=false;
-        this.form.contact.houseNo="";
-        this.form.contact.streetName="";
         this.error = "Invalid PostCode";
         this.status = "error";
       })
@@ -705,15 +697,26 @@ export default {
       }, (error)  =>  {
         alert("Invalid PostCode");
         this.seenOther=false;
-        this.form.contact.houseNo="";
-        this.form.contact.streetName="";
+        this.status = "error";
       })
     },
     submitRequest() {
+
       this.submitted = true;
+
+      if(this.form.requesting_for === 'other') {
+          this.submittedOther=true;
+          this.validateSelfAlone=this.$v.form.requestor.$invalid;
+      } else {
+          this.submittedOther=false;
+          this.validateSelfAlone=false;
+      }
+
+      
       // stop here if form is invalid
       this.$v.$touch();
-      if (this.$v.$invalid) {
+
+      if (this.$v.form.contact.$invalid && this.$v.form.requestor.$invalid) {
          return;
       }
 
