@@ -29,14 +29,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "auth" */ '../views/Login.vue')
       },
       {
-        path: 'register',
-        name: 'register',
-        redirect: '/login'
-      },
-      {
         path: 'signout',
         name: 'signout',
         component: () => import(/* webpackChunkName: "auth" */ '../views/Logout.vue')
+      },
+      {
+        path: 'register',
+        name: 'register',
+        redirect: '/login'
       },
       {
         path: 'about',

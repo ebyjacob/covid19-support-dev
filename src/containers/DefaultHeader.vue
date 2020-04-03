@@ -13,6 +13,11 @@
     </b-link>
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="false" />
     <b-navbar-nav class="d-md-down-none">
+      <b-nav-item
+        class="px-3"
+        to="/profile"
+        v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
+      ><b>My dashboard</b></b-nav-item>
       <b-nav-item class="px-3" to="/need/support">
         <b>Need Support?</b>
       </b-nav-item>
@@ -25,7 +30,7 @@
       <b-nav-item
         class="px-3"
         to="/support-requests"
-        v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
+        v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator)"
       >Support Requests</b-nav-item>
       <b-nav-item
         class="px-3"
