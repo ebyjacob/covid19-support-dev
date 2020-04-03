@@ -2,7 +2,7 @@
 
 ## Step 1 : Firebase Setup
 
-* Firebase account / Google Account
+* Firebase account/Google Account
 * Create a project in firebase with default setup.
 * Enable following authentication mechanism in your firebase project
     * By navigating firebase --> Develop --> Authentication --> Signin methods. And follow the steps there.
