@@ -12,7 +12,7 @@
                     <div
                       v-if="status==='submitted'"
                       class="alert alert-success"
-                    >Your request submitted successfully.</div>
+                    >Your request (Id: {{form.requestId}}) created successfully</div>
                     <h4 class="mb-4 text-primary">What support you need?</h4>
                   </div>
                 </div>
@@ -231,7 +231,12 @@
                           placeholder="Postal Code"
                           class="form-control"
                           v-model="form.contact.postCode"
+                          :class="{ 'is-invalid': submitted && $v.form.contact.postCode.$error }" 
                         />
+                        <div v-if="submitted && $v.form.contact.postCode.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.contact.postCode.required">Postcode is required</span>
+                        </div>
+                        <div v-if="selfPostCodeStatus === 'Invalid PostCode'" class="invalid-postcode">{{selfPostCodeStatus}}</div>
                       </div>
                     </fieldset>
                   </div>
@@ -445,7 +450,12 @@
                           placeholder="Postal Code"
                           class="form-control"
                           v-model="form.requestor.postCode"
+                          :class="{ 'is-invalid': submitted && submittedOther && $v.form.requestor.postCode.$error }" 
                         />
+                        <div v-if="submitted && submittedOther && $v.form.requestor.postCode.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.requestor.postCode.required">Postcode is required</span>
+                        </div>
+                        <div v-if="otherPostCodeStatus === 'Invalid PostCode'" class="invalid-postcode">{{otherPostCodeStatus}}</div>
                       </div>
                     </fieldset>
                   </div>
@@ -552,17 +562,32 @@
                     </div>
                   </div>
                   <div class="col-sm-4">
-                    <div class="text-right mr-4">
+                    <div class="text-right mr-4" v-if="!requestStatus" >
                       <button
                         type="button"
                         class="btn btn-primary"
                         @click="submitRequest"
                       >Agree & Submit Request</button>
                     </div>
+                    <div class="text-right mr-4" v-if="requestStatus" >
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                      >Loading...</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" id="formStatus">
+              <div v-if="error" class="alert alert-danger">{{error}}</div>
+                <div
+                      v-if="status==='submitted'"
+                      class="alert alert-success"
+                    >Your request (Id: {{form.requestId}}) created successfully</div>
           </div>
         </div>
       </div>
@@ -593,6 +618,10 @@ export default {
       submitted: false,
       submittedOther: false,
       validateSelfAlone: false,
+      selfPostCodeStatus: "",
+      otherPostCodeStatus:"",
+      requestId:"",
+      requestStatus: false,
       donation_categories: [
         "General",
         "Food",
@@ -612,6 +641,7 @@ export default {
           detail: "",
           status: "new"
         },
+        requestId:"",
         picked_up_by: "",
         picked_up_on: new Date(),
         assigned_groups: [],
@@ -658,14 +688,16 @@ export default {
                 name: { required, validName},
                 phone: { required, validPhoneNo },
                 houseNo: { required },
-                streetName: { required }               
+                streetName: { required },
+                postCode: {required}             
              },
              requestor: {
                 email: { required, email },
                 name: { required, validName},
                 phone: { required, validPhoneNo },
                 houseNo: { required },
-                streetName: { required }               
+                streetName: { required },
+                postCode: {required}                    
              }
          }    
   },
@@ -676,13 +708,13 @@ export default {
         this.seenSelf=true;
         this.form.contact.address=this.form.contact.houseNo+", "+this.form.contact.streetName;
         this.form.contact.town=response.data.result.admin_ward;
-        this.form.contact.city=response.data.result.european_electoral_region;
+        this.form.contact.city=response.data.result.primary_care_trust;
         this.form.contact.country=response.data.result.country;
         this.form.contact.postCode=response.data.result.postcode;
+        this.selfPostCodeStatus = "Success";
       }, (error)  =>  {
         this.seenSelf=false;
-        this.error = "Invalid PostCode";
-        this.status = "error";
+        this.selfPostCodeStatus = "Invalid PostCode";
       })
     },
     validateOtherRequest: function () {
@@ -691,13 +723,13 @@ export default {
         this.seenOther=true;
         this.form.requestor.address=this.form.requestor.houseNo+", "+this.form.requestor.streetName;
         this.form.requestor.town=response.data.result.admin_ward;
-        this.form.requestor.city=response.data.result.european_electoral_region;
+        this.form.requestor.city=response.data.result.primary_care_trust;
         this.form.requestor.country=response.data.result.country;
         this.form.requestor.postCode=response.data.result.postcode;
+        this.otherPostCodeStatus = "Success";
       }, (error)  =>  {
-        this.error = "Invalid PostCode";
+        this.otherPostCodeStatus = "Invalid PostCode";
         this.seenOther=false;
-        this.status = "error";
       })
     },
     submitRequest() {
@@ -707,18 +739,21 @@ export default {
       if(this.form.requesting_for === 'other') {
           this.submittedOther=true;
           this.validateSelfAlone=this.$v.form.requestor.$invalid;
+          this.form.requestor.address=this.form.requestor.houseNo+", "+this.form.requestor.streetName;
       } else {
           this.submittedOther=false;
           this.validateSelfAlone=false;
+          this.form.contact.address=this.form.contact.houseNo+", "+this.form.contact.streetName;
       }
 
       
       // stop here if form is invalid
       this.$v.$touch();
-
-      if (this.$v.form.contact.$invalid && this.validateSelfAlone) {
+      if (this.$v.form.contact.$invalid || this.validateSelfAlone) {
          return;
       }
+
+      this.requestStatus=true;
 
       if (this.user.loggedIn && this.user.data) {
         this.form.user_displayName =
@@ -736,14 +771,18 @@ export default {
         .then(docRef => {
           this.status = "submitted";
           this.error = null;
+          this.form.requestId=docRef.id;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
+            this.$router.push('/profile');
           }, 5 * 1000);
         })
         .catch(error => {
           this.error = error;
           this.status = "error";
+          this.requestId="";
+          this.requestStatus=false;
         });
     }
   }
@@ -758,5 +797,12 @@ export default {
 
 .form-group-cat {
     margin-bottom: 0.5rem !important;
+}
+
+.invalid-postcode {
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+    font-size: 80%;
+    color: #f86c6b;
 }
 </style>
