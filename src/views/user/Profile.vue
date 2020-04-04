@@ -100,6 +100,7 @@ export default {
       var db = firebase.firestore();
       db.collection("donations")
         .where("user_email", "==", this.user.data.email)
+        .orderBy("timestamp","desc")
         .get()
         .then(querySnapshot => {
           let donations = [];
@@ -116,6 +117,7 @@ export default {
       var db = firebase.firestore();
       db.collection("support_requests")
         .where("user_email", "==", this.user.data.email)
+        .orderBy("timestamp","desc")
         .get()
         .then(querySnapshot => {
           let support_requests = [];
@@ -132,6 +134,7 @@ export default {
       var db = firebase.firestore();
       db.collection("support_requests")
         .where("picked_up_by", "==", this.user.data.email)
+        .orderBy("timestamp","desc")
         .get()
         .then(querySnapshot => {
           let myassignments = [];
