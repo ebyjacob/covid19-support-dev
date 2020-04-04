@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  function isSignedIn() {
+    return request.auth != null;
+  }
+  function isOwnDonation(donation){
+  	return isSignedIn() && donation.data.user_email == request.auth.token.email
+  }
+  function isAdmin(){
+   return false;
+  }
+  match /databases/{database}/documents {
+  	match /messages/{message} {
+      allow read, write: if true;
+  	}
+    match /donations/{donation} {
+      allow write: if true;
+      allow read: if isSignedIn() && isOwnDonation(donation);
+  	}
+    match /support_requests/{support_request} {
+      allow read, write: if true;
+  	}
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

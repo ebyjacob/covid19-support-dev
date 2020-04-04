@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container mt-4">
-      <div v-if="user && user.loggedIn">
+      <div v-if="user && user.loggedIn && supportrequest">
         <div class="row">
           <div class="col-sm-12">
             <div class="card mt-4">
@@ -60,14 +60,8 @@
               v-if="supportrequest && supportrequest.request && supportrequest.picked_up_by === user.data.email && (supportrequest.request.status === 'pickedup' || supportrequest.request.status==='inprogress')"
             >
               <div class="card-body">
-                <button
-                  class="btn btn-primary mr-4"
-                  @click="releaseJob"
-                >Release Job</button>
-                <button
-                  class="btn btn-primary mr-4"
-                  @click="markJobAsCompleted"
-                >Complete Job</button>
+                <button class="btn btn-primary mr-4" @click="releaseJob">Release Job</button>
+                <button class="btn btn-primary mr-4" @click="markJobAsCompleted">Complete Job</button>
               </div>
             </div>
           </div>
@@ -119,10 +113,20 @@
             </div>
           </div>
         </div>
+        <div class="row" v-if="isAdmin || canCloseJob">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body text-right">
+                <button class="btn btn-danger mr-4" @click="deleteJob" v-if="isAdmin">Delete Job</button>
+                <button class="btn btn-danger mr-4" @click="markJobAsClosed" v-if="canCloseJob">Close Request</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row" v-else>
         <div class="col-sm-12">
-          <h4>You haven't logged in</h4>
+          <h4>Loading...</h4>
         </div>
       </div>
     </div>
@@ -137,13 +141,37 @@ export default {
   data() {
     return {
       newcomment: "",
-      supportrequest: {}
+      supportrequest: null
     };
   },
   computed: {
     ...mapGetters({
       user: "user"
-    })
+    }),
+    isLoggedInUser() {
+      return (
+        this.user &&
+        this.user.loggedIn &&
+        this.user.data &&
+        this.user.data.email
+      );
+    },
+    isAdmin(){
+      return this.isLoggedInUser && this.user.data.admin
+    },
+    isJobOwner() {
+      return (
+        this.isLoggedInUser &&
+        this.$route.params.supportrequestid &&
+        this.supportrequest &&
+        this.supportrequest.user_email === this.user.data.email
+      );
+    },
+    canCloseJob() {
+      return (
+        this.isJobOwner && ["new"].indexOf(this.supportrequest.request.status) > -1
+      );
+    }
   },
   created() {
     this.fetchJob();
@@ -217,7 +245,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Job picked up",
           timestamp: new Date()
-        })
+        });
         docRef
           .set(
             {
@@ -248,7 +276,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Released Job",
           timestamp: new Date()
-        })
+        });
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -283,7 +311,7 @@ export default {
           commentor: this.user.data.email,
           comment: "Completed Job",
           timestamp: new Date()
-        })
+        });
         var db = firebase.firestore();
         var docRef = db
           .collection("support_requests")
@@ -305,6 +333,76 @@ export default {
           .then(result => {
             console.log(result);
             this.fetchJob();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    markJobAsClosed() {
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.email &&
+        this.$route.params.supportrequestid &&
+        this.supportrequest &&
+        this.supportrequest.user_email === this.user.data.email
+      ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Closed Job",
+          timestamp: new Date()
+        });
+        var db = firebase.firestore();
+        var docRef = db
+          .collection("support_requests")
+          .doc(this.$route.params.supportrequestid);
+        docRef
+          .set(
+            {
+              request: _.set(this.supportrequest.request, "status", "closed"),
+              comments: newcomments,
+              completed_by: this.user.data.email,
+              completed_on: new Date()
+            },
+            { merge: true }
+          )
+          .then(result => {
+            console.log(result);
+            this.fetchJob();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        console.log("unable to mark job as closed");
+      }
+    },
+    deleteJob() {
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.email &&
+        this.$route.params.supportrequestid &&
+        this.user.data.admin
+      ) {
+        let newcomments = this.supportrequest.comments || [];
+        newcomments.push({
+          commentor: this.user.data.email,
+          comment: "Completed Job",
+          timestamp: new Date()
+        });
+        var db = firebase.firestore();
+        var docRef = db
+          .collection("support_requests")
+          .doc(this.$route.params.supportrequestid);
+        docRef
+          .delete()
+          .then(result => {
+            this.$router.replace({
+              name: "support-requests"
+            });
           })
           .catch(err => {
             console.log(err);

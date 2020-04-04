@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate'
 import BootstrapVue from 'bootstrap-vue'
 import * as firebase from "firebase";
 import * as config from "./config/config";
@@ -6,6 +7,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
+
+Vue.use(Vuelidate);
 
 firebase.initializeApp(config.firebase_config);
 
