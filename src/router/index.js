@@ -29,9 +29,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "auth" */ '../views/Login.vue')
       },
       {
+        path: 'signout',
+        name: 'signout',
+        component: () => import(/* webpackChunkName: "auth" */ '../views/Logout.vue')
+      },
+      {
         path: 'register',
         name: 'register',
-        component: () => import(/* webpackChunkName: "auth" */ '../views/Register.vue')
+        redirect: '/login'
       },
       {
         path: 'about',
@@ -61,6 +66,11 @@ const routes = [
       {
         path: 'support-requests',
         name: 'support-requests',
+        redirect: '/support-requests/bystatus/open'
+      },
+      {
+        path: 'support-requests/bystatus/:status',
+        name: 'support-requests-bystatus',
         component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequests.vue')
       },
       {
@@ -72,6 +82,21 @@ const routes = [
         path: 'volunteers',
         name: 'volunteers',
         component: () => import(/* webpackChunkName: "volunteers" */ '../views/help/Volunteers.vue')
+      },
+      {
+        path: 'groups',
+        name: 'groups',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Groups.vue')
+      },
+      {
+        path: 'group/:groupid',
+        name: 'group',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Group.vue')
+      },
+      {
+        path: 'groups/create',
+        name: 'groups-create',
+        component: () => import(/* webpackChunkName: "groups" */ '../views/groups/Create.vue')
       },
       {
         path: 'donations',

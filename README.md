@@ -2,7 +2,7 @@
 
 ## Step 1 : Firebase Setup
 
-* Firebase account / Google Account
+* Firebase account/Google Account
 * Create a project in firebase with default setup.
 * Enable following authentication mechanism in your firebase project
     * By navigating firebase --> Develop --> Authentication --> Signin methods. And follow the steps there.
@@ -10,11 +10,6 @@
         * Email
         * Google
 * create a firebase database with probably same name as your project
-* update the firebase database rules
-    * By navigating firebase --> Develop --> Database --> rules
-    * Initial Rules available in `backend/firebaserules.md` file
-* Create indices in firebase
-    * Not yet decided yet.
 
 ## Step 2 : Local dev Setup 
 
@@ -59,7 +54,7 @@ The above command will deploy dependent packages globally.
 
 * The above command will deploy following services in firebase
     * Hosting
-    * Database
+    * Database / Firestore
     * Functions
 
 * If you want to deploy specific components follow the commands specified in `package.json` script section
