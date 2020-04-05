@@ -25,9 +25,14 @@
                           type="text"
                           placeholder="First name"
                           class="form-control"
-						  v-model="form.personal.firstname"
-                        />
+						              v-model="form.personal.firstname"
+                           :class="{ 'is-invalid': submitted && $v.form.personal.firstname.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.firstname.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.firstname.required">First Name is required</span>
+                        </div>
                       </div>
+                      
                     </fieldset>
                   </div>
 				  <div class="col-sm-6">
@@ -39,8 +44,12 @@
                           type="text"
                           placeholder="Last name"
                           class="form-control"
-						  v-model="form.personal.lastname"
-                        />
+						              v-model="form.personal.lastname"
+                        :class="{ 'is-invalid': submitted && $v.form.personal.lastname.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.lastname.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.lastname.required">Last Name is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -57,7 +66,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.idtype"
+						              v-model="form.personal.idtype"
                         />
                       </div>
                     </fieldset>
@@ -71,7 +80,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.idproof"
+						              v-model="form.personal.idproof"
                         />
                       </div>
                     </fieldset>
@@ -87,7 +96,7 @@
                           type="text"
                           placeholder="Eg: Passprot, Driving License, BRP etc.."
                           class="form-control"
-						  v-model="form.personal.sidtype"
+						              v-model="form.personal.sidtype"
                         />
                       </div>
                     </fieldset>
@@ -101,7 +110,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.sidproof"
+						              v-model="form.personal.sidproof"
                         />
                       </div>
                     </fieldset>
@@ -118,8 +127,12 @@
                           type="text"
                           placeholder="Mobile number"
                           class="form-control"
-						  v-model="form.personal.mobile"
-                        />
+						            v-model="form.personal.mobile"
+                       :class="{ 'is-invalid': submitted && $v.form.personal.mobile.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.mobile.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.mobile.required">Mobile is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -132,7 +145,7 @@
                           type="text"
                           placeholder="Alternate Contact number "
                           class="form-control"
-						  v-model="form.personal.altmobile"
+						              v-model="form.personal.altmobile"
                         />
                       </div>
                     </fieldset>
@@ -145,7 +158,12 @@
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                         <label for="email">Email</label>
-                        <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"/>
+                        <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"
+                          :class="{ 'is-invalid': submitted && $v.form.personal.email.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.email.$error" class="invalid-feedback">
+                        <span v-if="!$v.form.personal.email.required">Email is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -166,8 +184,12 @@
                           type="password"
                           placeholder="Password"
                           class="form-control"
-						  v-model="password"
+						              v-model="password"
+                         :class="{ 'is-invalid': submitted && $v.password.$error }"
                         /> 
+                        <div v-if="submitted && $v.password.$error" class="invalid-feedback">
+                          <span v-if="!$v.password.required">Password is required</span>
+                        </div>
                       </div>                   
                     </fieldset>
                   </div>
@@ -217,8 +239,12 @@
                           type="text"
                           placeholder="House Number of the person offering support"
                           class="form-control"
-						  v-model="form.address.housenumber"
-                        />
+						            v-model="form.address.housenumber"
+                        :class="{ 'is-invalid': submitted && $v.form.address.housenumber.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.housenumber.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.address.housenumber.required">House Number is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -231,7 +257,7 @@
                           type="text"
                           placeholder="Build Name of the person offering support"
                           class="form-control"
-						  v-model="form.address.buildname"
+						              v-model="form.address.buildname"
                         />
                       </div>
                     </fieldset>
@@ -249,8 +275,12 @@
                           type="text"
                           placeholder="Address Line1"
                           class="form-control"
-						  v-model="form.address.address1"
-                        />
+						              v-model="form.address.address1"
+                        :class="{ 'is-invalid': submitted && $v.form.address.address1.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.address1.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.address1.required">Address Line1 is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -280,8 +310,12 @@
                           type="text"
                           placeholder="Area"
                           class="form-control"
-						  v-model="form.address.area"
-                        />
+						              v-model="form.address.area"
+                         :class="{ 'is-invalid': submitted && $v.form.address.area.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.area.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.area.required">Area/Locality is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -294,8 +328,12 @@
                           type="text"
                           placeholder="Postcode"
                           class="form-control"
-						  v-model="form.address.postcode"
-                        />
+						            v-model="form.address.postcode"
+                       :class="{ 'is-invalid': submitted && $v.form.address.postcode.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.postcode.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.postcode.required">Postcode is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -415,7 +453,6 @@
         </div>
 		
 		 <div class="row" v-if="user.loggedIn">
-      	 
           <div class="col-sm-12">
             <div class="card">
               <div class="card-body">
@@ -433,7 +470,7 @@
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
                       <button  class="btn btn-primary"  @click="submitRequest"  v-if="!submitted" >Agree & Update Request</button>
-					  <button class="btn btn-secondary" v-else>Submitting...</button>
+					            <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
                 </div>
@@ -460,7 +497,7 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary" type=“button”  @click="submitRequest" v-if="!submitted" >Agree & Submit Request</button>
+                      <button  class="btn btn-primary" type=“button”  @click="submitRequest" v-if="!isbutton" >Agree & Submit Request</button>
                       <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
@@ -526,6 +563,7 @@ export default {
       },
       password : "",
       submitted: false,
+      isbutton: false,
       error: null,
       vol: null,
       categories : null,
@@ -533,13 +571,25 @@ export default {
       status: "new"
     };
   },
-/* validations: {
+ validations: {
 		form: {
 			personal : {
-				firstName: { required }
-			}
-		}
-	},*/
+        firstname: { required } ,
+        lastname: { required },
+        mobile: { required },
+        email: { required, email }
+      },
+       address : {
+         housenumber: { required },
+         postcode: { required },
+         address1: { required },
+         area: { required }
+
+       }
+    }
+    /*,
+     password: { required } */
+	},
   computed: {
     ...mapGetters({
       user: "user"
@@ -548,15 +598,19 @@ export default {
   created() {
     this.fetchUser();
     this.fetchCategories();
-    this.form.accountstatus=true;
   },
   methods: {
      submitRequest() {
       this.submitted = "true";
-      /*if (this.$v.$invalid) {
-        //alert("ERROR");
+      this.isbutton=true;
+
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+            this.submitted = "false";
+            this.isbutton=false;
+            //alert("B"+this.isbutton);
             return;
-        }*/
+        }
         
         
      // alert("2"+ this.$v.$touch());
@@ -594,6 +648,7 @@ export default {
           this.status = "submitted";
           this.error = null;
           this.submitted = "false";
+          this.isbutton=false;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
@@ -603,6 +658,7 @@ export default {
         .catch(error => {
           this.error = error;
           this.status = "error";
+          this.isbutton=false;
         });
         }
     },
@@ -626,7 +682,8 @@ export default {
 					}
 				  })
 				  .catch(err => {
-					console.log('Error getting document', err);
+          console.log('Error getting document', err);
+          this.isbutton=false;
 				  });
 			}
 		}
@@ -652,10 +709,11 @@ export default {
 	          });
 			});
 			this.categories = categories_response;
-			
+			alert("categories"+categories);
 		  })
 		  .catch(err => {
-			console.log('Error getting documents', err);
+      console.log('Error getting documents', err);
+      this.isbutton=false;
 		  });
 		  
 		 this.categories=allCats;
@@ -703,6 +761,7 @@ export default {
           this.status = "error";
           this.useralreadyexist = true;
           this.submitted = false;
+          this.isbutton=false;
         });
         }
     },
@@ -741,10 +800,6 @@ export default {
           
 	},
     login() {
-      //alert("Inside");
-      //alert("Login:"+this.form.personal.email);
-	  //alert("Pass:"+this.password );
-        
       const auth = firebase
         .auth()
         .signInWithEmailAndPassword(this.form.pesonal.email, this.password);
@@ -783,10 +838,12 @@ export default {
         
 
 <style>
-input[type=checkbox] {
-    vertical-align: middle;
-    position: relative;
-    bottom: 1px;
+
+.marginPadding {
+   margin-bottom: 1.79rem !important;
 }
 
+.form-group-cat {
+    margin-bottom: 0.5rem !important;
+}
 </style>
