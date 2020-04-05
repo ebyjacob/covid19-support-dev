@@ -8,11 +8,6 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-12">
-                    <div v-if="error" class="alert alert-danger">{{error}}</div>
-                    <div
-                      v-if="status==='submitted'"
-                      class="alert alert-success"
-                    >Your request (Id: {{form.requestId}}) created successfully</div>
                     <h4 class="mb-4 text-primary">What support you need?</h4>
                   </div>
                 </div>
@@ -245,6 +240,10 @@
                           class="form-control"
                           v-model="form.contact.country" 
                         />
+                         <vue-modaltor  :visible="open" @hide="hideModal">
+                              <div v-if="error" class="alert alert-danger">{{error}}</div>
+                              <div v-if="(status==='submitted' || status==='new')" class="alert alert-success">Your request (Id: {{form.requestId}}) created successfully</div>
+                         </vue-modaltor>
                       </div>
                     </fieldset>
                   </div>
@@ -462,15 +461,6 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12" id="formStatus">
-              <div v-if="error" class="alert alert-danger">{{error}}</div>
-                <div
-                      v-if="status==='submitted'"
-                      class="alert alert-success"
-                    >Your request (Id: {{form.requestId}}) created successfully</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -500,6 +490,7 @@ export default {
       validateSelfAlone: false,
       requestId:"",
       requestStatus: false,
+      open: false,
       donation_categories: [
         "General",
         "Food",
@@ -553,8 +544,6 @@ export default {
       error: null,
       status: "new"
     };
-  },mounted() {
-    
   },
   computed: {
     ...mapGetters({
@@ -582,9 +571,10 @@ export default {
          }    
   },
   methods: {
-    
+    hideModal() {
+              this.open = false
+    },
     submitRequest() {
-
       this.submitted = true;
 
       if(this.form.requesting_for === 'other') {
@@ -624,13 +614,11 @@ export default {
           this.status = "submitted";
           this.error = null;
           this.form.requestId=docRef.id;
+          this.open = true;
+          this.requestStatus=false;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
-            if(this.user.loggedIn)
-            this.$router.replace({ name: "profile" });
-            else
-            this.$router.replace({ name: "supportrequest", params : { supportrequestid: this.form.requestId } });
           }, 5 * 1000);
         })
         .catch(error => {
@@ -653,4 +641,23 @@ export default {
 .form-group-cat {
     margin-bottom: 0.5rem !important;
 }
+
+.modal-vue--content {
+    background-color: rgb(240, 243, 245);
+    background-clip: border-box;
+    border: 1px solid #c8ced3;
+    border-radius: 0.25rem;
+}
+
+.modal-vue--content-panel {
+    margin-top: 1.5rem !important;
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.modal-vue-overlay {
+  opacity: 0.5;
+}
+
 </style>
