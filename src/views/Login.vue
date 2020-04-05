@@ -164,10 +164,18 @@ export default {
           this.loginform.password
         );
       auth
-        .then(data => {
+        .then(async data => {
           if (data && data.user) {
-            this.$store.dispatch("fetchUser", data.user);
-            this.$router.replace({ name: "profile" });
+            const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
+            await updateUserProfile({
+              username: result.user.email,
+              fullname : data.user.displayName ||  data.user.fullname || "-"
+            }).then(()=>{  
+              this.$store.dispatch("fetchUser", data.user);
+              this.$router.replace({ name: "profile" });
+            }).catch((ex)=>{
+              console.error(ex);
+            })
           } else {
             this.error = "Unknown error";
           }
@@ -182,8 +190,16 @@ export default {
       auth
         .then(result => {
           if (result && result.user) {
-            this.$store.dispatch("fetchUser", result.user);
-            this.$router.replace({ name: "profile" });
+            const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
+            updateUserProfile({
+              username: result.user.email,
+              fullname : result.user.displayName || result.user.fullname || ""
+            }).then((res)=>{  
+              this.$store.dispatch("fetchUser", result.user);
+              this.$router.replace({ name: "profile" });
+            }).catch((ex)=>{
+              console.error(ex);
+            })
           }
         })
         .catch(err => {
