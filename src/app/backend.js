@@ -154,3 +154,21 @@ export const updateSupportRequestStatus = (supportrequestid, supportrequest , ne
           })
     })
 };
+export const updateApplicationSettings = (appSettings, user_email) => {
+    return new Promise((resolve,reject)=>{
+        db.collection("application_settings")
+        .doc("application_settings")
+        .set(appSettings,{merge:true})
+        .then((res)=>{
+            resolve({
+                msg: "Settings saved Successfully",
+                res
+            });
+        }).catch((ex)=>{
+            reject({
+                msg: "Failed to save settings",
+                ex
+            })
+        })
+    })
+};
