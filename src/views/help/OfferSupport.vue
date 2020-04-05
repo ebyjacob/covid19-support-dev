@@ -432,7 +432,8 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary"  @click="submitRequest" >Agree & Update Request</button>
+                      <button  class="btn btn-primary"  @click="submitRequest"  v-if="!submitted" >Agree & Update Request</button>
+					  <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
                 </div>
@@ -662,12 +663,12 @@ export default {
 	redirect() {
 		if (this.user.loggedIn && this.user.data) {		
 			//this.$router.push({ path: '/profile' });
-			setTimeout( () => this.$router.push({ path: '/profile'}), 5000);
+			setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
 		} else {
-			alert("ELSE");
+			//alert("ELSE");
 			this.login();
 			//this.$router.push({ path: '/profile' });
-			setTimeout( () => this.$router.push({ path: '/profile'}), 5000);
+			setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
 		}		
 		/* else{
 			this.$router.push({ path: '/profile' });
