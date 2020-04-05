@@ -104,6 +104,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donations.vue')
       },
       {
+        path: 'donations',
+        name: 'donations',
+        redirect: '/donations/bystatus/open'
+      },
+      {
+        path: 'donations/bystatus/:status',
+        name: 'donations-bystatus',
+        component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donations.vue')
+      },      
+      {
         path: 'donation/:donationid',
         name: 'donation',
         component: () => import(/* webpackChunkName: "donate" */ '../views/help/Donation.vue')
