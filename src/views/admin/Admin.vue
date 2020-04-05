@@ -2,6 +2,15 @@
   <div>
     <div class="container pt-4">
       <div class="row">
+         <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin)">
+          <div class="card">
+            <div class="card-body">
+              <router-link to="/admin/appsettings">
+                <button class="btn btn-primary">Click for Application Settings</button>
+              </router-link>
+            </div>
+          </div>
+        </div>
         <div class="col-sm-12">
           <div class="card" v-if="error || status ==='submitted'">
             <div class="card-body">

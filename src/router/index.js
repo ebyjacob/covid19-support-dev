@@ -129,6 +129,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "admin" */ '../views/admin/Admin.vue')
       },
       {
+        path: 'admin/appsettings',
+        name: 'admin-appsettings',
+        component: () => import(/* webpackChunkName: "admin" */ '../views/admin/AppSettings.vue')
+      },
+      {
         path: 'users/manage',
         name: 'manageusers',
         component: () => import(/* webpackChunkName: "admin" */ '../views/admin/ManageUsers.vue')
