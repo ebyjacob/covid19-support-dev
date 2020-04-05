@@ -7,12 +7,19 @@ export default new Vuex.Store({
   state: {
     user: {
       loggedIn: false,
+      email : "",
       data: null
     }
   },
   getters: {
     user(state){
       return state.user
+    },
+    isLoggedInUser(state){
+      return state && state.user && state.user.loggedIn
+    },
+    isAdmin(state){
+      return state && state.user && state.user.loggedIn && state.user.data && state.user.data.admin
     }
   },
   mutations: {
@@ -21,6 +28,7 @@ export default new Vuex.Store({
     },
     SET_USER(state, data) {
       state.user.data = data;
+      state.user.email = data && data.email ? data.email : ""
     }
   },
   actions: {
