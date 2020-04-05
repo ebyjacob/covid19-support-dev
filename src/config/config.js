@@ -1,8 +1,8 @@
 export const firebase_config = {
-    apiKey: "AIzaSyCMUR3xNfSH05SwxmNFV3aF-qBwVv9bnQQ",
-    authDomain: "covid19-support-ramesh.firebaseapp.com",
-    databaseURL: "https://covid19-support-ramesh.firebaseio.com",
-    projectId: "covid19-support-ramesh",
+    apiKey: "AIzaSyCVSv4vUrvdVXI6ZG-M-ec-OKMcGJbXLuU",
+    authDomain: "covid19-support-dev.firebaseapp.com",
+    databaseURL: "https://covid19-support-dev.firebaseio.com",
+    projectId: "covid19-support-dev",
     storageBucket: "",
     messagingSenderId: "",
     appId: ""
