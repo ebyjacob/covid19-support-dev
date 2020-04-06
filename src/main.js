@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
-import VueModalTor from 'vue-modaltor'
 import BootstrapVue from 'bootstrap-vue'
 import * as firebase from "firebase";
 import * as config from "./config/config";
@@ -10,7 +9,6 @@ import store from './store'
 import './registerServiceWorker'
 
 Vue.use(Vuelidate);
-Vue.use(VueModalTor);
 
 firebase.initializeApp(config.firebase_config);
 
