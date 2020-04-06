@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "setup": "yarn && cd functions && yarn && cd ..",
+    "setup": "yarn && cd functions && npm install && cd ..",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "deploy": "yarn build && firebase deploy",
