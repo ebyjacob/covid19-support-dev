@@ -15,6 +15,24 @@
       ]
     },
     {
+      "collectionGroup": "donations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "donation_status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "user_email",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "support_requests",
       "queryScope": "COLLECTION",
       "fields": [
