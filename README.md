@@ -1,4 +1,4 @@
-# covid19-support-dev
+# covid19-support
 
 ## Step 1 : Firebase Setup
 
