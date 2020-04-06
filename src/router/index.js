@@ -49,6 +49,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "contact" */ '../views/public/ContactUs.vue')
       },
       {
+        path: 'contact/moderator',
+        name: 'contact-moderator',
+        component: () => import(/* webpackChunkName: "contact" */ '../views/messages/MessageModerator.vue')
+      },
+      {
         path: 'profile',
         name: 'profile',
         component: () => import(/* webpackChunkName: "user" */ '../views/user/Profile.vue')

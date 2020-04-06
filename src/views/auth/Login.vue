@@ -169,7 +169,8 @@ export default {
             const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
             await updateUserProfile({
               username: data.user.email,
-              fullname : data.user.displayName ||  data.user.fullname || "-"
+              fullname : data.user.displayName ||  data.user.fullname || "-",
+              last_login_time : new Date()
             }).then((tmp)=>{
               this.$store.dispatch("fetchUser", data.user);
               this.$router.replace({ name: "profile" });
@@ -193,7 +194,8 @@ export default {
             const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
             updateUserProfile({
               username: result.user.email,
-              fullname : result.user.displayName || result.user.fullname || ""
+              fullname : result.user.displayName || result.user.fullname || "",
+              last_login_time : new Date()
             }).then((res)=>{  
               this.$store.dispatch("fetchUser", result.user);
               this.$router.replace({ name: "profile" });
@@ -229,7 +231,8 @@ export default {
               const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
               await updateUserProfile({
                 username: this.form.email,
-                fullname : this.form.name || result.user.displayName || result.user.fullname || ""
+                fullname : this.form.name || result.user.displayName || result.user.fullname || "",
+                last_login_time : new Date()
               })
               this.$store.dispatch("fetchUser", result.user);
               this.$router.replace({ name: "profile" });

@@ -186,7 +186,7 @@ export default {
       );
     }
   },
-  created() {
+  created() {    
     this.fetchDonation();
   },
   methods: {
@@ -244,8 +244,8 @@ export default {
     },   
     fetchUserDetails(u) {
       var db = firebase.firestore();
-      return db.collection("userroles")
-          .where('username', '==', u)
+      return db.collection("user_profiles")
+          .doc(u)
           .get();
      },
     async AssignToVolunteer() {
@@ -260,13 +260,11 @@ export default {
         this.success = "";
         var db = firebase.firestore(); 
         var userdetails = null;
-        await this.fetchUserDetails(this.volunteerEmail).then(snapshot => {
-            snapshot.forEach(doc => {
-              console.log(doc.id, '=>', doc.data());
-              userdetails = doc.data();
-            });
+        await this.fetchUserDetails(this.volunteerEmail).then(doc => {
+            console.log(doc.id, '=>', doc.data());
+            userdetails = doc.data();
           })
-                   
+                             
          if(!userdetails){
           this.error = "Invalid user Id";          
           return;

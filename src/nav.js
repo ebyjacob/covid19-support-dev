@@ -31,6 +31,16 @@ export default {
             icon: 'icon-info'
         },
         {
+            name: 'Contact Info',
+            url: '/contact',
+            icon: 'icon-info'
+        },
+        {
+            name: `Contact Moderator`,
+            url: `/contact/moderator`,
+            icon: `icon-envelope`
+        },
+        {
             name: 'My Account',
             url: '/profile',
             icon: 'icon-info'

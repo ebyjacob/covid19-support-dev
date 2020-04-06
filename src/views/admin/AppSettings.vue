@@ -20,6 +20,21 @@
                         </div>
                     </fieldset>
                   </div>
+                  <!-- <div class="col-sm-4 text-right">Contact us page description</div>
+                  <div class="col-sm-8">
+                      <fieldset role="group" class="b-form-group form-group">
+                        <div role="group" class>
+                        <textarea
+                            id="page_contactus"
+                            type="text"
+                            placeholder="Contact Us Page"
+                            class="form-control"
+                            v-model="app_settings.page_contactus"
+                            rows="10"
+                        ></textarea>
+                        </div>
+                    </fieldset>
+                  </div> -->
                   <div class="col-sm-12 text-center">
                       <button class="btn btn-primary" @click="saveSettings" >Update Settings</button>
                   </div>
@@ -49,7 +64,7 @@ export default {
         async saveSettings(){
             if(this.user && this.user.data && this.user.data.admin){
                 try{
-                let res = await updateApplicationSettings(this.app_settings, this.user.data.email);
+                    let res = await updateApplicationSettings(this.app_settings, this.user.data.email);
                     this.error = "";
                     this.status = "submitted"
                 } catch(ex){

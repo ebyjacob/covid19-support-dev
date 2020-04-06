@@ -14,7 +14,8 @@
                         <div
                           v-if="status==='submitted'"
                           class="alert alert-success"
-                        >Thank you !!!. You made a difference. Your offer submitted successfully.</div>
+                        >Thank you !!!. You made a difference. Your offer submitted successfully.
+                        Your Reference number is {{refId}}</div>
                       </div>
                       <h4 class="mb-4 text-primary">Donation Promise Register</h4>
                       <b-form-group label="Category of the items" label-for="basicSelect" :label-cols="3">
@@ -302,8 +303,12 @@ export default {
         donation_status: "new"
       },
       error: null,
-      status: "new"
+      status: "new",
+      refId: null
     };
+  },
+  created() {    
+    this.prepopulate();
   },
   computed: {
     ...mapGetters({
@@ -312,6 +317,12 @@ export default {
   },
   methods: {
 
+    prepopulate(){
+      if(this.user && this.user.data){
+          this.form.requestor.name = this.user.data.displayName;      
+          this.form.requestor.email = this.user.data.email;
+      }      
+    },
     resetForm(){
       this.form.donation.category = "General";
       this.form.donation.title = "";
@@ -355,10 +366,12 @@ export default {
         .then(docRef => {
           this.status = "submitted";
           this.error = null;
+          this.refId = docRef.id;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
-          }, 5 * 1000);
+            this.$router.push({ path: '/welcome'})
+          }, 10 * 1000);
         })
         .catch(error => {
           this.error = error;

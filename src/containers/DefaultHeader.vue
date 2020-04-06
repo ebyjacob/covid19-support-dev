@@ -44,6 +44,7 @@
       >Groups</b-nav-item> -->
       <!-- <b-nav-item class="py-2 px-3" to="/about">About</b-nav-item>-->
       <b-nav-item class="py-2 px-3" to="/contact">Contact us</b-nav-item> 
+      <b-nav-item class="py-2 px-3" to="/contact/moderator" title="Contact Moderator"><i class="fa fa-envelope"></i></b-nav-item> 
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto" style="margin-right:20px;">
       <template v-if="user.loggedIn">
