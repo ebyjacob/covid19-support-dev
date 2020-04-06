@@ -11,12 +11,10 @@
                 <div class="row">
                   <div class="col-sm-4">Filter By Status</div>
                   <div class="col-sm-8">
-                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'active' }}">Open</router-link></span>
+                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'all' }}">All</router-link></span>
                       <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'new' }}">New</router-link></span>
-                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'pickedup' }}">Picked Up</router-link></span>
-                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'waiting-for-pickup' }}">Waiting for pickup</router-link></span>
-                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'closed' }}">Closed</router-link></span>
-                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'completed' }}">Completed</router-link></span>
+                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'assigned' }}">Assigned</router-link></span>
+                      <span class="mx-2"><router-link :to="{name:'donations-bystatus', params: { status : 'fulfilled' }}">Fulfilled</router-link></span>                     
                   </div>
                 </div>
               </div>
@@ -96,15 +94,15 @@ export default {
       return db
         .collection("donations")
         .where("donation_status", "==", s)
-        .orderBy("timestamp", "desc")
+        //.orderBy("timestamp", "desc")
         .limit(50)
         .get();
     },
     fetchDonations() {
       const filter_status = this.$route.params.status;
       let _donations = [];
-      if (!filter_status || filter_status === "active" || filter_status === "open") {
-        this.getActiveDonations().then(querySnapshot => {
+      if (!filter_status || filter_status === "all") {
+        this.getAllDonations().then(querySnapshot => {
           querySnapshot.forEach(doc => {
             _donations.push({
               id: doc.id,
