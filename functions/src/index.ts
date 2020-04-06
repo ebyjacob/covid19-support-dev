@@ -69,6 +69,25 @@ export const updateUserProfile = functions.https.onCall((data,context)=>{
     })
 });
 
+export const updateUserProfileAll = functions.https.onCall((data,context)=>{
+    return new Promise((resolve,reject)=>{
+        // need to verify user
+        let newProfile :any = {};
+        newProfile.firstname = data && data.firstname ? data.firstname : "";
+        newProfile.lastname = data && data.lastname ? data.lastname : "";
+        newProfile.fullname = data && data.fullname ? data.fullname : "";
+        newProfile.isavailablevolunteer = data.isavailablevolunteer;
+        newProfile.isregisteredvolunteer = true;
+        
+        var userRef = admin.firestore().collection('user_profiles').doc(data.username.toLowerCase());
+        userRef.set(newProfile,{merge: true}).then((res)=>{
+            resolve(res);
+        }).catch((ex)=>{
+            reject(ex);
+        })
+    })
+});
+
 export const registerUserAsVolunteer = functions.https.onCall((data,context)=>{
     return new Promise((resolve,reject)=>{
         // validate user
