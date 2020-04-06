@@ -172,3 +172,16 @@ export const updateApplicationSettings = (appSettings, user_email) => {
         })
     })
 };
+export const updateUserRoles = (email,typeofrole) => {
+    return new Promise((resolve,reject)=>{
+        const addRole = firebase.functions().httpsCallable("assignRole");
+        addRole({ email, typeofrole})
+            .then((res)=>{
+                resolve(res);
+            })
+            .catch((err)=>{ 
+                reject(err);
+            })
+
+    })
+}
