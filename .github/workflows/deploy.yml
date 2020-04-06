@@ -19,4 +19,5 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       run: |
         npm install -g yarn firebase-tools;
+        yarn setup;
         yarn deploy-ci;
