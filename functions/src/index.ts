@@ -18,7 +18,7 @@ export const markUserAsAdmin = (email:string) => {
     return new Promise((resolve,reject)=>{
         let newProfile :any = {};
         newProfile.isadmin = true;
-        var userRef = admin.firestore().collection('user_profiles').doc(email);
+        var userRef = admin.firestore().collection('user_profiles').doc(email.toLowerCase());
         userRef.set(newProfile,{merge: true}).then((res)=>{
             resolve();
         }).catch((ex)=>{
@@ -31,7 +31,7 @@ export const markUserAsModerator = (email:string) => {
     return new Promise((resolve,reject)=>{
         let newProfile :any = {};
         newProfile.ismoderator = true;
-        var userRef = admin.firestore().collection('user_profiles').doc(email);
+        var userRef = admin.firestore().collection('user_profiles').doc(email.toLowerCase());
         userRef.set(newProfile,{merge: true}).then((res)=>{
             resolve();
         }).catch((ex)=>{
@@ -44,7 +44,7 @@ export const markUserAsVerifiedVolunteer = (email:string) => {
     return new Promise((resolve,reject)=>{
         let newProfile :any = {};
         newProfile.isverifiedvolunteer = true;
-        var userRef = admin.firestore().collection('user_profiles').doc(email);
+        var userRef = admin.firestore().collection('user_profiles').doc(email.toLowerCase());
         userRef.set(newProfile,{merge: true}).then((res)=>{
             resolve();
         }).catch((ex)=>{
@@ -95,7 +95,7 @@ export const registerUserAsVolunteer = functions.https.onCall((data,context)=>{
         let newProfile :any = {};
         newProfile.isregisteredvolunteer = true;
         newProfile.isavailablevolunteer = data.isavailablevolunteer;
-        var userRef = admin.firestore().collection('user_profiles').doc(data.username);
+        var userRef = admin.firestore().collection('user_profiles').doc(data.username.toLowerCase());
         userRef.set(newProfile,{merge: true}).then((res)=>{
             resolve({
                 msg: "User Registered as volunteer"
