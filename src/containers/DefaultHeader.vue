@@ -22,6 +22,9 @@
       <b-nav-item class="py-2 px-3" to="/donate">
         <b>Donate</b>
       </b-nav-item>
+      <b-nav-item class="py-2 px-3" to="/track" v-if="!user || !(user && user.loggedIn)">
+        <b>Track Request</b>
+      </b-nav-item>
       <b-nav-item
         class="py-2 px-3"
         to="/support-requests"

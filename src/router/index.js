@@ -84,6 +84,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "support" */ '../views/help/SupportRequest.vue')
       },
       {
+        path: 'track',
+        name: 'track-request',
+        component: () => import(/* webpackChunkName: "track" */ '../views/help/TrackRequest.vue')
+      },
+      {
         path: 'volunteers',
         name: 'volunteers',
         component: () => import(/* webpackChunkName: "volunteers" */ '../views/help/Volunteers.vue')
