@@ -572,7 +572,11 @@ export default {
   },
   methods: {
     hideModal() {
-              this.open = false
+            this.open = false
+            if(this.user.loggedIn)
+            this.$router.replace({ name: "profile" });
+            else
+            this.$router.replace({ name: "welcome" });
     },
     submitRequest() {
       this.submitted = true;
