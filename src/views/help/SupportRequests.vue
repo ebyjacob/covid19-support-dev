@@ -26,7 +26,7 @@
         <div class="row">
           <div class="col-sm-12" v-if="supportrequests">
             <div class="card">
-              <div class="card-header">Support Requests</div>
+              <div class="card-header">Support Requests<button type="button" class="btn btn-primary float-right ml-1" @click="nextPage(filterStatus)">&gt;</button><button type="button" class="btn btn-primary float-right" @click="prevPage(filterStatus)">&lt;&lt;</button></div>
               <div class="card-body">
                 <div v-for="supportrequest in supportrequests" :key="supportrequest.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
@@ -68,7 +68,11 @@ var db = firebase.firestore();
 export default {
   data() {
     return {
-      supportrequests: null
+      supportrequests: null,
+      pageSize: 5,
+      firstSupportRequest: null,
+      lastSupportRequest: null,
+      filterStatus: []
     };
   },
   watch: {
@@ -87,9 +91,9 @@ export default {
     getActiveJobs() {
       return db
         .collection("support_requests")
-        .where("request.status", "in", ["new", "pickedup", "waiting-for-pickup"])
+        .where("request.status", "in", this.filterStatus)
         .orderBy("timestamp", "desc")
-        .limit(50)
+        .limit(this.pageSize)
         .get();
     },
     getJobsByStatus(s) {
@@ -97,31 +101,71 @@ export default {
         .collection("support_requests")
         .where("request.status", "==", s)
         .orderBy("timestamp", "desc")
-        .limit(50)
+        .limit(this.pageSize)
         .get();
     },
-    fetchJobs() {
-      const filter_status = this.$route.params.status;
-      let support_requests = [];
-      if (!filter_status || filter_status === "active" || filter_status === "open") {
-        this.getActiveJobs().then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            support_requests.push({
+    nextPage(filterStatus) {
+      return db
+        .collection("support_requests")
+        .where("request.status", "in", filterStatus)
+        .orderBy("timestamp", "desc")
+        .startAfter(this.lastSupportRequest)
+        .limit(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+          this.supportrequests = this.getSupportRequests(querySnapshot);
+        });  
+   },
+   prevPage(filterStatus) {
+    return db
+        .collection("support_requests")
+        .where("request.status", "in", filterStatus)
+        .orderBy("timestamp", "desc")
+        .endBefore(this.firstSupportRequest)
+        .limit(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+          this.supportrequests = this.getSupportRequests(querySnapshot);
+        });        
+  },
+   lastPage(filterStatus) {
+    return db
+        .collection("support_requests")
+        .where("request.status", "in", filterStatus)
+        .orderBy("timestamp", "asc")
+        .limit(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+          this.supportrequests = this.getSupportRequests(querySnapshot);
+        });
+  },
+  getSupportRequests(querySnapshot){
+    let support_requests = [],lastDoc=null,firstDoc=null;
+    this.lastSupportRequest = querySnapshot.docs[querySnapshot.docs.length - 1];
+    this.firstSupportRequest = querySnapshot.docs[0];
+
+    querySnapshot.forEach(doc => {
+        support_requests.push({
               id: doc.id,
               data: doc.data()
-            });
-          });
-          this.supportrequests = support_requests;
+        });
+    });
+
+    return support_requests;
+
+  },
+  fetchJobs() {
+      const filter_status = this.$route.params.status;
+      if (!filter_status || filter_status === "active" || filter_status === "open") {
+        this.filterStatus=["new", "pickedup", "waiting-for-pickup"];
+        this.getActiveJobs().then(querySnapshot => {
+          this.supportrequests = this.getSupportRequests(querySnapshot);
         });
       } else {
+        if (filter_status)
+        this.filterStatus.push(filter_status);
         this.getJobsByStatus(filter_status).then(querySnapshot => { 
-          querySnapshot.forEach(doc => {
-            support_requests.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.supportrequests = support_requests;
+          this.supportrequests = this.getSupportRequests(querySnapshot);
         });
       }
     }
@@ -136,3 +180,14 @@ export default {
   }
 };
 </script>
+
+<style>
+
+.divider{
+    margin-right:0.1rem !important;
+    margin-left:0.1rem !important;
+    height:auto;
+    display:inline-block;
+}
+
+</style>
