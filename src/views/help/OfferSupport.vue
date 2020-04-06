@@ -822,7 +822,7 @@ updatevolprofile() {
     isavailablevolunteer : this.form.accountstatus, 
     firstname : this.form.personal.firstname,
     lastname:this.form.personal.lastname,
-    isadult:this.from.isadult
+    isadult:this.form.isadult
   })
     .then(msg => {
       if (this.form) {
