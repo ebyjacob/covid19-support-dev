@@ -187,3 +187,12 @@ export const assignRole = functions.https.onCall((data,context)=>{
         }
     }
 });
+
+export const sendSupportRequestNotification = functions.firestore.document('support_requests/{support_request}')
+.onCreate((snap,ctx)=>{
+    const data :any=snap.data();
+    console.log(data.id);
+    console.log(data);
+    console.log(process.env.ADMIN_EMAIL_USERNAME);
+    console.log(functions.config().ADMIN_EMAIL_USERNAME);
+});
