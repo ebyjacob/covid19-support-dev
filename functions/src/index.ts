@@ -3,11 +3,7 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
-<<<<<<< HEAD
-const superadmins = [ 'eby7jacob@gmail.com' , 'masteruser@covid19-support-dev-eby.web.app' ];
-=======
-const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app', 'superadmin@covid19-support-dev.web.app' ];
->>>>>>> 551600e56f4eaa5296127a8b95188db8d0113ee7
+const superadmins = [ 'eby7jacob@gmail.com' , 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app', 'superadmin@covid19-support-dev.web.app' ];
 
 const doesAuthTokenExist = (context:any) => context && context.auth && context.auth.token;
 const isSuperAdmin = (email:string) => superadmins.indexOf(email.toLowerCase()) > -1;
@@ -113,7 +109,7 @@ export const assignRole = functions.https.onCall((data,context)=>{
     if(data && data.email && data.typeofrole){
         if(data.typeofrole ===`admin`){
             return admin.auth().getUserByEmail(data.email).then(user =>{
-                if(canAssignAdminRole(data,context)){
+                if(s(data,context)){
                     let adminClaims = {
                         admin:true,
                         moderator: user && user.customClaims && user.customClaims.moderator,
