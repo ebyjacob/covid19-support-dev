@@ -6,8 +6,7 @@
           <div class="col-sm-12">
             <div class="card mt-4">
               <div class="card-body" v-if="donation && donation.donation">
-                <h5 class="text-primary">Donation Promise For {{donation.donation.title}}</h5>
-                <!-- <h4 class="text-primary">{{donation.donation.title}}</h4> -->
+                <h5 class="text-primary">Donation Promise For {{donation.donation.title}}</h5>                
                 <div class="row my-4">
                   <div class="col-sm-4">Status</div>
                   <div class="col-sm-8">{{donation.donation_status ||'New / UnAssigned'}}</div>
@@ -47,6 +46,8 @@
         <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.moderator)">
           <div class="card">
             <div class="card-body">
+            <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div v-if="success" class="alert alert-success">{{success}}</div>
              <h5 class="text-primary">Assign to Volunteer</h5>
               <div class="row">
                 <div class="col-sm-8">
@@ -150,7 +151,10 @@ export default {
   data() {
     return {
       newcomment: "",
-      donation: null
+      error: "",
+      success: "",
+      donation: null,
+      volunteerEmail: "",      
     };
   },
   computed: {
@@ -206,7 +210,7 @@ export default {
             console.log(err);
           });
       }
-    },
+    },    
     submitComment() {
       if (
         this.user &&
@@ -237,8 +241,14 @@ export default {
             console.log(err);
           });
       }
-    },
-    AssignToVolunteer() {
+    },   
+    fetchUserDetails(u) {
+      var db = firebase.firestore();
+      return db.collection("userroles")
+          .where('username', '==', u)
+          .get();
+     },
+    async AssignToVolunteer() {
       if (
         this.user &&
         this.user.data &&
@@ -246,7 +256,25 @@ export default {
         this.$route.params.donationid &&
         this.volunteerEmail
       ) {
-        var db = firebase.firestore();
+        this.error = "";
+        this.success = "";
+        var db = firebase.firestore(); 
+        var userdetails = null;
+        await this.fetchUserDetails(this.volunteerEmail).then(snapshot => {
+            snapshot.forEach(doc => {
+              console.log(doc.id, '=>', doc.data());
+              userdetails = doc.data();
+            });
+          })
+                   
+         if(!userdetails){
+          this.error = "Invalid user Id";          
+          return;
+        }
+        if(!userdetails.isverifiedvolunteer && !userdetails.ismoderator){
+          this.error = "User is not a Verified Volunteer or Moderator";          
+          return;
+        }
         var docRef = db
           .collection("donations")
           .doc(this.$route.params.donationid);
@@ -272,6 +300,7 @@ export default {
           .catch(err => {
             console.log(err);
           });
+          this.success = "Successfully Assigned!"
       }
     },    
     markAsFulfilled() {
@@ -315,12 +344,13 @@ export default {
         this.user.data.email &&
         this.$route.params.donationid &&
         this.user.data.moderator
-      ) {        
+      ) { 
+        if(confirm('Are you sure to delete this record?  It will be deleted permanently.')) {
         var db = firebase.firestore();
         var docRef = db
           .collection("donations")
           .doc(this.$route.params.donationid);
-        docRef
+          docRef
           .delete()
           .then(result => {
             this.$router.replace({
@@ -330,6 +360,7 @@ export default {
           .catch(err => {
             console.log(err);
           });
+        }               
       }
     }
   }
