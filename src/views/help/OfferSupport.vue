@@ -160,6 +160,7 @@
                         <label for="email">Email</label>
                         <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"
                           :class="{ 'is-invalid': submitted && $v.form.personal.email.$error }"
+                          :readonly="user.loggedIn"  
                         /> 
                         <div v-if="submitted && $v.form.personal.email.$error" class="invalid-feedback">
                         <span v-if="!$v.form.personal.email.required">Email is required</span>
@@ -185,11 +186,7 @@
                           placeholder="Password"
                           class="form-control"
 						              v-model="password"
-                         :class="{ 'is-invalid': submitted && $v.password.$error }"
                         /> 
-                        <div v-if="submitted && $v.password.$error" class="invalid-feedback">
-                          <span v-if="!$v.password.required">Password is required</span>
-                        </div>
                       </div>                   
                     </fieldset>
                   </div>
@@ -365,7 +362,7 @@
 			      <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-						<input type="checkbox" v-model="form.accountstatus" id="accountstatus" value="true" unchecked-value="false" checked>
+                        <input type="checkbox" v-model="form.accountstatus" id="accountstatus" value="true" unchecked-value="false" checked>
                       </div>
                     </fieldset>
                   </div>
@@ -419,7 +416,7 @@
                       </div>
                     </fieldset>
                   </div>
-				  <div class="col-sm-6">
+				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                       </div>
@@ -435,7 +432,7 @@
                       </div>
                     </fieldset>
                   </div>
-				  <div class="col-sm-6">
+				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                        <ul v-for="cat in categories"><input type="checkbox"  v-bind:value="cat.data.desc" v-model="form.availability.support" :id="cat.data.desc" >{{cat.data.desc}}</ul>
@@ -469,7 +466,7 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary"  @click="submitRequest"  v-if="!submitted" >Agree & Update Request</button>
+                      <button  class="btn btn-primary"  @click="submitRequest"  v-if="!isbutton" >Agree & Update Request</button>
 					            <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
@@ -486,7 +483,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-8">
-					<div v-if="error" class="alert alert-danger">{{error}}</div>
+					          <div v-if="error" class="alert alert-danger">{{error}}</div>
                     <div
                       v-if="status==='submitted'"
                       class="alert alert-success"
@@ -497,7 +494,7 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary" type=“button”  @click="submitRequest" v-if="!isbutton" >Agree & Submit Request</button>
+                      <button  class="btn btn-primary"  @click="submitRequest" v-if="!isbutton" >Agree & Submit Request</button>
                       <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
@@ -512,6 +509,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import firebase from "firebase";
@@ -568,6 +566,7 @@ export default {
       vol: null,
       categories : null,
       useralreadyexist: false,
+      userrolefound: false,
       status: "new"
     };
   },
@@ -596,36 +595,20 @@ export default {
     })
   },
   created() {
-    this.fetchUser();
+    this.fetchVolunteer();
     this.fetchCategories();
   },
   methods: {
-     submitRequest() {
+
+    submitRequest() {
       this.submitted = "true";
       this.isbutton=true;
-
-      this.$v.$touch()
+     this.$v.$touch()
       if (this.$v.$invalid) {
             this.submitted = "false";
             this.isbutton=false;
-            //alert("B"+this.isbutton);
             return;
         }
-        
-        
-     // alert("2"+ this.$v.$touch());
-      /* if its still pending or an error is returned do not submit
-      
-      
-        if (this.$v.$invalid) {
-        alert("ERROR");
-            return;
-        }
-      if (this.$v.$pending || this.$v.$error) {
-	  alert("ERROR");
-		return;
-	  }*/
-      
       this.register();
       if (this.user.loggedIn && this.user.data) {
         this.form.user_displayName =  this.user.data.displayName || this.user.data.email;
@@ -638,13 +621,14 @@ export default {
       this.form.upvotes = [];
       this.form.downvotes = [];
       this.form.timestamp = new Date();
-     
-      if (!this.useralreadyexist) {
+     //alert("Submit"+this.useralreadyexist)
+    if (!this.useralreadyexist) {
       var db = firebase.firestore();
       db.collection("can_support")
-		.doc(this.form.user_email)
+		  .doc(this.form.user_email)
         .set(this.form)
         .then(docRef => {
+          //alert("can support 1");
           this.status = "submitted";
           this.error = null;
           this.submitted = "false";
@@ -653,16 +637,18 @@ export default {
             this.status = "new";
             this.error = null;
           }, 5 * 1000);
+          this.update();
           this.redirect();
         })
         .catch(error => {
+          console.error(error);
           this.error = error;
           this.status = "error";
           this.isbutton=false;
         });
-        }
+      }
     },
-	fetchUser() {
+	fetchVolunteer() {
 		if( this.user != null) {
 			if (this.user.loggedIn && this.user.data) {		
 				this.email = this.user.data.email;
@@ -709,7 +695,6 @@ export default {
 	          });
 			});
 			this.categories = categories_response;
-			alert("categories"+categories);
 		  })
 		  .catch(err => {
       console.log('Error getting documents', err);
@@ -720,51 +705,53 @@ export default {
 	},
 	redirect() {
 		if (this.user.loggedIn && this.user.data) {		
-			//this.$router.push({ path: '/profile' });
 			setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
-		} else {
-			//alert("ELSE");
-			this.login();
-			//this.$router.push({ path: '/profile' });
-			setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
+		} else if (!this.useralreadyexist) { 
+      setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
 		}		
-		/* else{
-			this.$router.push({ path: '/profile' });
-		}  */
-		
-		
 	},
-	register() {
-	this.useralreadyexist = false;
-	let statuscheck = this.user.loggedIn && this.user.data;
-	//alert("Registeration status"+statuscheck);
-	if(!statuscheck) {
-	
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.personal.email, this.password)
-        .then(result => {
-          this.status = "submitted";
-          this.error = null;
-          result.user
-            .updateProfile({
-              displayName: this.form.personal.firstname + " " + this.form.personal.lastname
-            })
-            .then(msg => {
-              this.$store.dispatch("fetchUser", result.user);
-              //this.$router.replace({ name: "profile" });
-              this.useralreadyexist = false;
-            });
-        })
-        .catch(err => {
-          this.error = err.message;
-          this.status = "error";
-          this.useralreadyexist = true;
-          this.submitted = false;
-          this.isbutton=false;
-        });
-        }
-    },
+    register() {
+          this.useralreadyexist = false;
+          let statuscheck = this.user.loggedIn && this.user.data;
+          if(!statuscheck) {
+              firebase
+                .auth()
+                .createUserWithEmailAndPassword(this.form.personal.email, this.password)
+                .then(result => {
+                  this.status = "submitted";
+                  this.error = null;
+                  result.user
+                    .updateProfile({
+                      displayName: this.form.personal.firstname || "User"
+                    })
+                    .then(async msg => {
+                      const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
+                      await updateUserProfile({
+                        username: this.form.personal.email,
+                        fullname : this.form.personal.firstname || "",
+                        isavailablevolunteer : this.form.accountstatus, 
+                        firstname : this.form.personal.firstname,
+                        lastname:this.form.personal.lastname
+                      })
+                    this.$store.dispatch("fetchUser", result.user);
+                    //this.$router.replace({ name: "profile" });
+                    }).catch((ex)=>{
+                      console.error(ex);
+                      this.useralreadyexist = true;
+                      this.submitted = false;
+                      this.isbutton=false;
+                    });
+                })
+                .catch(err => {
+                  this.error = err.message;
+                  this.status = "error";
+                  this.useralreadyexist = true;
+                  this.submitted = false;
+                  this.isbutton=false;
+                });
+          }
+      },
+    
     togglePassword() {
       var x = document.getElementById("password");
       if (x.type === "password") {
@@ -806,10 +793,8 @@ export default {
       	auth
         .then(data => {
           if (data && data.user) {
-          	//alert(data.user);
             this.$store.dispatch("fetchUser", data.user);
             //this.$router.replace({ name: "profile" });
-            //alert("push");
             this.$router.push({ path: '/profile' });
           } else {
          	 //alert("error");
@@ -817,12 +802,44 @@ export default {
           }
         })
         .catch(err => {
-          alert("push");
           this.error = err.message;
         });
-    }
+    },
+update() {
+
+ const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
+    updateUserProfile({
+    username: this.form.personal.email,
+    fullname : this.form.personal.firstname || "",
+    isavailablevolunteer : this.form.accountstatus, 
+    firstname : this.form.personal.firstname,
+    lastname:this.form.personal.lastname
+  })
+    .then(msg => {
+      if (this.form) {
+        this.status = "submitted";
+        this.error = null;
+        setTimeout(() => {
+          this.status = "new";
+          this.error = null;
+        }, 5 * 1000);
+      } else {
+        this.status = "error";
+        this.error = "error";
+        setTimeout(() => {
+          this.status = "new";
+          this.error = null;
+        }, 5 * 1000);
+      }
+      //this.newadminemail = "";
+    })
+    .catch(() => {
+      //this.newadminemail = "";
+      
+    });
 }
- 
+
+  }
 };
 
 </script>
