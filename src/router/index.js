@@ -26,12 +26,12 @@ const routes = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "auth" */ '../views/Login.vue')
+        component: () => import(/* webpackChunkName: "auth" */ '../views/auth/Login.vue')
       },
       {
         path: 'signout',
         name: 'signout',
-        component: () => import(/* webpackChunkName: "auth" */ '../views/Logout.vue')
+        component: () => import(/* webpackChunkName: "auth" */ '../views/auth/Logout.vue')
       },
       {
         path: 'register',
@@ -41,12 +41,12 @@ const routes = [
       {
         path: 'about',
         name: 'about',
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/public/About.vue')
       },
       {
         path: 'contact',
         name: 'contact',
-        component: () => import(/* webpackChunkName: "contact" */ '../views/ContactUs.vue')
+        component: () => import(/* webpackChunkName: "contact" */ '../views/public/ContactUs.vue')
       },
       {
         path: 'profile',
@@ -141,7 +141,7 @@ const routes = [
       {
         path: 'admin/messages',
         name: 'messageslist',
-        component: () => import(/* webpackChunkName: "admin" */ '../views/contactus/Messages.vue')
+        component: () => import(/* webpackChunkName: "admin" */ '../views/admin/Messages.vue')
       },
       {
         path: 'sorry',

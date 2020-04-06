@@ -30,6 +30,7 @@
                         type="text"
                         class="form-control mb-3"
                         v-model="form.donation.title"
+                        required
                         placeholder="What you would like to donate? ( Example: N95 masks * 100 )"
                       />
                       <fieldset role="group" class="b-form-group form-group">
@@ -38,6 +39,7 @@
                             id="donationdetails"
                             v-model="form.donation.message"
                             type="text"
+                            required
                             placeholder="Description of what you are donating, how do you want users to collect & Any other comments"
                             class="form-control"
                           />
@@ -62,6 +64,7 @@
                           <input
                             id="fullname"
                             v-model="form.contact.name"
+                            required
                             type="text"
                             placeholder="Full name of the person donating"
                             class="form-control"
@@ -110,6 +113,7 @@
                           <input
                             id="address"
                             v-model="form.contact.address"
+                            required
                             type="text"
                             placeholder="Address"
                             class="form-control"
@@ -126,6 +130,7 @@
                           <input
                             id="phonenumber"
                             v-model="form.contact.phone"
+                            required
                             type="text"
                             placeholder="Phone number"
                             class="form-control"
@@ -143,6 +148,7 @@
                             placeholder="Email"
                             class="form-control"
                             v-model="form.contact.email"
+                            required
                           />
                         </div>
                       </fieldset>
@@ -305,6 +311,20 @@ export default {
     })
   },
   methods: {
+
+    resetForm(){
+      this.form.donation.category = "General";
+      this.form.donation.title = "";
+      this.form.donation.message = "";
+      this.form.contact.name = "";
+      this.form.contact.address = "";
+      this.form.contact.phone = "";
+      this.form.contact.email = "";
+      this.form.requestor.name = "";
+      this.form.requestor.address = "";
+      this.form.requestor.phone = "";
+      this.form.requestor.email = "";
+    },
     submitDonation() {
       if (this.user.loggedIn && this.user.data) {
         this.form.user_displayName = this.user.data.displayName || this.user.data.email;
@@ -314,26 +334,39 @@ export default {
         this.form.user_email = "";
       }
       this.form.timestamp = new Date();
-      var db = firebase.firestore();
-      if (this.form.donation.title && this.form.donation.message) {
-        db.collection("donations")
-          .add(this.form)
-          .then(docRef => {
-            this.status = "submitted";
-            this.error = null;
-            setTimeout(() => {
-              this.status = "new";
-              this.error = null;
-            }, 5 * 1000);
-          })
-          .catch(error => {
-            this.error = error;
-            this.status = "error";
-          });
-      } else {
+      
+      if (!this.form.donation.title || !this.form.donation.message) {
         this.error = "Enter title and description";
         this.status = "error";
-      }
+        window.scrollTo(0,0);
+        return;
+      } 
+      if (!this.form.contact.name || !this.form.contact.address || 
+          !this.form.contact.phone || !this.form.contact.email) {
+        this.error = "Enter all donor details";
+        this.status = "error";
+        window.scrollTo(0,0);
+        return;
+      } 
+
+      var db = firebase.firestore();      
+      db.collection("donations")
+        .add(this.form)
+        .then(docRef => {
+          this.status = "submitted";
+          this.error = null;
+          setTimeout(() => {
+            this.status = "new";
+            this.error = null;
+          }, 5 * 1000);
+        })
+        .catch(error => {
+          this.error = error;
+          this.status = "error";
+        });
+      
+      this.resetForm();
+      window.scrollTo(0,0);
     }
   }
 };
