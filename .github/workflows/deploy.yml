@@ -24,4 +24,5 @@ jobs:
       run: |
         npm install -g yarn firebase-tools;
         yarn setup;
-        yarn deploy-ci;
+        yarn build;
+        firebase deploy --token $FIREBASE_TOKEN;
