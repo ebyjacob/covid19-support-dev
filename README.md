@@ -1,8 +1,8 @@
-# covid19-support-dev
+# covid19-support
 
 ## Step 1 : Firebase Setup
 
-* Firebase account/Google Account
+* Create a Firebase account
 * Create a project in firebase with default setup.
 * Enable following authentication mechanism in your firebase project
     * By navigating firebase --> Develop --> Authentication --> Signin methods. And follow the steps there.
@@ -22,7 +22,7 @@
 
 Once installed Node JS, Execute the following commands 
 
-    npm install -g yarn firebase
+    npm install -g yarn firebase-tools
 
 The above command will deploy dependent packages globally.
 
@@ -34,9 +34,9 @@ The above command will deploy dependent packages globally.
 
 ## Step 4 : Install Dependencies and start developing
 
-* Run the following command to install Dependencies
+* Run the following command to setup Dependencies
 
-        yarn 
+        yarn setup
 
 *  Then, Run the following command to start the development
 

@@ -85,13 +85,11 @@
 import firebase from "firebase";
 import { mapGetters } from "vuex";
 import { Header as AppHeader, SidebarToggler, AsideToggler } from "@coreui/vue";
-import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
 export default {
   name: "DefaultHeader",
   components: {
     AsideToggler,
     AppHeader,
-    DefaultHeaderDropdownAccnt,
     SidebarToggler
   },
   computed: {

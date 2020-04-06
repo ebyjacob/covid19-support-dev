@@ -25,9 +25,14 @@
                           type="text"
                           placeholder="First name"
                           class="form-control"
-						  v-model="form.personal.firstname"
-                        />
+						              v-model="form.personal.firstname"
+                           :class="{ 'is-invalid': submitted && $v.form.personal.firstname.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.firstname.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.firstname.required">First Name is required</span>
+                        </div>
                       </div>
+                      
                     </fieldset>
                   </div>
 				  <div class="col-sm-6">
@@ -39,8 +44,12 @@
                           type="text"
                           placeholder="Last name"
                           class="form-control"
-						  v-model="form.personal.lastname"
-                        />
+						              v-model="form.personal.lastname"
+                        :class="{ 'is-invalid': submitted && $v.form.personal.lastname.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.lastname.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.lastname.required">Last Name is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -57,7 +66,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.idtype"
+						              v-model="form.personal.idtype"
                         />
                       </div>
                     </fieldset>
@@ -71,7 +80,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.idproof"
+						              v-model="form.personal.idproof"
                         />
                       </div>
                     </fieldset>
@@ -87,7 +96,7 @@
                           type="text"
                           placeholder="Eg: Passprot, Driving License, BRP etc.."
                           class="form-control"
-						  v-model="form.personal.sidtype"
+						              v-model="form.personal.sidtype"
                         />
                       </div>
                     </fieldset>
@@ -101,7 +110,7 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						  v-model="form.personal.sidproof"
+						              v-model="form.personal.sidproof"
                         />
                       </div>
                     </fieldset>
@@ -118,8 +127,12 @@
                           type="text"
                           placeholder="Mobile number"
                           class="form-control"
-						  v-model="form.personal.mobile"
-                        />
+						            v-model="form.personal.mobile"
+                       :class="{ 'is-invalid': submitted && $v.form.personal.mobile.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.personal.mobile.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.personal.mobile.required">Mobile is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -132,7 +145,7 @@
                           type="text"
                           placeholder="Alternate Contact number "
                           class="form-control"
-						  v-model="form.personal.altmobile"
+						              v-model="form.personal.altmobile"
                         />
                       </div>
                     </fieldset>
@@ -145,7 +158,13 @@
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                         <label for="email">Email</label>
-                        <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"/>
+                        <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"
+                          :class="{ 'is-invalid': submitted && $v.form.personal.email.$error }"
+                          :readonly="user.loggedIn"  
+                        /> 
+                        <div v-if="submitted && $v.form.personal.email.$error" class="invalid-feedback">
+                        <span v-if="!$v.form.personal.email.required">Email is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -166,7 +185,7 @@
                           type="password"
                           placeholder="Password"
                           class="form-control"
-						  v-model="password"
+						              v-model="password"
                         /> 
                       </div>                   
                     </fieldset>
@@ -217,8 +236,12 @@
                           type="text"
                           placeholder="House Number of the person offering support"
                           class="form-control"
-						  v-model="form.address.housenumber"
-                        />
+						            v-model="form.address.housenumber"
+                        :class="{ 'is-invalid': submitted && $v.form.address.housenumber.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.housenumber.$error" class="invalid-feedback">
+                              <span v-if="!$v.form.address.housenumber.required">House Number is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -231,7 +254,7 @@
                           type="text"
                           placeholder="Build Name of the person offering support"
                           class="form-control"
-						  v-model="form.address.buildname"
+						              v-model="form.address.buildname"
                         />
                       </div>
                     </fieldset>
@@ -249,8 +272,12 @@
                           type="text"
                           placeholder="Address Line1"
                           class="form-control"
-						  v-model="form.address.address1"
-                        />
+						              v-model="form.address.address1"
+                        :class="{ 'is-invalid': submitted && $v.form.address.address1.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.address1.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.address1.required">Address Line1 is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -280,8 +307,12 @@
                           type="text"
                           placeholder="Area"
                           class="form-control"
-						  v-model="form.address.area"
-                        />
+						              v-model="form.address.area"
+                         :class="{ 'is-invalid': submitted && $v.form.address.area.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.area.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.area.required">Area/Locality is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -294,8 +325,12 @@
                           type="text"
                           placeholder="Postcode"
                           class="form-control"
-						  v-model="form.address.postcode"
-                        />
+						            v-model="form.address.postcode"
+                       :class="{ 'is-invalid': submitted && $v.form.address.postcode.$error }"
+                        /> 
+                        <div v-if="submitted && $v.form.address.postcode.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.address.postcode.required">Postcode is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -327,7 +362,7 @@
 			      <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-						<input type="checkbox" v-model="form.accountstatus" id="accountstatus" value="true" unchecked-value="false" checked>
+                        <input type="checkbox" v-model="form.accountstatus" id="accountstatus" value="true" unchecked-value="false" checked>
                       </div>
                     </fieldset>
                   </div>
@@ -381,7 +416,7 @@
                       </div>
                     </fieldset>
                   </div>
-				  <div class="col-sm-6">
+				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                       </div>
@@ -397,7 +432,7 @@
                       </div>
                     </fieldset>
                   </div>
-				  <div class="col-sm-6">
+				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                        <ul v-for="cat in categories"><input type="checkbox"  v-bind:value="cat.data.desc" v-model="form.availability.support" :id="cat.data.desc" >{{cat.data.desc}}</ul>
@@ -415,7 +450,6 @@
         </div>
 		
 		 <div class="row" v-if="user.loggedIn">
-      	 
           <div class="col-sm-12">
             <div class="card">
               <div class="card-body">
@@ -432,7 +466,8 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary"  @click="submitRequest" >Agree & Update Request</button>
+                      <button  class="btn btn-primary"  @click="submitRequest"  v-if="!isbutton" >Agree & Update Request</button>
+					            <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
                 </div>
@@ -448,7 +483,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-8">
-					<div v-if="error" class="alert alert-danger">{{error}}</div>
+					          <div v-if="error" class="alert alert-danger">{{error}}</div>
                     <div
                       v-if="status==='submitted'"
                       class="alert alert-success"
@@ -459,7 +494,7 @@
                   </div>
                   <div class="col-sm-4">
                     <div class="text-right mr-4">
-                      <button  class="btn btn-primary" type=“button”  @click="submitRequest" v-if="!submitted" >Agree & Submit Request</button>
+                      <button  class="btn btn-primary"  @click="submitRequest" v-if="!isbutton" >Agree & Submit Request</button>
                       <button class="btn btn-secondary" v-else>Submitting...</button>
                     </div>
                   </div>
@@ -474,6 +509,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import firebase from "firebase";
@@ -525,52 +561,54 @@ export default {
       },
       password : "",
       submitted: false,
+      isbutton: false,
       error: null,
       vol: null,
       categories : null,
       useralreadyexist: false,
+      userrolefound: false,
       status: "new"
     };
   },
-/* validations: {
+ validations: {
 		form: {
 			personal : {
-				firstName: { required }
-			}
-		}
-	},*/
+        firstname: { required } ,
+        lastname: { required },
+        mobile: { required },
+        email: { required, email }
+      },
+       address : {
+         housenumber: { required },
+         postcode: { required },
+         address1: { required },
+         area: { required }
+
+       }
+    }
+    /*,
+     password: { required } */
+	},
   computed: {
     ...mapGetters({
       user: "user"
     })
   },
   created() {
-    this.fetchUser();
+    this.fetchVolunteer();
     this.fetchCategories();
-    this.form.accountstatus=true;
   },
   methods: {
-     submitRequest() {
+
+    submitRequest() {
       this.submitted = "true";
-      /*if (this.$v.$invalid) {
-        //alert("ERROR");
-            return;
-        }*/
-        
-        
-     // alert("2"+ this.$v.$touch());
-      /* if its still pending or an error is returned do not submit
-      
-      
-        if (this.$v.$invalid) {
-        alert("ERROR");
+      this.isbutton=true;
+     this.$v.$touch()
+      if (this.$v.$invalid) {
+            this.submitted = "false";
+            this.isbutton=false;
             return;
         }
-      if (this.$v.$pending || this.$v.$error) {
-	  alert("ERROR");
-		return;
-	  }*/
-      
       this.register();
       if (this.user.loggedIn && this.user.data) {
         this.form.user_displayName =  this.user.data.displayName || this.user.data.email;
@@ -583,29 +621,34 @@ export default {
       this.form.upvotes = [];
       this.form.downvotes = [];
       this.form.timestamp = new Date();
-     
-      if (!this.useralreadyexist) {
+     //alert("Submit"+this.useralreadyexist)
+    if (!this.useralreadyexist) {
       var db = firebase.firestore();
       db.collection("can_support")
-		.doc(this.form.user_email)
+		  .doc(this.form.user_email)
         .set(this.form)
         .then(docRef => {
+          //alert("can support 1");
           this.status = "submitted";
           this.error = null;
           this.submitted = "false";
+          this.isbutton=false;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
           }, 5 * 1000);
+          this.update();
           this.redirect();
         })
         .catch(error => {
+          console.error(error);
           this.error = error;
           this.status = "error";
+          this.isbutton=false;
         });
-        }
+      }
     },
-	fetchUser() {
+	fetchVolunteer() {
 		if( this.user != null) {
 			if (this.user.loggedIn && this.user.data) {		
 				this.email = this.user.data.email;
@@ -625,7 +668,8 @@ export default {
 					}
 				  })
 				  .catch(err => {
-					console.log('Error getting document', err);
+          console.log('Error getting document', err);
+          this.isbutton=false;
 				  });
 			}
 		}
@@ -651,60 +695,63 @@ export default {
 	          });
 			});
 			this.categories = categories_response;
-			
 		  })
 		  .catch(err => {
-			console.log('Error getting documents', err);
+      console.log('Error getting documents', err);
+      this.isbutton=false;
 		  });
 		  
 		 this.categories=allCats;
 	},
 	redirect() {
 		if (this.user.loggedIn && this.user.data) {		
-			//this.$router.push({ path: '/profile' });
-			setTimeout( () => this.$router.push({ path: '/profile'}), 5000);
-		} else {
-			alert("ELSE");
-			this.login();
-			//this.$router.push({ path: '/profile' });
-			setTimeout( () => this.$router.push({ path: '/profile'}), 5000);
+			setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
+		} else if (!this.useralreadyexist) { 
+      setTimeout( () => this.$router.push({ path: '/profile'}), 1000);
 		}		
-		/* else{
-			this.$router.push({ path: '/profile' });
-		}  */
-		
-		
 	},
-	register() {
-	this.useralreadyexist = false;
-	let statuscheck = this.user.loggedIn && this.user.data;
-	//alert("Registeration status"+statuscheck);
-	if(!statuscheck) {
-	
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.personal.email, this.password)
-        .then(result => {
-          this.status = "submitted";
-          this.error = null;
-          result.user
-            .updateProfile({
-              displayName: this.form.personal.firstname + " " + this.form.personal.lastname
-            })
-            .then(msg => {
-              this.$store.dispatch("fetchUser", result.user);
-              //this.$router.replace({ name: "profile" });
-              this.useralreadyexist = false;
-            });
-        })
-        .catch(err => {
-          this.error = err.message;
-          this.status = "error";
-          this.useralreadyexist = true;
-          this.submitted = false;
-        });
-        }
-    },
+    register() {
+          this.useralreadyexist = false;
+          let statuscheck = this.user.loggedIn && this.user.data;
+          if(!statuscheck) {
+              firebase
+                .auth()
+                .createUserWithEmailAndPassword(this.form.personal.email, this.password)
+                .then(result => {
+                  this.status = "submitted";
+                  this.error = null;
+                  result.user
+                    .updateProfile({
+                      displayName: this.form.personal.firstname || "User"
+                    })
+                    .then(async msg => {
+                      const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
+                      await updateUserProfile({
+                        username: this.form.personal.email,
+                        fullname : this.form.personal.firstname || "",
+                        isavailablevolunteer : this.form.accountstatus, 
+                        firstname : this.form.personal.firstname,
+                        lastname:this.form.personal.lastname
+                      })
+                    this.$store.dispatch("fetchUser", result.user);
+                    //this.$router.replace({ name: "profile" });
+                    }).catch((ex)=>{
+                      console.error(ex);
+                      this.useralreadyexist = true;
+                      this.submitted = false;
+                      this.isbutton=false;
+                    });
+                })
+                .catch(err => {
+                  this.error = err.message;
+                  this.status = "error";
+                  this.useralreadyexist = true;
+                  this.submitted = false;
+                  this.isbutton=false;
+                });
+          }
+      },
+    
     togglePassword() {
       var x = document.getElementById("password");
       if (x.type === "password") {
@@ -740,20 +787,14 @@ export default {
           
 	},
     login() {
-      //alert("Inside");
-      //alert("Login:"+this.form.personal.email);
-	  //alert("Pass:"+this.password );
-        
       const auth = firebase
         .auth()
         .signInWithEmailAndPassword(this.form.pesonal.email, this.password);
       	auth
         .then(data => {
           if (data && data.user) {
-          	//alert(data.user);
             this.$store.dispatch("fetchUser", data.user);
             //this.$router.replace({ name: "profile" });
-            //alert("push");
             this.$router.push({ path: '/profile' });
           } else {
          	 //alert("error");
@@ -761,12 +802,44 @@ export default {
           }
         })
         .catch(err => {
-          alert("push");
           this.error = err.message;
         });
-    }
+    },
+update() {
+
+ const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
+    updateUserProfile({
+    username: this.form.personal.email,
+    fullname : this.form.personal.firstname || "",
+    isavailablevolunteer : this.form.accountstatus, 
+    firstname : this.form.personal.firstname,
+    lastname:this.form.personal.lastname
+  })
+    .then(msg => {
+      if (this.form) {
+        this.status = "submitted";
+        this.error = null;
+        setTimeout(() => {
+          this.status = "new";
+          this.error = null;
+        }, 5 * 1000);
+      } else {
+        this.status = "error";
+        this.error = "error";
+        setTimeout(() => {
+          this.status = "new";
+          this.error = null;
+        }, 5 * 1000);
+      }
+      //this.newadminemail = "";
+    })
+    .catch(() => {
+      //this.newadminemail = "";
+      
+    });
 }
- 
+
+  }
 };
 
 </script>
@@ -782,10 +855,12 @@ export default {
         
 
 <style>
-input[type=checkbox] {
-    vertical-align: middle;
-    position: relative;
-    bottom: 1px;
+
+.marginPadding {
+   margin-bottom: 1.79rem !important;
 }
 
+.form-group-cat {
+    margin-bottom: 0.5rem !important;
+}
 </style>
