@@ -193,6 +193,9 @@ export const sendSupportRequestNotification = functions.firestore.document('supp
     const data :any=snap.data();
     console.log(data.id);
     console.log(data);
-    console.log(process.env.ADMIN_EMAIL_USERNAME);
-    console.log(functions.config().ADMIN_EMAIL_USERNAME);
+    console.log("------------- process.env");
+    console.log(process.env.admin_email_username);
+    console.log("------------- firebase config");
+    console.log(functions.config().admin_email_username);
+    console.log("------------- done");
 });

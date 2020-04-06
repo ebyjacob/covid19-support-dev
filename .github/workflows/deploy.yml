@@ -31,7 +31,7 @@ jobs:
         ADMIN_EMAIL_USERNAME: ${{ secrets.ADMIN_EMAIL_USERNAME }}
         ADMIN_EMAIL_PASSWORD: ${{ secrets.ADMIN_EMAIL_PASSWORD }}
       run: |
-        firebase functions:config:set ADMIN_EMAIL_USERNAME=$ADMIN_EMAIL_USERNAME ADMIN_EMAIL_PASSWORD=$ADMIN_EMAIL_PASSWORD --token $FIREBASE_TOKEN;
+        firebase functions:config:set admin_email_username=$ADMIN_EMAIL_USERNAME admin_email_password=$ADMIN_EMAIL_PASSWORD --token $FIREBASE_TOKEN;
     - name: Build  
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
