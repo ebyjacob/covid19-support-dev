@@ -4,7 +4,8 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="jumbotran border p-4 mb-4 bg-warning text-dark text-center">
-            <h1>Let's make a difference</h1>
+            <h1 v-if="app_settings && app_settings.app_title">{{app_settings.app_title}}</h1>
+            <h1 v-else>Let's make a difference</h1>
           </div>
         </div>
       </div>
@@ -84,12 +85,12 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   }
 };

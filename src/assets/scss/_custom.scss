@@ -1,0 +1,31 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow : -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: $accentColor_ligt;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: $accentColor;
+}
+.card-header{
+    background-color: $primarycolor;
+    color: #ffffff;
+}
+// li.nav-item {
+//     border-radius: 25px;
+// }
+// li.nav-item:hover {
+//     background : $primarycolor;
+//     a, a:hover, a:active {
+//         color: white;
+//     }
+// }
