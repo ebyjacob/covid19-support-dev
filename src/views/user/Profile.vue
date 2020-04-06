@@ -7,8 +7,8 @@
             <h4>Hi {{user.data.displayName}}!</h4>
           </div>
         </div>
-        <div class="row mt-4">
-          <div class="col-sm-8" v-if="myassignments">
+        <div class="row mt-4" v-if="user && user.data && user.data.verifiedvolunteer">
+          <div class="col-sm-12" v-if="myassignments">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
@@ -28,25 +28,6 @@
                   <br />
                   <br />
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="card">
-              <div class="card-header">
-                My Roles
-              </div>
-              <div class="card-body">
-                Admin ?
-                <span v-if="user.data.admin">yes</span>
-                <span v-else>No</span>
-                <br />Moderator ?
-                <span v-if="user.data.moderator">yes</span>
-                <span v-else>No</span>
-                <br />Verified Volunteer ?
-                <span v-if="user.data.verifiedvolunteer">yes</span>
-                <span v-else>No</span>
-                <br />
               </div>
             </div>
           </div>
@@ -104,8 +85,8 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { mapGetters } from "vuex";
+import { profile_get_open_jobs_of_user, profile_get_open_jobs_created_by_user, profile_get_open_donations_created_by_user } from "@/app/backend"
 export default {
   data() {
     return {
@@ -115,59 +96,30 @@ export default {
     };
   },
   methods: {
-    fetchDonationsList() {
-      var db = firebase.firestore();
-      db.collection("donations")
-        .where("user_email", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let donations = [];
-          querySnapshot.forEach(doc => {
-            donations.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mydonations = donations;
-        });
+    async fetchDonationsList() {
+      if(this.user && this.user.loggedIn){
+        this.mydonations = await profile_get_open_donations_created_by_user(this.user.data.email);
+      }
     },
-    fetchSupportRequests() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("user_email", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let support_requests = [];
-          querySnapshot.forEach(doc => {
-            support_requests.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mysupportrequests = support_requests;
-        });
+    async fetchSupportRequests() {
+      if(this.user && this.user.loggedIn){
+        this.mysupportrequests = await profile_get_open_jobs_created_by_user(this.user.data.email);
+      }
     },
-    fetchMyAssigments() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("picked_up_by", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let myassignments = [];
-          querySnapshot.forEach(doc => {
-            myassignments.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.myassignments = myassignments;
-        });
+    async fetchMyOpenAssigments() {
+      if(this.user && this.user.data && this.user.data.verifiedvolunteer){
+        this.myassignments = await profile_get_open_jobs_of_user(this.user.data.email);      
+      }
     }
   },
   created() {
-    this.fetchDonationsList();
-    this.fetchSupportRequests();
-    this.fetchMyAssigments();
+    if(this.user && this.user.loggedIn){
+      this.fetchDonationsList();
+      this.fetchSupportRequests();
+      this.fetchMyOpenAssigments();
+    } else {
+      this.$router.replace({ name: "login" });
+    }
   },
   computed: {
     ...mapGetters({
