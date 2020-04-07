@@ -33,6 +33,24 @@
       ]
     },
     {
+      "collectionGroup": "donations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "donation_status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "picked_up_by",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "support_requests",
       "queryScope": "COLLECTION",
       "fields": [
