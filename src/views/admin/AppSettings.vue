@@ -5,43 +5,75 @@
               <h4 class="text-primary mb-4">Application Settings</h4>
               <div v-if="error" class="alert alert-danger">{{error}}</div>
               <div v-if="status==='submitted'" class="alert alert-success">Settings saved successfully.</div>
-              <div class="row mt-4">
-                  <div class="col-sm-4 text-left">Application Title</div>
-                  <div class="col-sm-8">
-                      <fieldset role="group" class="b-form-group form-group">
-                        <div role="group" class>
-                        <input
-                            id="applicationtitle"
-                            type="text"
-                            placeholder="Application Title"
-                            class="form-control"
-                            v-model="app_settings.app_title"
-                        />
+              <div class="card mt-4">
+                  <div class="card-header">Application Title</div>
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-12">
+                            <fieldset role="group" class="b-form-group form-group">
+                                <div role="group" class>
+                                <input
+                                    id="applicationtitle"
+                                    type="text"
+                                    placeholder="Application Title"
+                                    class="form-control"
+                                    v-model="app_settings.app_title"
+                                />
+                                </div>
+                            </fieldset>
                         </div>
-                    </fieldset>
+                    </div>
                   </div>
               </div>
-              <div class="row">
-                  <div class="col-sm-12 text-left mb-4">Contact us page description</div>
-                  <div class="col-sm-6">
-                      <fieldset role="group" class="b-form-group form-group">
-                        <div role="group" class>
-                        <textarea
-                            id="page_contactus"
-                            type="text"
-                            placeholder="Contact Us Page"
-                            class="form-control"
-                            v-model="app_settings.page_contactus"
-                            rows="10"
-                        ></textarea>
+              <div class="card">
+                  <div class="card-header">Contact US page</div>
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-6">
+                            <fieldset role="group" class="b-form-group form-group">
+                                <div role="group" class>
+                                <textarea
+                                    id="page_contactus"
+                                    type="text"
+                                    placeholder="Contact Us Page"
+                                    class="form-control"
+                                    v-model="app_settings.page_contactus"
+                                    rows="10"
+                                ></textarea>
+                                </div>
+                            </fieldset>
                         </div>
-                    </fieldset>
-                  </div>
-                  <div class="col-sm-6" style="max-height:200px; overflow-y:scroll;">
-                      <MarkdownDisplay :text="app_settings.page_contactus" />
+                        <div class="col-sm-6" style="max-height:200px; overflow-y:scroll;">
+                            <MarkdownDisplay :text="app_settings.page_contactus" />
+                        </div>
+                    </div>
                   </div>
               </div>
-              <div class="row">
+              <div class="card">
+                  <div class="card-header">Support Categories</div>
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-12">
+                            <div v-for="(support_category,index) in app_settings.support_categories" :key="index" class="my-2">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <template v-if="app_settings.support_categories[index]==='General'|| app_settings.support_categories[index]==='Others'"> <input type="text" disabled class="form-control form-inline" v-model="app_settings.support_categories[index]" /></template>
+                                        <template v-else> <input type="text" class="form-control form-inline" v-model="app_settings.support_categories[index]" /></template>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <i  v-if="app_settings.support_categories[index] !== 'Others'" class="fa fa-plus btn-primary btn mr-2" @click="insertCategory(index)"></i>
+                                        <template v-if="app_settings.support_categories[index]==='General'|| app_settings.support_categories[index]==='Others'">
+                                        </template>
+                                        <template v-else><i class="fa fa-trash btn-danger btn mr-2" @click="removeSupportCategory(index)"></i></template>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-success" @click="addCategory">Add category</button>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="row my-4">
                   <div class="col-sm-12 text-center">
                       <button class="btn btn-primary" @click="saveSettings" >Update Settings</button>
                   </div>
@@ -55,6 +87,9 @@
 import { mapGetters } from "vuex";
 import { updateApplicationSettings } from "@/app/backend.js";
 import MarkdownDisplay from '@/components/MarkdownDisplay';
+Array.prototype.insert = function ( index, item ) {
+    this.splice( index, 0, item );
+};
 export default {
     components: {
         MarkdownDisplay
@@ -72,6 +107,16 @@ export default {
         })
     },
     methods: {
+        insertCategory(index){
+            this.app_settings.support_categories.insert(index+1,"")
+        },
+        removeSupportCategory(index){
+            this.app_settings.support_categories.splice(index,1);
+        },
+        addCategory(){
+            this.app_settings.support_categories = this.app_settings.support_categories || [];
+            this.app_settings.support_categories.push("");
+        },
         async saveSettings(){
             if(this.user && this.user.data && this.user.data.admin){
                 try{
