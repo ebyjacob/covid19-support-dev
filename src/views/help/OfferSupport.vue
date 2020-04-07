@@ -565,7 +565,6 @@ export default {
         lastname: { required },
         mobile: { required },
         email: { required, email },
-        idtype: { required },
         idproof: { required }
       },
        address : {
