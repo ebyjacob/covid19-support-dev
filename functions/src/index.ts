@@ -15,6 +15,7 @@ const isVerifiedVolunteer = (context:any) => doesAuthTokenExist(context) && cont
 const canAssignAdminRole = (data:any,context:any) => doesAuthTokenExist(context) && (isAdmin(context) || isSuperAdmin(data.email));
 const canAssignModeratorRole =  (data:any, context:any) => canAssignAdminRole(data,context) || isModerator(context) ;
 const canVerifyVolunteerRole = (data:any,context:any) => canAssignModeratorRole(data,context) || isVerifiedVolunteer(context);
+const maskText = (text:string) => text.split("").map((v:string,i:number)=>  (i < 4 || i >8) ? v : '*').join();
 
 export const markUserAsAdmin = (email:string) => {
     return new Promise((resolve,reject)=>{
@@ -206,9 +207,15 @@ export const sendSupportRequestNotification = functions.firestore.document('supp
     authData.sendMail({
         from :'moderator@covid19-support-dev.web.app',
         to:`${data.contact.email}`,
-        subject:'Support Request Information',
-        text:`Your support request submitted successfully. Request id : ${support_request_id} Title: ${data.request.title}`,
-        html:`<div>Your support request submitted successfully.<br/> Request id : ${support_request_id} <br/>Title: <b>${data.request.title}</b></div>`,
+        subject:`Support Request : ${data.request.title}. Req ID : ${support_request_id} `,
+        text:`Your support request created successfully. Request id : ${support_request_id} Title: ${data.request.title}`,
+        html:`<div>
+                Your support request created successfully.<br/> 
+                Title: <b>${data.request.title}</b><br/>
+                Request id : ${support_request_id} <br/>
+                Email address : ${maskText(data.contact.email)}<br/>
+                Phone Number : ${maskText(data.contact.phone)}<br/>
+             </div>`,
     })
     .then((res:any)=>{
         console.log('successfully sent that mail');
