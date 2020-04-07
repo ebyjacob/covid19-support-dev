@@ -6,7 +6,7 @@
               <div v-if="error" class="alert alert-danger">{{error}}</div>
               <div v-if="status==='submitted'" class="alert alert-success">Settings saved successfully.</div>
               <div class="row mt-4">
-                  <div class="col-sm-4 text-right">Application Title</div>
+                  <div class="col-sm-4 text-left">Application Title</div>
                   <div class="col-sm-8">
                       <fieldset role="group" class="b-form-group form-group">
                         <div role="group" class>
@@ -20,8 +20,10 @@
                         </div>
                     </fieldset>
                   </div>
-                  <!-- <div class="col-sm-4 text-right">Contact us page description</div>
-                  <div class="col-sm-8">
+              </div>
+              <div class="row">
+                  <div class="col-sm-12 text-left mb-4">Contact us page description</div>
+                  <div class="col-sm-6">
                       <fieldset role="group" class="b-form-group form-group">
                         <div role="group" class>
                         <textarea
@@ -34,7 +36,12 @@
                         ></textarea>
                         </div>
                     </fieldset>
-                  </div> -->
+                  </div>
+                  <div class="col-sm-6" style="max-height:200px; overflow-y:scroll;">
+                      <MarkdownDisplay :text="app_settings.page_contactus" />
+                  </div>
+              </div>
+              <div class="row">
                   <div class="col-sm-12 text-center">
                       <button class="btn btn-primary" @click="saveSettings" >Update Settings</button>
                   </div>
@@ -47,7 +54,11 @@
 <script>
 import { mapGetters } from "vuex";
 import { updateApplicationSettings } from "@/app/backend.js";
+import MarkdownDisplay from '@/components/MarkdownDisplay';
 export default {
+    components: {
+        MarkdownDisplay
+    },
     data(){
         return {
             error: "",
