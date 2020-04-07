@@ -9,6 +9,24 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "picked_up_by",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "donations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "donation_status",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "user_email",
           "order": "ASCENDING"
         },
@@ -41,11 +59,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "donation_status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "picked_up_by",
+          "fieldPath": "user_email",
           "order": "ASCENDING"
         },
         {
@@ -55,11 +69,11 @@
       ]
     },
     {
-      "collectionGroup": "donations",
+      "collectionGroup": "messages",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "user_email",
+          "fieldPath": "msg_read",
           "order": "ASCENDING"
         },
         {
@@ -121,6 +135,48 @@
         {
           "fieldPath": "timestamp",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "user_profiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fullname",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "username",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "fullname",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "isadult",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isavailablevolunteer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isverifiedvolunteer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isregisteredvolunteer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ismoderator",
+          "order": "ASCENDING"
         }
       ]
     }
