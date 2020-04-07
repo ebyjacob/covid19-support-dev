@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
+const nodemailer =require('nodemailer');
+
 admin.initializeApp();
 
 const superadmins = [ 'yesoreyeram@gmail.com' , 'masteruser@covid19-support-dev.web.app', 'superadmin@covid19-support-dev.web.app' ];
@@ -186,4 +188,32 @@ export const assignRole = functions.https.onCall((data,context)=>{
             data: `Not a valid email address`
         }
     }
+});
+
+export const sendSupportRequestNotification = functions.firestore.document('support_requests/{support_request}')
+.onCreate((snap,ctx)=>{
+    const support_request_id : string = snap.id;
+    const data :any=snap.data();
+    let authData = nodemailer.createTransport({
+        host:'smtp.gmail.com',
+        port:465,
+        secure:true,
+        auth:{
+            user:functions.config().admin_email.username,
+            pass:functions.config().admin_email.password
+        }
+    });
+    authData.sendMail({
+        from :'moderator@covid19-support-dev.web.app',
+        to:`${data.contact.email}`,
+        subject:'Support Request Information',
+        text:`Your support request submitted successfully. Request id : ${support_request_id} Title: ${data.request.title}`,
+        html:`<div>Your support request submitted successfully.<br/> Request id : ${support_request_id} <br/>Title: <b>${data.request.title}</b></div>`,
+    })
+    .then((res:any)=>{
+        console.log('successfully sent that mail');
+    })
+    .catch((err:any)=>{
+        console.log(err)
+    });
 });
