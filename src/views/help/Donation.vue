@@ -9,7 +9,9 @@
                 <h5 class="text-primary">Donation Promise For {{donation.donation.title}}</h5>                
                 <div class="row my-4">
                   <div class="col-sm-4">Status</div>
-                  <div class="col-sm-8">{{donation.donation_status.charAt(0).toUpperCase() + donation.donation_status.slice(1) ||'New'}}</div>
+                  <div class="col-sm-8" v-if="donation.donation_status && donation.donation_status !== ''">
+                    {{donation.donation_status.charAt(0).toUpperCase() + donation.donation_status.slice(1)}}</div>
+                  <div class="col-sm-8" v-else> New</div>
                 </div>
                 <div class="row my-4" v-if="donation.donation_status === 'assigned'">
                   <div class="col-sm-4">Assigned Status</div>

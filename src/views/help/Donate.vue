@@ -268,19 +268,7 @@ import firebase from "firebase";
 import { mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      donation_categories: [
-        "General",
-        "Food",
-        "Groceries",
-        "Toys",
-        "Books",
-        "Furniture",
-        "Cloths",
-        "Medical supplies",
-        "Electronics",
-        "Other"
-      ],
+    return {     
       form: {
         donation: {
           category: "General",
@@ -304,11 +292,13 @@ export default {
       },
       error: null,
       status: "new",
-      refId: null
+      refId: null,
+      donation_categories: []
     };
   },
   created() {    
     this.prepopulate();
+    this.fetchCategories();
   },
   computed: {
     ...mapGetters({
@@ -316,13 +306,30 @@ export default {
     })
   },
   methods: {
-
+     fetchCategories(){   
+      var categories = []; 
+      var db = firebase.firestore();  
+      db.collection('categories').get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log('No categories found');
+          return;
+        }  
+        snapshot.forEach(doc => {          
+          categories.push(doc.id);
+        });
+      })
+      .catch(err => {
+        console.log('Error getting categories', err);
+      });      
+      this.donation_categories = categories;      
+    },
     prepopulate(){
       if(this.user && this.user.data){
           this.form.requestor.name = this.user.data.displayName;      
           this.form.requestor.email = this.user.data.email;
       }      
-    },
+    },    
     resetForm(){
       this.form.donation.category = "General";
       this.form.donation.title = "";
