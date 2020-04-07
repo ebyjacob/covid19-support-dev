@@ -6,7 +6,7 @@
       >
         <div class="row mt-4">
           <div class="col-sm-12">
-            <div class="card">
+            <div class="card mt-3">
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-4">Filter By Status</div>
@@ -26,14 +26,59 @@
         <div class="row">
           <div class="col-sm-12" v-if="supportrequests">
             <div class="card">
-              <div class="card-header">Support Requests<button type="button" class="btn btn-primary float-right ml-1" @click="nextPage(filterStatus)">&gt;</button><button type="button" class="btn btn-primary float-right" @click="prevPage(filterStatus)">&lt;&lt;</button></div>
+              <div class="card-header"><span class="btn btn-primary"><b>Support Requests</b></span>
+                 <span v-if="pageNavButton">
+                 <button type="button" class="btn btn-primary float-right" @click="lastPage(filterStatus)">&gt;&gt;</button>
+                 <button type="button" class="btn btn-primary float-right ml-1" @click="nextPage(filterStatus)">&gt;</button>
+                 <button type="button" class="btn btn-primary float-right" @click="prevPage(filterStatus)">&lt;</button>
+                 <button type="button" class="btn btn-primary float-right" @click="fetchJobs()">&lt;&lt;</button>
+                 </span>
+              </div>
               <div class="card-body">
-                <div v-for="supportrequest in supportrequests" :key="supportrequest.id">
+                <div v-for="supportrequest in supportrequests" :key="supportrequest.id" v-if="supportrequests.length === pageSize || loadedFrom === 'base'">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
                     >{{supportrequest.data.request.title || 'No Title'}}</router-link>
-                  </span> -
+                  </span> - 
+                  <span
+                    style="font-size:16px;font-weight:light;"
+                  >{{supportrequest.data.request.status || 'new'}}</span> -
+                  <router-link
+                    :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                  >More details</router-link>
+                  <br />
+                  For {{ supportrequest.data.contact.name || supportrequest.data.contact.email }} by
+                  <i>{{supportrequest.data.user_displayName || supportrequest.data.user_email || 'Unknown User' }}</i>
+                  <br />
+                  <p>{{supportrequest.data.request.detail}}</p>
+                  <hr />
+                </div>
+                <div v-for="supportrequest in firstsetResults" :key="supportrequest.id" v-if="supportrequests.length != pageSize && loadedFrom === 'prev'">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
+                    <router-link
+                      :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                    >{{supportrequest.data.request.title || 'No Title'}}</router-link>
+                  </span> - 
+                  <span
+                    style="font-size:16px;font-weight:light;"
+                  >{{supportrequest.data.request.status || 'new'}}</span> -
+                  <router-link
+                    :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                  >More details</router-link>
+                  <br />
+                  For {{ supportrequest.data.contact.name || supportrequest.data.contact.email }} by
+                  <i>{{supportrequest.data.user_displayName || supportrequest.data.user_email || 'Unknown User' }}</i>
+                  <br />
+                  <p>{{supportrequest.data.request.detail}}</p>
+                  <hr />
+                </div>
+                <div v-for="supportrequest in lastsetResults" :key="supportrequest.id" v-if="supportrequests.length != pageSize && loadedFrom === 'next'">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
+                    <router-link
+                      :to="{ name: 'supportrequest', params: { supportrequestid: supportrequest.id }}"
+                    >{{supportrequest.data.request.title || 'No Title'}}</router-link>
+                  </span> - 
                   <span
                     style="font-size:16px;font-weight:light;"
                   >{{supportrequest.data.request.status || 'new'}}</span> -
@@ -65,6 +110,7 @@
 import firebase from "firebase";
 import { mapGetters } from "vuex";
 var db = firebase.firestore();
+
 export default {
   data() {
     return {
@@ -72,7 +118,13 @@ export default {
       pageSize: 5,
       firstSupportRequest: null,
       lastSupportRequest: null,
-      filterStatus: []
+      filterStatus: [],
+      prevNavStatus: false,
+      nextNavStatus: false,
+      loadedFrom:"base",
+      firstsetResults: [],
+      lastsetResults:[],
+      pageNavButton:false
     };
   },
   watch: {
@@ -81,6 +133,13 @@ export default {
     }
   },
   methods: {
+    pageNavStatusCheck() {
+        if(this.supportrequests <this.pageSize) {
+           this.pageNavButton=false;
+       } else {
+           this.pageNavButton=true;
+       }
+    },
     getAllJobs() {
       return db
         .collection("support_requests")
@@ -96,15 +155,18 @@ export default {
         .limit(this.pageSize)
         .get();
     },
-    getJobsByStatus(s) {
+    getJobsByStatus(filterStatus) {
+      this.filterStatus=filterStatus;
       return db
         .collection("support_requests")
-        .where("request.status", "==", s)
+        .where("request.status", "in", filterStatus)
         .orderBy("timestamp", "desc")
         .limit(this.pageSize)
         .get();
     },
     nextPage(filterStatus) {
+      this.filterStatus=filterStatus;
+      this.loadedFrom="next";
       return db
         .collection("support_requests")
         .where("request.status", "in", filterStatus)
@@ -114,21 +176,35 @@ export default {
         .get()
         .then(querySnapshot => {
           this.supportrequests = this.getSupportRequests(querySnapshot);
-        });  
+          if(this.supportrequests.length==0){
+            this.lastPage(this.filterStatus);lastsetResults
+          } else if(this.supportrequests.length<this.pageSize) {
+            this.lastsetResults=this.supportrequests
+          }
+        }); 
    },
    prevPage(filterStatus) {
+    this.filterStatus=filterStatus;
+    this.supportrequests =[];
+    this.loadedFrom="prev";
     return db
         .collection("support_requests")
         .where("request.status", "in", filterStatus)
         .orderBy("timestamp", "desc")
         .endBefore(this.firstSupportRequest)
-        .limit(this.pageSize)
+        .limitToLast(this.pageSize)
         .get()
         .then(querySnapshot => {
           this.supportrequests = this.getSupportRequests(querySnapshot);
-        });        
+        }); 
   },
    lastPage(filterStatus) {
+    this.filterStatus=filterStatus;
+    this.loadedFrom="base";
+    if(this.lastsetResults.length>0) {
+      this.supportrequests = this.lastsetResults;
+      return;
+    }
     return db
         .collection("support_requests")
         .where("request.status", "in", filterStatus)
@@ -137,15 +213,22 @@ export default {
         .get()
         .then(querySnapshot => {
           this.supportrequests = this.getSupportRequests(querySnapshot);
+          this.lastsetResults=this.supportrequests;
         });
   },
   getSupportRequests(querySnapshot){
-    let support_requests = [],lastDoc=null,firstDoc=null;
-    this.lastSupportRequest = querySnapshot.docs[querySnapshot.docs.length - 1];
-    this.firstSupportRequest = querySnapshot.docs[0];
-
+    let support_requests = [];
+    let i=0;
     querySnapshot.forEach(doc => {
-        support_requests.push({
+      if(i==0){
+        this.firstSupportRequest = doc;
+      }
+
+      if(i == (this.pageSize -1)) {
+        this.lastSupportRequest = doc;
+      }
+       i++;
+      support_requests.push({
               id: doc.id,
               data: doc.data()
         });
@@ -156,18 +239,27 @@ export default {
   },
   fetchJobs() {
       const filter_status = this.$route.params.status;
+      this.supportrequests =[];
+      this.firstsetResults=[];
+
       if (!filter_status || filter_status === "active" || filter_status === "open") {
         this.filterStatus=["new", "pickedup", "waiting-for-pickup"];
         this.getActiveJobs().then(querySnapshot => {
           this.supportrequests = this.getSupportRequests(querySnapshot);
+          this.firstsetResults=this.supportrequests;
+          this.pageNavStatusCheck();
         });
       } else {
-        if (filter_status)
-        this.filterStatus.push(filter_status);
-        this.getJobsByStatus(filter_status).then(querySnapshot => { 
+        if (filter_status) {
+          this.filterStatus=[];
+          this.filterStatus.push(filter_status);
+        }
+        this.getJobsByStatus(this.filterStatus).then(querySnapshot => { 
           this.supportrequests = this.getSupportRequests(querySnapshot);
+          this.firstsetResults=this.supportrequests;
+          this.pageNavStatusCheck();
         });
-      }
+      } 
     }
   },
   created() {
@@ -181,13 +273,3 @@ export default {
 };
 </script>
 
-<style>
-
-.divider{
-    margin-right:0.1rem !important;
-    margin-left:0.1rem !important;
-    height:auto;
-    display:inline-block;
-}
-
-</style>
