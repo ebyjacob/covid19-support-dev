@@ -76,6 +76,9 @@
                   <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>
                   <hr />
                 </div>
+                <div v-if="support_requests_created_by_me.length ===0">
+                  No Support request created by you. <router-link to="need/support">Request for help here</router-link>
+                </div>
               </div>
             </div>
           </div>
@@ -94,6 +97,9 @@
                   <br />
                   <p>{{donation.data.donation.message}}</p>
                   <hr />
+                </div>                
+                <div v-if="donations_created_by_me.length ===0">
+                  No Donations offered by you / No active requests. <router-link to="donate">Offer your donation here</router-link>
                 </div>
               </div>
             </div>
