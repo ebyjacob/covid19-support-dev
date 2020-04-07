@@ -217,3 +217,79 @@ export const sendSupportRequestNotification = functions.firestore.document('supp
         console.log(err)
     });
 });
+
+export const sendDonationDetailsToDonor = functions.firestore.document('donations/{donation}')
+.onCreate((snap,ctx)=>{
+    const donationid : string = snap.id;
+    const data :any=snap.data();
+    if(data.contact.email && data.contact.email !== ""){
+        let authData = nodemailer.createTransport({
+            host:'smtp.gmail.com',
+            port:465,
+            secure:true,
+            auth:{
+                user:functions.config().admin_email.username,
+                pass:functions.config().admin_email.password
+            }
+        });
+        authData.sendMail({
+            from :'moderator@covid19-support-dev.web.app',
+            to:`${data.contact.email}`,
+            subject:'Donor Promise Details',
+            text:`Your promise is submitted successfully. Reference No. : ${donationid} Title: ${data.donation.title}`,
+            html:`<div>Your promise is submitted successfully.<br/> Reference No. : ${donationid} <br/>Title: <b>${data.donation.title}</b></div>`,
+        })
+        .then((res:any)=>{
+            console.log('successfully sent email');
+        })
+        .catch((err:any)=>{
+            console.log(err)
+        });
+    }    
+});
+
+export const sendDonationDetailsToVolunteer = functions.https.onCall((data,context)=>{   
+    
+    if(data && data.volunteerEmail){
+
+        let authData = nodemailer.createTransport({
+        host:'smtp.gmail.com',
+        port:465,
+        secure:true,
+        auth:{
+            user:functions.config().admin_email.username,
+            pass:functions.config().admin_email.password
+        }
+    });
+        authData.sendMail({
+            from :'moderator@covid19-support-dev.web.app',
+            to:`${data.volunteerEmail}`,
+            subject:'Donor Promise Assigned',
+            text:`Donor Promise is assigned to you with Title: ${data.donorPromiseTitle} 
+            and Message: ${data.donorPromiseMsg}.  Donor Contact details are Name: ${data.donorName}, 
+            Address: ${data.donorAddress}, Phone: ${data.donorPhone}, email: ${data.donorEmail}`,
+
+            html:`<div>Donor Promise is assigned to you.<br/> 
+            Title: <b>${data.donorPromiseTitle}</b><br/>
+            Message: ${data.donorPromiseMsg} <br/><br/>
+            <b>Donor Contact details</b>
+            Name: ${data.donorName}<br/>
+            Address: ${data.onorAddress}<br/> 
+            Phone: ${data.donorPhone}<br/> 
+            email: ${data.donorEmail}
+            </div>`,
+        })
+        .then((res:any)=>{
+            console.log('email sent successfully');            
+            return {
+                data: `email sent successfully`
+            }
+        })
+        .catch((err:any)=>{
+            console.log(err)
+            return {
+                data: `error sending email: ${err}`
+            }
+        });
+    }
+  });

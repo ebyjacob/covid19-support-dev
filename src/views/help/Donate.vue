@@ -327,7 +327,7 @@ export default {
     prepopulate(){
       if(this.user && this.user.data){
           this.form.requestor.name = this.user.data.displayName;      
-          this.form.requestor.email = this.user.data.email;
+          this.form.requestor.email = this.user.data.email.toLowerCase();
       }      
     },    
     resetForm(){
@@ -352,6 +352,8 @@ export default {
         this.form.user_email = "";
       }
       this.form.timestamp = new Date();
+      this.form.contact.email = this.form.contact.email.toLowerCase();
+      this.form.requestor.email = this.form.requestor.email.toLowerCase();
       
       if (!this.form.donation.title || !this.form.donation.message) {
         this.error = "Enter title and description";

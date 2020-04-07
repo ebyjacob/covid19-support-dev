@@ -304,7 +304,7 @@ export default {
             {              
               donation_status: "assigned",
               statechanges: newstatechanges,
-              picked_up_by: this.volunteerEmail,
+              picked_up_by: this.volunteerEmail.toLowerCase(),
               picked_up_on: new Date()
             },
             { merge: true }
@@ -316,7 +316,41 @@ export default {
             console.log(err);
           });
           this.success = "Successfully Assigned!"
+          this.sendEmailToVolunteer();
+          
       }
+    },
+    sendEmailToVolunteer(){
+      const sendEmail = firebase.functions().httpsCallable("sendDonationDetailsToVolunteer");
+      sendEmail({
+        volunteerEmail: this.donation.picked_up_by,
+        donorPromiseTitle: this.donation.donation.title,
+        donorPromiseMsg: this.donation.donation.message,        
+        donorName: this.donation.contact.name,
+        donorAddress: this.donation.contact.address,
+        donorPhone: this.donation.contact.phone,
+        donorEmail: this.donation.contact.email
+      })
+      .then(
+        this.success = "Successfully assigned and email sent"
+      )
+        // .then(msg => {
+        //   if (
+        //     msg &&
+        //     msg.data &&
+        //     msg.data.data &&
+        //     msg.data.data.indexOf("email sent successfully") > -1            
+        //   ) {
+        //     this.success = "Successfully assigned and email sent";                        
+        //   } else {
+        //     this.success = "";
+        //     this.error = "Error sending email";            
+        //   }    
+        //   console.log("msg => ", msg);      
+        // })
+        .catch(err => {
+          console.log(err);
+        });
     },    
     markAsFulfilled() {
       if (
