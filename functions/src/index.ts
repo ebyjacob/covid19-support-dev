@@ -15,7 +15,7 @@ const isVerifiedVolunteer = (context:any) => doesAuthTokenExist(context) && cont
 const canAssignAdminRole = (data:any,context:any) => doesAuthTokenExist(context) && (isAdmin(context) || isSuperAdmin(data.email));
 const canAssignModeratorRole =  (data:any, context:any) => canAssignAdminRole(data,context) || isModerator(context) ;
 const canVerifyVolunteerRole = (data:any,context:any) => canAssignModeratorRole(data,context) || isVerifiedVolunteer(context);
-const maskText = (text:string) => text.split("").map((v:string,i:number)=>  (i < 4 || i >8) ? v : '*').join();
+const maskText = (text:string) => text.split("").map((v:string,i:number)=>  (i < 4 || i >8) ? v : '*').join('');
 
 export const markUserAsAdmin = (email:string) => {
     return new Promise((resolve,reject)=>{
