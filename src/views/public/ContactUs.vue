@@ -2,59 +2,15 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-sm-12">
-          <div class="card mt-4">
+        <div class="col-sm-12 py-4">
+          <div class="card">
+            <div class="card-header">
+              Contact US
+            </div>
             <div class="card-body">
-              <h4 class="mb-4">Contact US</h4>
-              <div v-if="error" class="alert alert-danger">{{error}}</div>
-              <div
-                v-if="status==='submitted'"
-                class="alert alert-success"
-              >Your message submitted successfully.</div>
-              <div class="row mt-4" v-if="status !== 'submitted'">
-                <div class="col-sm-12" v-if="user.loggedIn === false">
-                  <fieldset role="group" class="b-form-group form-group">
-                    <div role="group" class>
-                      <input
-                        id="name"
-                        type="text"
-                        placeholder="Your Name"
-                        class="form-control"
-                        v-model="form.name"
-                      />
-                    </div>
-                  </fieldset>
-                </div>
-                <div class="col-sm-12" v-if="user.loggedIn === false">
-                  <fieldset role="group" class="b-form-group form-group">
-                    <div role="group" class>
-                      <input
-                        id="email"
-                        type="text"
-                        placeholder="Your email"
-                        class="form-control"
-                        v-model="form.email"
-                      />
-                    </div>
-                  </fieldset>
-                </div>
-                <div class="col-sm-12">
-                  <fieldset role="group" class="b-form-group form-group">
-                    <div role="group" class>
-                      <textarea
-                        id="message"
-                        type="text"
-                        rows="5"
-                        placeholder="Enter your Message"
-                        class="form-control"
-                        v-model="form.message"
-                      />
-                    </div>
-                  </fieldset>
-                </div>
-                <div class="col-sm-12 text-center pt-2">
-                  <button class="btn btn-primary" @click="submitMessage">Submit your message</button>
-                </div>
+              <MarkdownDisplay v-if="app_settings && app_settings.page_contactus" :text="app_settings.page_contactus" />
+              <div v-else>
+                <h4>Contact us page</h4>
               </div>
             </div>
           </div>
@@ -67,7 +23,11 @@
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
+import MarkdownDisplay from '@/components/MarkdownDisplay';
 export default {
+  components: {
+    MarkdownDisplay
+  },
   data() {
     return {
       form: {
@@ -80,7 +40,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   },
   methods: {

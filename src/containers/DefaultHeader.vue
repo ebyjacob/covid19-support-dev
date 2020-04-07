@@ -22,6 +22,9 @@
       <b-nav-item class="py-2 px-3" to="/donate">
         <b>Donate</b>
       </b-nav-item>
+      <b-nav-item class="py-2 px-3" to="/track" v-if="!user || !(user && user.loggedIn)">
+        <b>Track Request</b>
+      </b-nav-item>
       <b-nav-item
         class="py-2 px-3"
         to="/support-requests"
@@ -43,7 +46,7 @@
         v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
       >Groups</b-nav-item> -->
       <!-- <b-nav-item class="py-2 px-3" to="/about">About</b-nav-item>-->
-      <b-nav-item class="py-2 px-3" to="/contact">Contact us</b-nav-item> 
+      <b-nav-item class="py-2 px-3" to="/contact">Contact</b-nav-item> 
       <b-nav-item class="py-2 px-3" to="/contact/moderator" title="Contact Moderator"><i class="fa fa-envelope"></i></b-nav-item> 
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto" style="margin-right:20px;">

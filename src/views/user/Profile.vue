@@ -8,11 +8,11 @@
           </div>
         </div>
         <div class="row mt-4" v-if="user && user.data && user.data.verifiedvolunteer">
-          <div class="col-sm-12" v-if="myassignments">
+          <div class="col-sm-6" v-if="support_requests_assigned_to_me">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
-                <div v-for="myassignment in myassignments" :key="myassignment.id">
+                <div v-for="myassignment in support_requests_assigned_to_me" :key="myassignment.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: myassignment.id }}"
@@ -28,16 +28,41 @@
                   <br />
                   <br />
                 </div>
+                <div v-if="support_requests_assigned_to_me.length ===0">No Support requests available for action.</div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6" v-if="donations_assigned_to_me">
+            <div class="card">
+              <div class="card-header">Donations assigned to me</div>
+              <div class="card-body">
+                <div v-for="donation in donations_assigned_to_me" :key="donation.id">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
+                    <router-link
+                      :to="{ name: 'donation', params: { donationid: donation.id }}"
+                    >{{donation.data.donation.title}}</router-link>
+                  </span>&nbsp;&nbsp;-&nbsp;&nbsp;
+                  <router-link
+                    :to="{ name: 'donation', params: { donationid: donation.id }}"
+                  >More details</router-link>
+                  Status : {{donation.data.donation_status}}
+                  <br />
+                  For {{ donation.data.contact.name || donation.data.contact.email }} by
+                  <i>{{donation.data.user_displayName || donation.data.user_email || 'Unknown User' }}</i>
+                  <br />
+                  <br />
+                </div>
+                <div v-if="donations_assigned_to_me.length ===0">No donations available for action.</div> 
               </div>
             </div>
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-sm-6" v-if="mysupportrequests">
+          <div class="col-sm-6" v-if="support_requests_created_by_me">
             <div class="card">
               <div class="card-header">Support Requests created by you</div>
               <div class="card-body">
-                <div v-for="mysupportrequest in mysupportrequests" :key="mysupportrequest.id">
+                <div v-for="mysupportrequest in support_requests_created_by_me" :key="mysupportrequest.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
@@ -54,11 +79,11 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-6" v-if="mydonations">
+          <div class="col-sm-6" v-if="donations_created_by_me">
             <div class="card">
               <div class="card-header">Donation Requests created by you</div>
               <div class="card-body">
-                <div v-for="donation in mydonations" :key="donation.id">
+                <div v-for="donation in donations_created_by_me" :key="donation.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'donation', params: { donationid: donation.id }}"
@@ -86,29 +111,35 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { profile_get_open_jobs_of_user, profile_get_open_jobs_created_by_user, profile_get_open_donations_created_by_user } from "@/app/backend"
+import { profile_get_open_jobs_of_user, profile_get_open_jobs_created_by_user, profile_get_open_donations_created_by_user, profile_get_open_donation_assigments_of_user } from "@/app/backend"
 export default {
   data() {
     return {
-      mydonations: null,
-      mysupportrequests: null,
-      myassignments: null
+      donations_created_by_me: null,
+      support_requests_created_by_me: null,
+      support_requests_assigned_to_me: null,
+      donations_assigned_to_me: null,
     };
   },
   methods: {
     async fetchDonationsList() {
       if(this.user && this.user.loggedIn){
-        this.mydonations = await profile_get_open_donations_created_by_user(this.user.data.email);
+        this.donations_created_by_me = await profile_get_open_donations_created_by_user(this.user.data.email);
       }
     },
     async fetchSupportRequests() {
       if(this.user && this.user.loggedIn){
-        this.mysupportrequests = await profile_get_open_jobs_created_by_user(this.user.data.email);
+        this.support_requests_created_by_me = await profile_get_open_jobs_created_by_user(this.user.data.email);
       }
     },
     async fetchMyOpenAssigments() {
       if(this.user && this.user.data && this.user.data.verifiedvolunteer){
-        this.myassignments = await profile_get_open_jobs_of_user(this.user.data.email);      
+        this.support_requests_assigned_to_me = await profile_get_open_jobs_of_user(this.user.data.email);      
+      }
+    },
+    async fetchMyOpenDonationAssigments() {
+      if(this.user && this.user.data && this.user.data.verifiedvolunteer){
+        this.donations_assigned_to_me = await profile_get_open_donation_assigments_of_user(this.user.data.email);      
       }
     }
   },
@@ -117,6 +148,7 @@ export default {
       this.fetchDonationsList();
       this.fetchSupportRequests();
       this.fetchMyOpenAssigments();
+      this.fetchMyOpenDonationAssigments();
     } else {
       this.$router.replace({ name: "login" });
     }
