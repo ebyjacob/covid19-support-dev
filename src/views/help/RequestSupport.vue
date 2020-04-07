@@ -29,7 +29,7 @@
                         <b-form-select
                           id="basicSelect"
                           :plain="true" 
-                          :options="donation_categories"
+                          :options="app_settings.support_categories"
                           value="Please select"
                           v-model="form.request.category"
                         ></b-form-select>
@@ -556,7 +556,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   },
   validations: {
