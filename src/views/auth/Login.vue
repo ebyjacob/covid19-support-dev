@@ -167,16 +167,13 @@ export default {
         .then(async data => {
           if (data && data.user) {
             const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
-            await updateUserProfile({
+            updateUserProfile({
               username: data.user.email,
               fullname : data.user.displayName ||  data.user.fullname || "-",
               last_login_time : new Date()
-            }).then((tmp)=>{
-              this.$store.dispatch("fetchUser", data.user);
-              this.$router.replace({ name: "profile" });
-            }).catch((ex)=>{
-              console.error(ex);
-            })
+            });
+            this.$store.dispatch("fetchUser", data.user);
+            this.$router.replace({ name: "profile" });
           } else {
             this.error = "Unknown error";
           }
@@ -196,12 +193,9 @@ export default {
               username: result.user.email,
               fullname : result.user.displayName || result.user.fullname || "",
               last_login_time : new Date()
-            }).then((res)=>{  
-              this.$store.dispatch("fetchUser", result.user);
-              this.$router.replace({ name: "profile" });
-            }).catch((ex)=>{
-              console.error(ex);
-            })
+            })            
+            this.$store.dispatch("fetchUser", result.user);
+            this.$router.replace({ name: "profile" });
           }
         })
         .catch(err => {
@@ -227,9 +221,9 @@ export default {
             .updateProfile({
               displayName: this.form.name || "User"
             })
-            .then(async msg => {
+            .then(msg => {
               const updateUserProfile = firebase.functions().httpsCallable("updateUserProfile");
-              await updateUserProfile({
+              updateUserProfile({
                 username: this.form.email,
                 fullname : this.form.name || result.user.displayName || result.user.fullname || "",
                 last_login_time : new Date()
