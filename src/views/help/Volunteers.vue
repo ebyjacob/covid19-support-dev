@@ -1,83 +1,193 @@
 <template>
-  <div style="width: 1300px">
-    <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
+  <div>
+    <div class="container mt-4">
+      <div
+        v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
+      >
+
+	     <div class="row">
+                  <div class="col-sm-6">
+                    <fieldset role="group" class="b-form-group form-group-cat">
+                      <div role="group" class>
+                        <b-form-group label="Verification Status" label-for="VerSelect" :label-cols="6">
+                        <b-form-select
+                          id="VerSelect"
+                          :plain="true" 
+                          :options="['All','Verified','Non Verified']"
+						  @change="fetchJobs"
+                          value="Please select"
+                          v-model="filter.verifiedVolunteer"
+                        ></b-form-select>
+                      </b-form-group>
+                      </div>
+                    </fieldset>
+                  </div>
+				  <div class="col-sm-6">
+                    <fieldset role="group" class="b-form-group form-group-cat">
+                      <div role="group" class>
+                        <b-form-group label="Availability" label-for="availableSelect" :label-cols="6">
+                        <b-form-select
+                          id="availableSelect"
+                          :plain="true" 
+                          :options="['All','Available','Not Available']"
+						  @change="fetchJobs"
+                          value="Please select"
+                          v-model="filter.isavailablevolunteer"
+                        ></b-form-select>
+                      </b-form-group>
+                      </div>
+                    </fieldset>
+                  </div>
+            </div>
+         <div class="row">
+          <div class="col-sm-12" v-if="volunteers">
+            <div class="card">
+              <div class="card-header"><span class="btn btn-primary"><b>Volunteers</b></span>
+                 <button type="button" class="btn btn-primary float-right" @click="lastPage()">&gt;&gt;</button>
+                 <button type="button" class="btn btn-primary float-right ml-1" @click="nextPage()">&gt;</button>
+                 <button type="button" class="btn btn-primary float-right" @click="prevPage()">&lt;</button>
+                 <button type="button" class="btn btn-primary float-right" @click="fetchJobs()">&lt;&lt;</button>
+              </div>
+              
+                <div v-for="Volunteer in volunteers" :key="Volunteer.id">
+					 {{Volunteer}}
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" v-else>
+        <div class="col-sm-12">
+          <h4>Loading...</h4>
+        </div>
+      </div>
+    </div>
   </div>
-  <!--https://github.com/TheoXiong/vue-table-dynamic -->
 </template>
 
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
-import VueTableDynamic from 'vue-table-dynamic'
+var db = firebase.firestore();
+
 export default {
-  name: 'Demo',
   data() {
     return {
-    paramss: {
-    	data: [
-    	
-    	  ['Full Name', 'First Name', 'Last Name','Email', 'AV', 'RV', 'Adult', 'Admin', 'Moderator'],
-  		  ['Sakthi', 'vel', 'Sakthi', "sakti@email.com", "true", "true", "false", "false", "false"]
-  		  
-    	  ]
-      },
-      params: {
-        data: [
-      
-        ],
-        header: 'row',
-        border: true,
-        enableSearch: true,
-        sort: [4,5,6,7,8],
-        columnWidth: [{column: 0, width: 200}, {column: 1, width: 150},{column: 2, width: 150},{column: 3, width: 250},{column: 4, width: 100},{column:5, width: 100},{column: 6, width: 100},{column:7, width: 100},{column: 8, width: 100}],
-        stripe: true,
-        pagination: true,
-        pageSize: 5,
-        pageSizes: [5, 10, 20]
+      volunteers: null,
+      pageSize: 5,
+      firstVolunteers: null,
+      lastVolunteers: null,
+      loadedFrom:"base",
+	  filter:{
+		  verifiedVolunteer: "All",
+		  isavailablevolunteer: "All"
+	  }
+    };
+  },
+  methods: {
+     getFilteredVolunteerList(){
+        let volList=null
+		volList=db
+		.collection("user_profiles")
+	 if(this.filter.verifiedVolunteer==="Verified"){
+		 volList=volList.where("isverifiedvolunteer","==",true)
+	 } else if(this.filter.verifiedVolunteer ==="Non Verified"){
+		 volList=volList.where("isverifiedvolunteer","==",false)
+	 }
+
+	 if(this.filter.isavailablevolunteer==="Available"){
+		 volList=volList.where("isavailablevolunteer","==",true)
+	 } else if(this.filter.isavailablevolunteer ==="Not Available"){
+		 volList=volList.where("isavailablevolunteer","==",false)
+	 }
+
+	  return volList;
+	},
+    getVolunteerList() {
+	  return this.getFilteredVolunteerList()
+	    .orderBy("username")
+        .limit(this.pageSize)
+        .get();
+    },
+    nextPage() {
+	  this.loadedFrom="next";
+      return this.getFilteredVolunteerList()
+		.orderBy("username")
+        .startAfter(this.lastVolunteers)
+        .limit(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+          this.volunteers = this.getvolunteers(querySnapshot);
+          if(this.volunteers.length<this.pageSize){
+            this.lastPage();
+          }
+        }); 
+   },
+   prevPage() {
+    this.volunteers =[];
+    this.loadedFrom="prev";
+    return this.getFilteredVolunteerList()
+		.orderBy("username")
+        .endBefore(this.firstVolunteers)
+        .limitToLast(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+		  this.volunteers = this.getvolunteers(querySnapshot);
+		  if(this.volunteers.length<this.pageSize){
+            this.fetchJobs();
+          }
+        }); 
+  },
+   lastPage() {
+    this.loadedFrom="base";
+    return this.getFilteredVolunteerList()
+		.orderBy("username","desc")
+		.limit(this.pageSize)
+        .get()
+        .then(querySnapshot => {
+          this.volunteers = this.getvolunteers(querySnapshot);
+        });
+  },
+  getvolunteers(querySnapshot){
+    let categories_response = [];
+	let i=0;
+    querySnapshot.forEach(doc => {
+	  if(i==0){
+        this.firstVolunteers = doc;
       }
+
+      if(i == (this.pageSize -1)) {
+        this.lastVolunteers = doc;
+      }
+       i++;
+		categories_response.push({
+              id: doc.id,
+              data: doc.data()
+        });
+	});
+
+	this.volunteers=categories_response;
+
+    return categories_response;
+
+  },
+  fetchJobs() {
+      this.volunteers =[];
+      this.getVolunteerList().then(querySnapshot => {
+          this.volunteers = this.getvolunteers(querySnapshot);
+          this.pageNavStatusCheck();
+      });
     }
   },
   created() {
-    this.fetchVolunteer();
+    this.fetchJobs();
   },
-  methods: {
-
-	fetchVolunteer() {
-	
-		var db = firebase.firestore();					  
-		let catRef = db.collection('user_profiles');
-		var fullname = "";
-		let allCats = catRef.get()
-		  .then(snapshot => {
-		   let categories_response = [];
-		   let index = 1;
-		   categories_response[0] = ['Full Name', 'First Name', 'Last Name','Email', 'AV', 'RV', 'Adult', 'Admin', 'Moderator'];
-		  
-			snapshot.forEach(doc => {
-			 	  let onedata = [];
-  		          onedata[0]= doc.data().fullname ?  doc.data().fullname : "";
-		          onedata[1]= doc.data().firstname ?  doc.data().firstname : "";
-		          onedata[2]= doc.data().lastname ?  doc.data().lastname : "";
-		          onedata[3]= doc.id;
-		          onedata[4]= doc.data().isavailablevolunteer ?  doc.data().isavailablevolunteer : "false";
-		          onedata[5]= doc.data().isregisteredvolunteer ?  doc.data().isregisteredvolunteer : "false";
-		          onedata[6]= doc.data().isadult ?  doc.data().isadult : "false";
-		          onedata[7]= doc.data().isadmin ?  doc.data().isadmin : "false";
-		          onedata[8]= doc.data().ismoderator ?  doc.data().ismoderator : "false";
-		          categories_response[index]=onedata;
-		          index++;
-			});
-			this.params.data = categories_response;
-			//console.log(this.params);
-		  })
-		  .catch(err => {
-      		console.log('Error getting documents', err);
-      		this.isbutton=false;
-		  });
-	}
-
+  computed: {
+    ...mapGetters({
+      user: "user"
+    })
   }
-  //,
- // components: { VueTableDynamic }
-}
+};
 </script>
+

@@ -143,6 +143,56 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "isavailablevolunteer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "user_profiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isverifiedvolunteer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "user_profiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fullname",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "username",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "fullname",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "user_profiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "username",
           "order": "ASCENDING"
         },
