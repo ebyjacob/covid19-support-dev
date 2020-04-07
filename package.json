@@ -28,6 +28,7 @@
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.15",
+    "marked": "^0.8.2",
     "perfect-scrollbar": "^1.4.0",
     "register-service-worker": "^1.6.2",
     "simple-line-icons": "^2.4.1",

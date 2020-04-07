@@ -25,7 +25,7 @@
                     </div>
                   </fieldset>
                 </div>
-                <div class="col-sm-12" v-if="user.loggedIn === false">
+                <div :class="user.loggedIn? 'col-sm-12':'col-sm-6'" v-if="user.loggedIn === false">
                   <fieldset role="group" class="b-form-group form-group">
                     <div role="group" class>
                       <input
@@ -34,6 +34,19 @@
                         placeholder="Your email"
                         class="form-control"
                         v-model="form.email"
+                      />
+                    </div>
+                  </fieldset>
+                </div>
+                <div :class="user.loggedIn? 'col-sm-12':'col-sm-6'">
+                  <fieldset role="group" class="b-form-group form-group">
+                    <div role="group" class>
+                      <input
+                        id="phone"
+                        type="text"
+                        placeholder="Your phone number"
+                        class="form-control"
+                        v-model="form.phone"
                       />
                     </div>
                   </fieldset>
@@ -72,7 +85,11 @@ export default {
     return {
       form: {
         name: "",
-        message: ""
+        email:"",
+        phone: "",
+        message: "",
+        msg_read: false,
+        notes: []
       },
       error: null,
       status: "new"
@@ -91,10 +108,11 @@ export default {
       }
       if (!this.form.name) {
         (this.error = "Enter Your name and contact details"), (this.status = "error");
-      }
-      if (!this.form.message) {
+      } else if (!this.form.message) {
         (this.error = "Enter Your message"), (this.status = "error");
-      }      
+      }  else {
+        this.error = null;
+      }
     },
     submitMessage() {
       this.validate();
