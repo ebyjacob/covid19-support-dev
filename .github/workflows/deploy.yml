@@ -1,0 +1,41 @@
+name: Deploy
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Tools Setup
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      run: |
+        npm install -g yarn firebase-tools;
+    - name: Load variables
+      uses: w9jds/firebase-action@master
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        ADMIN_EMAIL_USERNAME: ${{ secrets.ADMIN_EMAIL_USERNAME }}
+        ADMIN_EMAIL_PASSWORD: ${{ secrets.ADMIN_EMAIL_PASSWORD }}
+    - name: Set firebase environment variables
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        ADMIN_EMAIL_USERNAME: ${{ secrets.ADMIN_EMAIL_USERNAME }}
+        ADMIN_EMAIL_PASSWORD: ${{ secrets.ADMIN_EMAIL_PASSWORD }}
+      run: |
+        firebase functions:config:set admin_email.username=$ADMIN_EMAIL_USERNAME admin_email.password=$ADMIN_EMAIL_PASSWORD --token $FIREBASE_TOKEN;
+    - name: Build  
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      run: |
+        yarn setup;
+        yarn build;
+        firebase deploy --token $FIREBASE_TOKEN;

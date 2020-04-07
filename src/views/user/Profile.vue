@@ -85,8 +85,8 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { mapGetters } from "vuex";
+import { profile_get_open_jobs_of_user, profile_get_open_jobs_created_by_user, profile_get_open_donations_created_by_user } from "@/app/backend"
 export default {
   data() {
     return {
@@ -96,63 +96,27 @@ export default {
     };
   },
   methods: {
-    fetchDonationsList() {
-      var db = firebase.firestore();
-      db.collection("donations")
-        .where("user_email", "==", this.user.data.email)
-        .orderBy("timestamp","desc")
-        .get()
-        .then(querySnapshot => {
-          let donations = [];
-          querySnapshot.forEach(doc => {
-            donations.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mydonations = donations;
-        });
+    async fetchDonationsList() {
+      if(this.user && this.user.loggedIn){
+        this.mydonations = await profile_get_open_donations_created_by_user(this.user.data.email);
+      }
     },
-    fetchSupportRequests() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("user_email", "==", this.user.data.email)
-        .orderBy("timestamp","desc")
-        .get()
-        .then(querySnapshot => {
-          let support_requests = [];
-          querySnapshot.forEach(doc => {
-            support_requests.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mysupportrequests = support_requests;
-        });
+    async fetchSupportRequests() {
+      if(this.user && this.user.loggedIn){
+        this.mysupportrequests = await profile_get_open_jobs_created_by_user(this.user.data.email);
+      }
     },
-    fetchMyAssigments() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("picked_up_by", "==", this.user.data.email)
-        .orderBy("timestamp","desc")
-        .get()
-        .then(querySnapshot => {
-          let myassignments = [];
-          querySnapshot.forEach(doc => {
-            myassignments.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.myassignments = myassignments;
-        });
+    async fetchMyOpenAssigments() {
+      if(this.user && this.user.data && this.user.data.verifiedvolunteer){
+        this.myassignments = await profile_get_open_jobs_of_user(this.user.data.email);      
+      }
     }
   },
   created() {
     if(this.user && this.user.loggedIn){
       this.fetchDonationsList();
       this.fetchSupportRequests();
-      this.fetchMyAssigments();
+      this.fetchMyOpenAssigments();
     } else {
       this.$router.replace({ name: "login" });
     }

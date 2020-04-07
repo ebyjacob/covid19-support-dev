@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-4">
+  <div class="container mt-4">
     <div class="row">
       <div class="col-sm-12">
         <b-modal title="Error" v-model="error" @ok="error = false" ok-only ok-variant="primary">
@@ -9,11 +9,14 @@
           <div class="alert alert-success">{{successmsg}}</div>
         </b-modal>
       </div>
-      <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin)">
+      <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator)">
         <div class="card">
           <div class="card-body">
-            <router-link to="/admin/appsettings">
-              <button class="btn btn-primary">Click for Application Settings</button>
+            <router-link to="/admin/appsettings" v-if="user.data.admin">
+              <button class="btn btn-primary mr-4">Click for Application Settings</button>
+            </router-link>
+            <router-link to="/admin/messages" v-if="user.data.admin || user.data.moderator">
+              <button class="btn btn-primary mr-4">Messages</button>
             </router-link>
           </div>
         </div>

@@ -2,6 +2,16 @@
   <div>
     <div class="container mt-4">
       <div class="animated fadeIn">
+        <div class="row" id="custommodel">
+          <div class="col-sm-12">
+            <b-modal title="Error" v-model="error" @ok="onError()" ok-only ok-variant="primary">
+              <div class="alert alert-danger">{{errormsg}}</div>
+            </b-modal>
+            <b-modal title="Success" v-model="success" @ok="onSuccess()" ok-only ok-variant="primary">
+              <div class="alert alert-success">{{successmsg}}</div>
+            </b-modal>
+          </div>
+        </div>
         <div class="row">
           <div class="col-sm-12">
             <div class="card">
@@ -240,10 +250,6 @@
                           class="form-control"
                           v-model="form.contact.country" 
                         />
-                         <vue-modaltor  :visible="open" @hide="hideModal">
-                              <div v-if="error" class="alert alert-danger">{{error}}</div>
-                              <div v-if="(status==='submitted' || status==='new')" class="alert alert-success">Your request (Id: {{form.requestId}}) created successfully</div>
-                         </vue-modaltor>
                       </div>
                     </fieldset>
                   </div>
@@ -540,8 +546,11 @@ export default {
           postCode: "",
           city:""
         }
-      },
+      },      
       error: null,
+      errormsg: '',
+      success: null,
+      successmsg: '',
       status: "new"
     };
   },
@@ -571,11 +580,33 @@ export default {
          }    
   },
   methods: {
-    hideModal() {
-              this.open = false
+    onError(){
+      this.error = false;
+      this.errormsg = '';
+      this.success = false;
+    },
+    onSuccess() {
+            this.success = false;
+            this.success = false;
+            this.error = false;
+            if(this.user.loggedIn){
+              this.$router.replace({ name: "profile" });
+            } else {
+              this.$router.replace({ name: "welcome" });
+            }
+    },
+    validate(){
+      if(this.form && this.form.request && this.form.request.title && this.form.request.detail){
+        this.error = false;
+        return true;
+      } else {
+        this.error = true;
+        this.errormsg = `Enter request title & description`;
+      }
     },
     submitRequest() {
-      this.submitted = true;
+      if(this.validate()){
+        this.submitted = true;
 
       if(this.form.requesting_for === 'other') {
           this.submittedOther=true;
@@ -616,6 +647,8 @@ export default {
           this.form.requestId=docRef.id;
           this.open = true;
           this.requestStatus=false;
+          this.success = true;
+          this.successmsg = `Your request submitted sucessfully ${docRef.id}`;
           setTimeout(() => {
             this.status = "new";
             this.error = null;
@@ -627,6 +660,9 @@ export default {
           this.requestId="";
           this.requestStatus=false;
         });
+      } else {
+        
+      }
     }
   }
 };

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
-import VueModalTor from 'vue-modaltor'
 import BootstrapVue from 'bootstrap-vue'
 import * as firebase from "firebase";
 import * as config from "./config/config";
@@ -8,9 +7,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
+import VueTableDynamic from 'vue-table-dynamic'
+
 
 Vue.use(Vuelidate);
-Vue.use(VueModalTor);
+Vue.use(VueTableDynamic);
 
 firebase.initializeApp(config.firebase_config);
 
