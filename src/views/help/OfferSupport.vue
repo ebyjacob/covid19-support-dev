@@ -440,7 +440,7 @@
 				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                       <ul v-for="cat in categories"><input type="checkbox"  v-bind:value="cat.data.desc" v-model="form.availability.support" :id="cat.data.desc" >  {{cat.data.desc}}</ul>
+                       <ul v-for="(cat,index) in app_settings.support_categories" :key="index"><input type="checkbox"  v-bind:value="cat" v-model="form.availability.support" :id="cat" >  {{cat}}</ul>
                       </div>
                     </fieldset>
                   </div>
@@ -597,7 +597,8 @@ export default {
 	},
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   },
   created() {

@@ -51,23 +51,20 @@
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto" style="margin-right:20px;">
       <template v-if="user.loggedIn">
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item v-if="user" class="py-2 px-3">
+        <b-nav-item class="d-md-down-none" v-if="user">
+          <b-nav-item class="py-2 px-3">
             <router-link to="/profile">
               <b>My Dashboard</b>
             </router-link>
           </b-nav-item>
         </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item
-            v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer )"
-            class="py-2 px-3"
-          >
+        <b-nav-item class="d-md-down-none" v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer )">
+          <b-nav-item class="py-2 px-3">
             <router-link to="/admin">Manage</router-link>
           </b-nav-item>
         </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item v-if="user" class="py-2 px-3" @click.prevent="signOut">Signout</b-nav-item>
+        <b-nav-item class="d-md-down-none" v-if="user">
+          <b-nav-item class="py-2 px-3" @click.prevent="signOut">Signout</b-nav-item>
         </b-nav-item>
       </template>
       <template v-else>
