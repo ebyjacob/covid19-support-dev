@@ -42,6 +42,7 @@ jobs:
         VUE_APP_FIREBASE_databaseURL: ${{ secrets.VUE_APP_FIREBASE_databaseURL_SVGT }}
         VUE_APP_FIREBASE_projectId: ${{ secrets.VUE_APP_FIREBASE_projectId_SVGT }}
       run: |
+        echo $VUE_APP_FIREBASE_projectId;
         yarn build;
         firebase use $VUE_APP_FIREBASE_projectId;
         firebase functions:config:set admin_email.username=$ADMIN_EMAIL_USERNAME admin_email.password=$ADMIN_EMAIL_PASSWORD --token $FIREBASE_TOKEN;
