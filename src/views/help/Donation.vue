@@ -25,7 +25,7 @@
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Donor</div>
-                  <div class="col-sm-8">{{donation.contact.name|| 'Not Available'}}</div>
+                  <div class="col-sm-8">{{donation.contact.firstname + " " + donation.contact.lastname|| 'Not Available'}}</div>
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Contact Address</div>
@@ -326,7 +326,7 @@ export default {
         volunteerEmail: this.donation.picked_up_by,
         donorPromiseTitle: this.donation.donation.title,
         donorPromiseMsg: this.donation.donation.message,        
-        donorName: this.donation.contact.name,
+        donorName: this.donation.contact.firstname + " " + this.donation.contact.lastname,
         donorAddress: this.donation.contact.address,
         donorPhone: this.donation.contact.phone,
         donorEmail: this.donation.contact.email
