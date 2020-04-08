@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin)">
+      <div class="col-sm-12" v-if="user && user.loggedIn && user.data && (user.data.admin || isSuperAdmin)">
         <div class="card">
           <div class="card-body">
             <div class="row mb-2">
