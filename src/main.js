@@ -9,9 +9,10 @@ import store from './store'
 import './registerServiceWorker'
 import VueTableDynamic from 'vue-table-dynamic'
 
-
 Vue.use(Vuelidate);
 Vue.use(VueTableDynamic);
+
+console.info(`Firebase is loading from firebase project ${process.env.VUE_APP_FIREBASE_projectId}`);
 
 firebase.initializeApp(config.firebase_config);
 
