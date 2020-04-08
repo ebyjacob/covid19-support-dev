@@ -6,6 +6,11 @@ export default {
             icon: 'icon-home'
         },
         {
+            name: 'Login / Register',
+            url: '/login',
+            icon: 'icon-user'
+        },
+        {
             name: 'Need Help?',
             url: '/need/support',
             icon: 'icon-support'
@@ -23,6 +28,21 @@ export default {
         {
             name: 'About',
             url: '/about',
+            icon: 'icon-info'
+        },
+        {
+            name: 'Contact Info',
+            url: '/contact',
+            icon: 'icon-info'
+        },
+        {
+            name: `Contact Moderator`,
+            url: `/contact/moderator`,
+            icon: `icon-envelope`
+        },
+        {
+            name: 'My Account',
+            url: '/profile',
             icon: 'icon-info'
         }
     ]

@@ -1,6 +1,10 @@
+$primarycolor : #0033a0;
+$secondarycolor : #00b140;
 $theme-colors: (
-  "primary": #0033a0,
-  "success": #00b140,
+  "primary": $primarycolor,
+  "success": $secondarycolor
 );
 $body-bg: #ffffff;
 $body-color: #111;
+$accentColor: $secondarycolor;
+$accentColor_ligt : $primarycolor; 

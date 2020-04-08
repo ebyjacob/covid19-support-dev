@@ -7,12 +7,12 @@
             <h4>Hi {{user.data.displayName}}!</h4>
           </div>
         </div>
-        <div class="row mt-4">
-          <div class="col-sm-8" v-if="myassignments">
+        <div class="row mt-4" v-if="user && user.data && user.data.verifiedvolunteer">
+          <div class="col-sm-6" v-if="support_requests_assigned_to_me">
             <div class="card">
               <div class="card-header">Jobs assigned to me</div>
               <div class="card-body">
-                <div v-for="myassignment in myassignments" :key="myassignment.id">
+                <div v-for="myassignment in support_requests_assigned_to_me" :key="myassignment.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: myassignment.id }}"
@@ -28,35 +28,41 @@
                   <br />
                   <br />
                 </div>
+                <div v-if="support_requests_assigned_to_me.length ===0">No Support requests available for action.</div> 
               </div>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-6" v-if="donations_assigned_to_me">
             <div class="card">
-              <div class="card-header">
-                My Roles
-              </div>
+              <div class="card-header">Donations assigned to me</div>
               <div class="card-body">
-                Admin ?
-                <span v-if="user.data.admin">yes</span>
-                <span v-else>No</span>
-                <br />Moderator ?
-                <span v-if="user.data.moderator">yes</span>
-                <span v-else>No</span>
-                <br />Verified Volunteer ?
-                <span v-if="user.data.verifiedvolunteer">yes</span>
-                <span v-else>No</span>
-                <br />
+                <div v-for="donation in donations_assigned_to_me" :key="donation.id">
+                  <span class="text-primary" style="font-size:16px;font-weight:bold;">
+                    <router-link
+                      :to="{ name: 'donation', params: { donationid: donation.id }}"
+                    >{{donation.data.donation.title}}</router-link>
+                  </span>&nbsp;&nbsp;-&nbsp;&nbsp;
+                  <router-link
+                    :to="{ name: 'donation', params: { donationid: donation.id }}"
+                  >More details</router-link>
+                  Status : {{donation.data.donation_status}}
+                  <br />
+                  For {{ donation.data.contact.name || donation.data.contact.email }} by
+                  <i>{{donation.data.user_displayName || donation.data.user_email || 'Unknown User' }}</i>
+                  <br />
+                  <br />
+                </div>
+                <div v-if="donations_assigned_to_me.length ===0">No donations available for action.</div> 
               </div>
             </div>
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-sm-6" v-if="mysupportrequests">
+          <div class="col-sm-6" v-if="support_requests_created_by_me">
             <div class="card">
               <div class="card-header">Support Requests created by you</div>
               <div class="card-body">
-                <div v-for="mysupportrequest in mysupportrequests" :key="mysupportrequest.id">
+                <div v-for="mysupportrequest in support_requests_created_by_me" :key="mysupportrequest.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'supportrequest', params: { supportrequestid: mysupportrequest.id }}"
@@ -70,14 +76,17 @@
                   <i>{{mysupportrequest.data.user_displayName || mysupportrequest.data.user_email || 'Unknown User' }}</i>
                   <hr />
                 </div>
+                <div v-if="support_requests_created_by_me.length ===0">
+                  No Support request created by you. <router-link to="need/support">Request for help here</router-link>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-sm-6" v-if="mydonations">
+          <div class="col-sm-6" v-if="donations_created_by_me">
             <div class="card">
               <div class="card-header">Donation Requests created by you</div>
               <div class="card-body">
-                <div v-for="donation in mydonations" :key="donation.id">
+                <div v-for="donation in donations_created_by_me" :key="donation.id">
                   <span class="text-primary" style="font-size:16px;font-weight:bold;">
                     <router-link
                       :to="{ name: 'donation', params: { donationid: donation.id }}"
@@ -88,6 +97,9 @@
                   <br />
                   <p>{{donation.data.donation.message}}</p>
                   <hr />
+                </div>                
+                <div v-if="donations_created_by_me.length ===0">
+                  No Donations offered by you / No active requests. <router-link to="donate">Offer your donation here</router-link>
                 </div>
               </div>
             </div>
@@ -104,70 +116,48 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { mapGetters } from "vuex";
+import { profile_get_open_jobs_of_user, profile_get_open_jobs_created_by_user, profile_get_open_donations_created_by_user, profile_get_open_donation_assigments_of_user } from "@/app/backend"
 export default {
   data() {
     return {
-      mydonations: null,
-      mysupportrequests: null,
-      myassignments: null
+      donations_created_by_me: null,
+      support_requests_created_by_me: null,
+      support_requests_assigned_to_me: null,
+      donations_assigned_to_me: null,
     };
   },
   methods: {
-    fetchDonationsList() {
-      var db = firebase.firestore();
-      db.collection("donations")
-        .where("user_email", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let donations = [];
-          querySnapshot.forEach(doc => {
-            donations.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mydonations = donations;
-        });
+    async fetchDonationsList() {
+      if(this.user && this.user.loggedIn){
+        this.donations_created_by_me = await profile_get_open_donations_created_by_user(this.user.data.email);
+      }
     },
-    fetchSupportRequests() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("user_email", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let support_requests = [];
-          querySnapshot.forEach(doc => {
-            support_requests.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.mysupportrequests = support_requests;
-        });
+    async fetchSupportRequests() {
+      if(this.user && this.user.loggedIn){
+        this.support_requests_created_by_me = await profile_get_open_jobs_created_by_user(this.user.data.email);
+      }
     },
-    fetchMyAssigments() {
-      var db = firebase.firestore();
-      db.collection("support_requests")
-        .where("picked_up_by", "==", this.user.data.email)
-        .get()
-        .then(querySnapshot => {
-          let myassignments = [];
-          querySnapshot.forEach(doc => {
-            myassignments.push({
-              id: doc.id,
-              data: doc.data()
-            });
-          });
-          this.myassignments = myassignments;
-        });
+    async fetchMyOpenAssigments() {
+      if(this.user && this.user.data && this.user.data.verifiedvolunteer){
+        this.support_requests_assigned_to_me = await profile_get_open_jobs_of_user(this.user.data.email);      
+      }
+    },
+    async fetchMyOpenDonationAssigments() {
+      if(this.user && this.user.data && this.user.data.verifiedvolunteer){
+        this.donations_assigned_to_me = await profile_get_open_donation_assigments_of_user(this.user.data.email);      
+      }
     }
   },
   created() {
-    this.fetchDonationsList();
-    this.fetchSupportRequests();
-    this.fetchMyAssigments();
+    if(this.user && this.user.loggedIn){
+      this.fetchDonationsList();
+      this.fetchSupportRequests();
+      this.fetchMyOpenAssigments();
+      this.fetchMyOpenDonationAssigments();
+    } else {
+      this.$router.replace({ name: "login" });
+    }
   },
   computed: {
     ...mapGetters({

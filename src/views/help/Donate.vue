@@ -14,14 +14,15 @@
                         <div
                           v-if="status==='submitted'"
                           class="alert alert-success"
-                        >Thank you !!!. You made a difference. Your offer submitted successfully.</div>
+                        >Thank you !!!. You made a difference. Your offer submitted successfully.
+                        Your Reference number is {{refId}}</div>
                       </div>
                       <h4 class="mb-4 text-primary">Donation Promise Register</h4>
                       <b-form-group label="Category of the items" label-for="basicSelect" :label-cols="3">
                         <b-form-select
                           id="basicSelect"
                           :plain="true"
-                          :options="donation_categories"
+                          :options="app_settings.donation_categories"
                           value="Please select"
                           v-model="form.donation.category"
                         ></b-form-select>
@@ -30,7 +31,8 @@
                         type="text"
                         class="form-control mb-3"
                         v-model="form.donation.title"
-                        placeholder="What you would like to donate? ( Example: N95 masks * 100 )"
+                        required
+                        placeholder="What would you like to donate? ( Example: N95 masks * 100 )"
                       />
                       <fieldset role="group" class="b-form-group form-group">
                         <div role="group" class>
@@ -38,6 +40,7 @@
                             id="donationdetails"
                             v-model="form.donation.message"
                             type="text"
+                            required
                             placeholder="Description of what you are donating, how do you want users to collect & Any other comments"
                             class="form-control"
                           />
@@ -58,12 +61,13 @@
                     <div class="col-sm-6">
                       <fieldset role="group" class="b-form-group form-group">
                         <div role="group" class>
-                          <label for="fullname">Donor Full Name</label>
+                          <label for="firstname">First Name</label>
                           <input
-                            id="fullname"
-                            v-model="form.contact.name"
+                            id="firstname"
+                            v-model="form.contact.firstname"
+                            required
                             type="text"
-                            placeholder="Full name of the person donating"
+                            placeholder="First name"
                             class="form-control"
                           />
                         </div>
@@ -72,7 +76,73 @@
                     <div class="col-sm-6">
                       <fieldset role="group" class="b-form-group form-group">
                         <div role="group" class>
-                          <label for="requestfor">Submitting by</label>
+                          <label for="lastname">Last Name</label>
+                          <input
+                            id="lastname"
+                            v-model="form.contact.lastname"
+                            required
+                            type="text"
+                            placeholder="Last name"
+                            class="form-control"
+                          />
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <fieldset role="group" class="b-form-group form-group">
+                        <div role="group" class>
+                          <label for="address">Address</label>
+                          <input
+                            id="address"
+                            v-model="form.contact.address"
+                            required
+                            type="text"
+                            placeholder="Address"
+                            class="form-control"
+                          />
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <fieldset role="group" class="b-form-group form-group">
+                        <div role="group" class>
+                          <label for="phonenumber">Phone Number</label>
+                          <input
+                            id="phonenumber"
+                            v-model="form.contact.phone"
+                            required
+                            type="text"
+                            placeholder="Phone number"
+                            class="form-control"
+                          />
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-sm-6">
+                      <fieldset role="group" class="b-form-group form-group">
+                        <div role="group" class>
+                          <label for="email">Email</label>
+                          <input
+                            id="email"
+                            type="text"
+                            placeholder="Email"
+                            class="form-control"
+                            v-model="form.contact.email"
+                            required
+                          />
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <fieldset role="group" class="b-form-group form-group">
+                        <div role="group" class>
+                          <label for="requestfor">Submitted by</label>
                           <div id="requestfor" role="radiogroup" tabindex="-1" class>
                             <div class="custom-control custom-radio custom-control-inline">
                               <input
@@ -95,55 +165,9 @@
                                 class="custom-control-input"
                                 v-model="form.requesting_for"
                               />
-                              <label for="requestfor2" class="custom-control-label">On behalf others</label>
+                              <label for="requestfor2" class="custom-control-label">On behalf of others</label>
                             </div>
                           </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <fieldset role="group" class="b-form-group form-group">
-                        <div role="group" class>
-                          <label for="address">Address</label>
-                          <input
-                            id="address"
-                            v-model="form.contact.address"
-                            type="text"
-                            placeholder="Address"
-                            class="form-control"
-                          />
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <fieldset role="group" class="b-form-group form-group">
-                        <div role="group" class>
-                          <label for="phonenumber">Phone Number</label>
-                          <input
-                            id="phonenumber"
-                            v-model="form.contact.phone"
-                            type="text"
-                            placeholder="Phone number"
-                            class="form-control"
-                          />
-                        </div>
-                      </fieldset>
-                    </div>
-                    <div class="col-sm-6">
-                      <fieldset role="group" class="b-form-group form-group">
-                        <div role="group" class>
-                          <label for="email">Email</label>
-                          <input
-                            id="email"
-                            type="text"
-                            placeholder="Email"
-                            class="form-control"
-                            v-model="form.contact.email"
-                          />
                         </div>
                       </fieldset>
                     </div>
@@ -261,19 +285,7 @@ import firebase from "firebase";
 import { mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      donation_categories: [
-        "General",
-        "Food",
-        "Groceries",
-        "Toys",
-        "Books",
-        "Furniture",
-        "Cloths",
-        "Medical supplies",
-        "Electronics",
-        "Other"
-      ],
+    return {     
       form: {
         donation: {
           category: "General",
@@ -282,7 +294,8 @@ export default {
         },
         requesting_for: "self",
         contact: {
-          name: "",
+          firstname: "",
+          lastname: "",
           address: "",
           phone: "",
           email: ""
@@ -296,15 +309,40 @@ export default {
         donation_status: "new"
       },
       error: null,
-      status: "new"
+      status: "new",
+      refId: null,      
     };
+  },
+  created() {    
+    this.prepopulate();    
   },
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   },
-  methods: {
+  methods: {     
+    prepopulate(){
+      if(this.user && this.user.data){
+          this.form.requestor.name = this.user.data.displayName;      
+          this.form.requestor.email = this.user.data.email.toLowerCase();
+      }      
+    },    
+    resetForm(){
+      this.form.donation.category = "General";
+      this.form.donation.title = "";
+      this.form.donation.message = "";
+      this.form.contact.firstname = "";
+      this.form.contact.lastname = "";
+      this.form.contact.address = "";
+      this.form.contact.phone = "";
+      this.form.contact.email = "";
+      this.form.requestor.name = "";
+      this.form.requestor.address = "";
+      this.form.requestor.phone = "";
+      this.form.requestor.email = "";
+    },
     submitDonation() {
       if (this.user.loggedIn && this.user.data) {
         this.form.user_displayName = this.user.data.displayName || this.user.data.email;
@@ -314,26 +352,42 @@ export default {
         this.form.user_email = "";
       }
       this.form.timestamp = new Date();
-      var db = firebase.firestore();
-      if (this.form.donation.title && this.form.donation.message) {
-        db.collection("donations")
-          .add(this.form)
-          .then(docRef => {
-            this.status = "submitted";
-            this.error = null;
-            setTimeout(() => {
-              this.status = "new";
-              this.error = null;
-            }, 5 * 1000);
-          })
-          .catch(error => {
-            this.error = error;
-            this.status = "error";
-          });
-      } else {
+      this.form.contact.email = this.form.contact.email.toLowerCase();
+      this.form.requestor.email = this.form.requestor.email.toLowerCase();
+      
+      if (!this.form.donation.title || !this.form.donation.message) {
         this.error = "Enter title and description";
         this.status = "error";
-      }
+        window.scrollTo(0,0);
+        return;
+      } 
+      if (!this.form.contact.firstname || !this.form.contact.address || 
+          !this.form.contact.phone || !this.form.contact.email) {
+        this.error = "Enter all donor details";
+        this.status = "error";
+        window.scrollTo(0,0);
+        return;
+      } 
+      var db = firebase.firestore();      
+      db.collection("donations")
+        .add(this.form)
+        .then(docRef => {
+          this.status = "submitted";
+          this.error = null;
+          this.refId = docRef.id;
+          setTimeout(() => {
+            this.status = "new";
+            this.error = null;
+            this.$router.push({ path: '/welcome'})
+          }, 10 * 1000);
+        })
+        .catch(error => {
+          this.error = error;
+          this.status = "error";
+        });
+      
+      this.resetForm();
+      window.scrollTo(0,0);
     }
   }
 };
