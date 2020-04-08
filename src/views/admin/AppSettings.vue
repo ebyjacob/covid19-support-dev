@@ -74,15 +74,12 @@
                             <div class="card-header">Donation Categories</div>
                             <div v-for="(donation_category,index) in app_settings.donation_categories" :key="index" class="my-2">
                                 <div class="row">
-                                    <div class="col-sm-8">
-                                        <template v-if="app_settings.donation_categories[index]==='General'|| app_settings.donation_categories[index]==='Others'"> <input type="text" disabled class="form-control form-inline" v-model="app_settings.donation_categories[index]" /></template>
-                                        <template v-else> <input type="text" class="form-control form-inline" v-model="app_settings.donation_categories[index]" /></template>
+                                    <div class="col-sm-8">                                        
+                                        <template> <input type="text" class="form-control form-inline" v-model="app_settings.donation_categories[index]" /></template>
                                     </div>
                                     <div class="col-sm-4">
-                                        <i  v-if="app_settings.donation_categories[index] !== 'Others'" class="fa fa-plus btn-primary btn mr-2" @click="insertDonationCategory(index)"></i>
-                                        <template v-if="app_settings.donation_categories[index]==='General'|| app_settings.donation_categories[index]==='Others'">
-                                        </template>
-                                        <template v-else><i class="fa fa-trash btn-danger btn mr-2" @click="removeDonationCategory(index)"></i></template>
+                                        <i class="fa fa-plus btn-primary btn mr-2" @click="insertDonationCategory(index)"></i>                                        
+                                        <template><i class="fa fa-trash btn-danger btn mr-2" @click="removeDonationCategory(index)"></i></template>
                                     </div>
                                 </div>
                             </div>
@@ -160,6 +157,8 @@ export default {
                 this.status = "";
                 this.$router.replace({ name: "login" });
             }
+
+            window.scroll(0,0);
         }
     }
 
