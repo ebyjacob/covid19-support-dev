@@ -22,6 +22,9 @@
       <b-nav-item class="py-2 px-3" to="/donate">
         <b>Donate</b>
       </b-nav-item>
+      <b-nav-item class="py-2 px-3" to="/track" v-if="!user || !(user && user.loggedIn)">
+        <b>Track Request</b>
+      </b-nav-item>
       <b-nav-item
         class="py-2 px-3"
         to="/support-requests"
@@ -43,27 +46,25 @@
         v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
       >Groups</b-nav-item> -->
       <!-- <b-nav-item class="py-2 px-3" to="/about">About</b-nav-item>-->
-      <b-nav-item class="py-2 px-3" to="/contact">Contact us</b-nav-item> 
+      <b-nav-item class="py-2 px-3" to="/contact">Contact</b-nav-item> 
+      <b-nav-item class="py-2 px-3" to="/contact/moderator" title="Contact Moderator"><i class="fa fa-envelope"></i></b-nav-item> 
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto" style="margin-right:20px;">
       <template v-if="user.loggedIn">
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item v-if="user" class="py-2 px-3">
+        <b-nav-item class="d-md-down-none" v-if="user">
+          <b-nav-item class="py-2 px-3">
             <router-link to="/profile">
               <b>My Dashboard</b>
             </router-link>
           </b-nav-item>
         </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item
-            v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer )"
-            class="py-2 px-3"
-          >
+        <b-nav-item class="d-md-down-none" v-if="user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer || isSuperAdmin)">
+          <b-nav-item class="py-2 px-3">
             <router-link to="/admin">Manage</router-link>
           </b-nav-item>
         </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <b-nav-item v-if="user" class="py-2 px-3" @click.prevent="signOut">Signout</b-nav-item>
+        <b-nav-item class="d-md-down-none" v-if="user">
+          <b-nav-item class="py-2 px-3" @click.prevent="signOut">Signout</b-nav-item>
         </b-nav-item>
       </template>
       <template v-else>
@@ -78,6 +79,7 @@
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
+import { superadmins } from "@/config/config";
 import { Header as AppHeader, SidebarToggler, AsideToggler } from "@coreui/vue";
 export default {
   name: "DefaultHeader",
@@ -92,6 +94,9 @@ export default {
     })
   },
   methods: {
+    isSuperAdmin(){
+      return this.user && this.user.data ? superadmins.indexOf(this.user.data.email) > -1 : false;
+    },
     signOut() {
       this.$router.replace({
         name: "signout"

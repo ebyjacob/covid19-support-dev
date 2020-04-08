@@ -2,7 +2,7 @@
   <div>
     <div class="container mt-4">
       <div
-        v-if="user && user.loggedIn && user.data && (user.data.admin || user.data.moderator || user.data.verifiedvolunteer)"
+        v-if="user && user.loggedIn && user.data && (user.data.moderator || user.data.verifiedvolunteer)"
       >
         <div class="row mt-4">
           <div class="col-sm-12">
@@ -34,12 +34,9 @@
                   </span> -
                   <span
                     style="font-size:16px;font-weight:light;"
-                  >{{donation.data.donation_status || 'new'}}</span> 
-                  <!-- <router-link
-                    :to="{ name: 'donation', params: { donation: donation.id }}"
-                  >More details</router-link> -->
+                  >{{donation.data.donation_status || 'new'}}</span>                  
                   <br />
-                  Donor - {{ donation.data.contact.name || donation.data.contact.email }} entered by
+                  Donor - {{ donation.data.contact.firstname + " " + donation.data.contact.lastname || donation.data.contact.email }} entered by
                   <i>{{donation.data.user_displayName || donation.data.user_email || 'Unknown User' }}</i>
                   <br />
                   <p>{{donation.data.donation.message}}</p>
@@ -75,28 +72,39 @@ export default {
     }
   },
   methods: {
+
     getAllDonations() {
+      if(this.user.data.moderator){
+         return db
+        .collection("donations")            
+        .orderBy("timestamp", "desc")
+        .limit(50)
+        .get();         
+      }
       return db
         .collection("donations")
+        .where("picked_up_by", "==", this.user.data.email)        
         .orderBy("timestamp", "desc")
         .limit(50)
         .get();
-    },
-    getActiveDonations() {
-      return db
-        .collection("donations")
-        .where("donation_status", "in", ["new", "pickedup", "waiting-for-pickup"])
-        //.orderBy("timestamp", "desc")
-        .limit(50)
-        .get();
+          
     },
     getDonationsByStatus(s) {
+      if(this.user.data.moderator){
+        return db
+        .collection("donations")
+        .where("donation_status", "==", s)
+        .orderBy("timestamp", "desc")
+        .limit(50)
+        .get();        
+      }
       return db
         .collection("donations")
         .where("donation_status", "==", s)
-        //.orderBy("timestamp", "desc")
+        .where("picked_up_by", "==", this.user.data.email)
+        .orderBy("timestamp", "desc")
         .limit(50)
-        .get();
+        .get();      
     },
     fetchDonations() {
       const filter_status = this.$route.params.status;

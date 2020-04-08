@@ -12,7 +12,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /donations/{donation} {
       allow write: if true;
-      allow read: if isSignedIn() && isOwnDonation(donation);
+      allow read: if true;
   	}
     match /support_requests/{support_request} {
       allow read, write: if true;

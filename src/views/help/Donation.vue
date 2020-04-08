@@ -9,7 +9,9 @@
                 <h5 class="text-primary">Donation Promise For {{donation.donation.title}}</h5>                
                 <div class="row my-4">
                   <div class="col-sm-4">Status</div>
-                  <div class="col-sm-8">{{donation.donation_status ||'New / UnAssigned'}}</div>
+                  <div class="col-sm-8" v-if="donation.donation_status && donation.donation_status !== ''">
+                    {{donation.donation_status.charAt(0).toUpperCase() + donation.donation_status.slice(1)}}</div>
+                  <div class="col-sm-8" v-else> New</div>
                 </div>
                 <div class="row my-4" v-if="donation.donation_status === 'assigned'">
                   <div class="col-sm-4">Assigned Status</div>
@@ -23,7 +25,7 @@
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Donor</div>
-                  <div class="col-sm-8">{{donation.contact.name|| 'Not Available'}}</div>
+                  <div class="col-sm-8">{{donation.contact.firstname + " " + donation.contact.lastname|| 'Not Available'}}</div>
                 </div>
                 <div class="row my-4">
                   <div class="col-sm-4">Contact Address</div>
@@ -74,6 +76,20 @@
         <!-- </div>             -->
       </div>
     </div>
+      <div class="row" v-if="donation.statechanges && donation.statechanges.length > 0">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="text-primary">State Change History</h5>
+              <div v-for="(statechange,index) in donation.statechanges" :key="index" class="row">
+                  <div class="col-sm-12 py-2">
+                    {{statechange.message ||'-----------------'}} by <i>{{statechange.sender}}</i> on {{new Date(statechange.timestamp.seconds * 1000)}} 
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <div class="row">
           <div class="col-sm-12">
             <div class="card">
@@ -186,7 +202,7 @@ export default {
       );
     }
   },
-  created() {
+  created() {    
     this.fetchDonation();
   },
   methods: {
@@ -205,6 +221,7 @@ export default {
             let _donation = docRef.data();            
             this.donation = _donation;
             this.donation.comments = _donation.comments || [];
+            this.donation.statechanges = _donation.statechanges || [];
           })
           .catch(err => {
             console.log(err);
@@ -244,8 +261,8 @@ export default {
     },   
     fetchUserDetails(u) {
       var db = firebase.firestore();
-      return db.collection("userroles")
-          .where('username', '==', u)
+      return db.collection("user_profiles")
+          .doc(u)
           .get();
      },
     async AssignToVolunteer() {
@@ -260,13 +277,11 @@ export default {
         this.success = "";
         var db = firebase.firestore(); 
         var userdetails = null;
-        await this.fetchUserDetails(this.volunteerEmail).then(snapshot => {
-            snapshot.forEach(doc => {
-              console.log(doc.id, '=>', doc.data());
-              userdetails = doc.data();
-            });
+        await this.fetchUserDetails(this.volunteerEmail).then(doc => {
+            console.log(doc.id, '=>', doc.data());
+            userdetails = doc.data();
           })
-                   
+                             
          if(!userdetails){
           this.error = "Invalid user Id";          
           return;
@@ -278,18 +293,18 @@ export default {
         var docRef = db
           .collection("donations")
           .doc(this.$route.params.donationid);
-        let newcomments = this.donation.comments || [];
-        newcomments.push({
-          commentor: this.user.data.email,
-          comment: "Donation Assigned",
+        let newstatechanges = this.donation.statechanges || [];
+        newstatechanges.push({
+          sender: this.user.data.email,
+          message: "Donor Promise Assigned",
           timestamp: new Date()
         });
         docRef
           .set(
             {              
               donation_status: "assigned",
-              comments: newcomments,
-              picked_up_by: this.volunteerEmail,
+              statechanges: newstatechanges,
+              picked_up_by: this.volunteerEmail.toLowerCase(),
               picked_up_on: new Date()
             },
             { merge: true }
@@ -301,7 +316,41 @@ export default {
             console.log(err);
           });
           this.success = "Successfully Assigned!"
+          this.sendEmailToVolunteer();
+          
       }
+    },
+    sendEmailToVolunteer(){
+      const sendEmail = firebase.functions().httpsCallable("sendDonationDetailsToVolunteer");
+      sendEmail({
+        volunteerEmail: this.donation.picked_up_by,
+        donorPromiseTitle: this.donation.donation.title,
+        donorPromiseMsg: this.donation.donation.message,        
+        donorName: this.donation.contact.firstname + " " + this.donation.contact.lastname,
+        donorAddress: this.donation.contact.address,
+        donorPhone: this.donation.contact.phone,
+        donorEmail: this.donation.contact.email
+      })
+      .then(
+        this.success = "Successfully assigned and email sent"
+      )
+        // .then(msg => {
+        //   if (
+        //     msg &&
+        //     msg.data &&
+        //     msg.data.data &&
+        //     msg.data.data.indexOf("email sent successfully") > -1            
+        //   ) {
+        //     this.success = "Successfully assigned and email sent";                        
+        //   } else {
+        //     this.success = "";
+        //     this.error = "Error sending email";            
+        //   }    
+        //   console.log("msg => ", msg);      
+        // })
+        .catch(err => {
+          console.log(err);
+        });
     },    
     markAsFulfilled() {
       if (
@@ -310,10 +359,10 @@ export default {
         this.user.data.email &&
         this.$route.params.donationid
       ) {
-        let newcomments = this.donation.comments || [];
-        newcomments.push({
-          commentor: this.user.data.email,
-          comment: "Donor Promise Fulfilled",
+        let newstatechanges = this.donation.statechanges || [];
+        newstatechanges.push({
+          sender: this.user.data.email,
+          message: "Donor Promise Fulfilled",
           timestamp: new Date()
         });
         var db = firebase.firestore();
@@ -324,7 +373,7 @@ export default {
           .set(
             {
               donation_status: "fulfilled",
-              comments: newcomments              
+              statechanges: newstatechanges              
             },
             { merge: true }
           )

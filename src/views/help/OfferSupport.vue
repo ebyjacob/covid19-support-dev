@@ -19,7 +19,7 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="firstname">First Name</label>
+                        <label for="firstname">First Name*</label>
                         <input
                           id="firstname"
                           type="text"
@@ -38,7 +38,7 @@
 				  <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="lastname">Last Name</label>
+                        <label for="lastname">Last Name*</label>
                         <input
                           id="lastname"
                           type="text"
@@ -66,22 +66,26 @@
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						              v-model="form.personal.idtype"
-                        />
+			              v-model="form.personal.idtype"
+                          /> 
                       </div>
                     </fieldset>
                   </div>
 				  <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="idproof">Primary ID Number</label>
+                        <label for="idproof">Primary ID Number*</label>
                         <input
                           id="idproof"
                           type="text"
                           placeholder="Eg: Passport Number, Driving License Number etc.."
                           class="form-control"
-						              v-model="form.personal.idproof"
-                        />
+			              v-model="form.personal.idproof"
+                       	  :class="{ 'is-invalid': submitted && $v.form.personal.idproof.$error }"
+                          /> 
+                		<div v-if="submitted && $v.form.personal.idproof.$error" class="invalid-feedback">
+                          <span v-if="!$v.form.personal.idtype.idproof">Primary ID is required</span>
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -121,11 +125,11 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="mobile">Mobile Number</label>
+                        <label for="mobile">Mobile Number*</label>
                         <input
                           id="mobile"
                           type="text"
-                          placeholder="Mobile number"
+                          placeholder="Mobile number*"
                           class="form-control"
 						            v-model="form.personal.mobile"
                        :class="{ 'is-invalid': submitted && $v.form.personal.mobile.$error }"
@@ -157,7 +161,7 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="email">Email</label>
+                        <label for="email">Email*</label>
                         <input id="email" type="text" placeholder="Email" class="form-control" v-model="form.personal.email"
                           :class="{ 'is-invalid': submitted && $v.form.personal.email.$error }"
                           :readonly="user.loggedIn"  
@@ -179,13 +183,13 @@
       			  <div class="col-sm-5" Password  v-else>
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="password">Password</label>
+                        <label for="password">Password*</label>
                         <input
                           id="password"
                           type="password"
                           placeholder="Password"
                           class="form-control"
-						              v-model="password"
+						  v-model="password"			              
                         /> 
                       </div>                   
                     </fieldset>
@@ -230,7 +234,7 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="housenumber">House Number</label>
+                        <label for="housenumber">House Number*</label>
                         <input
                           id="housenumber"
                           type="text"
@@ -244,29 +248,14 @@
                         </div>
                       </div>
                     </fieldset>
-                  </div>
-				   <div class="col-sm-6">
-                    <fieldset role="group" class="b-form-group form-group">
-                      <div role="group" class>
-                        <label for="buildname">Build  Name</label>
-                        <input
-                          id="buildname"
-                          type="text"
-                          placeholder="Build Name of the person offering support"
-                          class="form-control"
-						              v-model="form.address.buildname"
-                        />
-                      </div>
-                    </fieldset>
-                  </div>
-			
+                  </div>			
                 </div>
 				
 				 <div class="row">
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="address1">Address Line1</label>
+                        <label for="address1">Address Line1*</label>
                         <input
                           id="address1"
                           type="text"
@@ -301,7 +290,7 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="area">City/Area</label>
+                        <label for="area">City/Area*</label>
                         <input
                           id="area"
                           type="text"
@@ -319,7 +308,7 @@
 				  <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="postcode">Postcode</label>
+                        <label for="postcode">Postcode*</label>
                         <input
                           id="postcode"
                           type="text"
@@ -355,7 +344,7 @@
                   <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                        <label for="accountstatus">Availability Status</label> 
+                        <label for="accountstatus">Willing to register as volunteer ?</label> 
                       </div>
                     </fieldset>
                   </div>
@@ -367,6 +356,25 @@
                     </fieldset>
                   </div>
                 </div>
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <fieldset role="group" class="b-form-group form-group">
+                      <div role="group" class>
+                        <label for="accountstatus">Are you above 18years ?</label> 
+                      </div>
+                    </fieldset>
+                  </div>
+			      <div class="col-sm-6">
+                    <fieldset role="group" class="b-form-group form-group">
+                      <div role="group" class>
+                        <input type="checkbox" v-model="form.isadult" id="isadult" value="true" unchecked-value="false" >
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                
+                
               </div>              
             </div>
           </div>
@@ -385,31 +393,9 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-12">
-                    <div class="row">
-                      <div class="col-sm-3">
-                        <fieldset role="group" class="b-form-group form-group">
-                          <div role="group" class>
-                           <label for="name">Locations you can support</label>
-                          </div>
-                        </fieldset>
-                      </div>
-                      <div class="col-sm-9">
-                        <fieldset role="group" class="b-form-group form-group">
-                          <div role="group" class>
-                            <input
-                              id="location"
-                              type="text"
-                              placeholder="Locations you can support"
-                              class="form-control"
-							   v-model="form.availability.location"
-                            />
-                          </div>
-                        </fieldset>
-                      </div>
-                    </div>
                     
                  <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-sm-9">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
                         <label for="area">Area of Interest to support</label>
@@ -435,7 +421,7 @@
 				          <div class="col-sm-6">
                     <fieldset role="group" class="b-form-group form-group">
                       <div role="group" class>
-                       <ul v-for="cat in categories"><input type="checkbox"  v-bind:value="cat.data.desc" v-model="form.availability.support" :id="cat.data.desc" >{{cat.data.desc}}</ul>
+                       <ul v-for="(cat,index) in app_settings.support_categories" :key="index"><input type="checkbox"  v-bind:value="cat" v-model="form.availability.support" :id="cat" >  {{cat}}</ul>
                       </div>
                     </fieldset>
                   </div>
@@ -514,7 +500,6 @@
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
-import { ValidationProvider } from 'vee-validate';
 import { required, email, numeric } from "vuelidate/lib/validators";
 import Router from 'vue-router'
 
@@ -526,6 +511,10 @@ const validPhoneNo = function (phone) {
     return (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(phone));
 }
 
+const vaildPassowrd = function (password) {
+    return !this.user.loggedIn;
+}
+
 
 export default {
  name: "FormComponent",
@@ -533,15 +522,13 @@ export default {
     return {
       form: {
       	 "accountstatus" : "",
+      	 "isadult" : "",
          "availability": {
-          "location": "",
-          "time": "",
-          "support" : []
+           "support" : []
         },
         "personal": {
           "firstname": "",
           "lastname": "",
-          "idtype": "",
 		  "idproof": "",
           "sidtype": "",
 		  "sidproof": "",
@@ -571,12 +558,13 @@ export default {
     };
   },
  validations: {
-		form: {
-			personal : {
+	form: {
+		personal : {
         firstname: { required } ,
         lastname: { required },
         mobile: { required },
-        email: { required, email }
+        email: { required, email },
+        idproof: { required }
       },
        address : {
          housenumber: { required },
@@ -586,12 +574,11 @@ export default {
 
        }
     }
-    /*,
-     password: { required } */
 	},
   computed: {
     ...mapGetters({
-      user: "user"
+      user: "user",
+      app_settings: "app_settings"
     })
   },
   created() {
@@ -603,7 +590,7 @@ export default {
     submitRequest() {
       this.submitted = "true";
       this.isbutton=true;
-     this.$v.$touch()
+      this.$v.$touch()
       if (this.$v.$invalid) {
             this.submitted = "false";
             this.isbutton=false;
@@ -611,11 +598,11 @@ export default {
         }
       this.register();
       if (this.user.loggedIn && this.user.data) {
-        this.form.user_displayName =  this.user.data.displayName || this.user.data.email;
-        this.form.user_email = this.user.data.email;
+        this.form.user_displayName =  this.user.data.displayName || this.user.data.email.toLowerCase();
+        this.form.user_email = this.user.data.email.toLowerCase();
       } else {
       	this.form.user_displayName =this.form.personal.firstname;
-      	this.form.user_email=this.form.personal.email;
+      	this.form.user_email=this.form.personal.email.toLowerCase();
       }
       this.form.verified = false;
       this.form.upvotes = [];
@@ -625,7 +612,7 @@ export default {
     if (!this.useralreadyexist) {
       var db = firebase.firestore();
       db.collection("can_support")
-		  .doc(this.form.user_email)
+		  .doc(this.form.user_email.toLowerCase())
         .set(this.form)
         .then(docRef => {
           //alert("can support 1");
@@ -637,7 +624,7 @@ export default {
             this.status = "new";
             this.error = null;
           }, 5 * 1000);
-          this.update();
+          this.updatevolprofile();
           this.redirect();
         })
         .catch(error => {
@@ -651,10 +638,10 @@ export default {
 	fetchVolunteer() {
 		if( this.user != null) {
 			if (this.user.loggedIn && this.user.data) {		
-				this.email = this.user.data.email;
+				this.email = this.user.data.email.toLowerCase();
 				//alert("Fetch user" + this.user.data.email);
 				var db = firebase.firestore();
-				let voldata = db.collection('can_support').doc(this.email)
+				let voldata = db.collection('can_support').doc(this.email.toLowerCase())
 				let getDoc = voldata.get()
 				  .then(doc => {
 					if (!doc.exists) {
@@ -716,7 +703,7 @@ export default {
           if(!statuscheck) {
               firebase
                 .auth()
-                .createUserWithEmailAndPassword(this.form.personal.email, this.password)
+                .createUserWithEmailAndPassword(this.form.personal.email.toLowerCase(), this.password)
                 .then(result => {
                   this.status = "submitted";
                   this.error = null;
@@ -727,7 +714,7 @@ export default {
                     .then(async msg => {
                       const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
                       await updateUserProfile({
-                        username: this.form.personal.email,
+                        username: this.form.personal.email.toLowerCase(),
                         fullname : this.form.personal.firstname || "",
                         isavailablevolunteer : this.form.accountstatus, 
                         firstname : this.form.personal.firstname,
@@ -770,7 +757,7 @@ export default {
     	this.form.personal.sidproof=vol.personal.sidproof;
     	this.form.personal.mobile=vol.personal.mobile;
     	this.form.personal.altmobile=vol.personal.altmobile;
-    	this.form.personal.email=vol.personal.email;
+    	this.form.personal.email=vol.personal.email.toLowerCase();
     	
     	this.form.address.housenumber=vol.address.housenumber;
     	this.form.address.buildname=vol.address.buildname;
@@ -782,6 +769,8 @@ export default {
     	this.form.availability.location=vol.availability.location;
     	this.form.availability.time=vol.availability.time;
     	this.form.accountstatus=vol.accountstatus;
+    	this.form.isadult=vol.isadult;
+    	
     	//alert(vol.availability.support);
     	this.form.availability.support=vol.availability.support;
           
@@ -789,7 +778,7 @@ export default {
     login() {
       const auth = firebase
         .auth()
-        .signInWithEmailAndPassword(this.form.pesonal.email, this.password);
+        .signInWithEmailAndPassword(this.form.pesonal.email.toLowerCase(), this.password);
       	auth
         .then(data => {
           if (data && data.user) {
@@ -805,15 +794,16 @@ export default {
           this.error = err.message;
         });
     },
-update() {
+updatevolprofile() {
 
  const updateUserProfile = firebase.functions().httpsCallable("updateUserProfileAll");
     updateUserProfile({
-    username: this.form.personal.email,
+    username: this.form.personal.email.toLowerCase(),
     fullname : this.form.personal.firstname || "",
     isavailablevolunteer : this.form.accountstatus, 
     firstname : this.form.personal.firstname,
-    lastname:this.form.personal.lastname
+    lastname:this.form.personal.lastname,
+    isadult:this.form.isadult
   })
     .then(msg => {
       if (this.form) {
