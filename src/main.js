@@ -9,11 +9,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
-import VueTableDynamic from 'vue-table-dynamic'
 
 Vue.config.productionTip = false;
 Vue.use(Vuelidate);
-Vue.use(VueTableDynamic);
 Vue.use(BootstrapVue)
 
 console.info(`Firebase is loading from firebase project ${process.env.VUE_APP_FIREBASE_projectId}`);
