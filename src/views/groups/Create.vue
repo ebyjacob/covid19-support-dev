@@ -69,7 +69,6 @@
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
-import { ValidationProvider } from 'vee-validate';
 import { required, email, numeric } from "vuelidate/lib/validators";
 export default {
   data() {
