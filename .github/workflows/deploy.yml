@@ -17,7 +17,7 @@ jobs:
     - name: Tools Setup & Dependencies installation
       run: |
         npm install -g yarn firebase-tools;
-        # yarn setup;
+        yarn setup;
     # - name: Build  & Deploy (covid19-support-dev)
     #   env:
     #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
