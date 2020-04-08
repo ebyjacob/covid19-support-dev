@@ -14,9 +14,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Tools Setup
+    - name: Tools Setup & Dependencies installation
       run: |
         npm install -g yarn firebase-tools;
+        yarn setup;
     - name: Build  & Deploy
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -27,7 +28,7 @@ jobs:
         VUE_APP_FIREBASE_databaseURL: ${{ secrets.VUE_APP_FIREBASE_databaseURL }}
         VUE_APP_FIREBASE_projectId: ${{ secrets.VUE_APP_FIREBASE_projectId }}
       run: |
-        yarn setup;
         yarn build;
+        firebase use $VUE_APP_FIREBASE_projectId;
         firebase functions:config:set admin_email.username=$ADMIN_EMAIL_USERNAME admin_email.password=$ADMIN_EMAIL_PASSWORD --token $FIREBASE_TOKEN;
         firebase deploy --token $FIREBASE_TOKEN;
