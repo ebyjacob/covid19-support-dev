@@ -40,7 +40,7 @@ jobs:
         VUE_APP_FIREBASE_apiKey: ${{ secrets.VUE_APP_FIREBASE_apiKey_SVGT }}
         VUE_APP_FIREBASE_authDomain: ${{ secrets.VUE_APP_FIREBASE_authDomain_SVGT }}
         VUE_APP_FIREBASE_databaseURL: ${{ secrets.VUE_APP_FIREBASE_databaseURL_SVGT }}
-        VUE_APP_FIREBASE_projectId: ${{ secrets.VUE_APP_FIREBASE_projectId_SVGT }}
+        VUE_APP_FIREBASE_projectId: essex-volunteers-group-test
       run: |
         echo $VUE_APP_FIREBASE_projectId;
         yarn build;
