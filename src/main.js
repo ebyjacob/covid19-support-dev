@@ -33,6 +33,10 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+const updateStorewithInitialSettings = (appsettings)=>{
+  store.dispatch("updateApplicationSettings",appsettings);
+}
+
 const getInitialApplicationSettings = ()=>{
   return new Promise((resolve,reject)=>{
       firebase
@@ -42,9 +46,14 @@ const getInitialApplicationSettings = ()=>{
           .get()
           .then((docRef)=>{
               let appsettings = docRef.data();
-              store.dispatch("updateApplicationSettings",appsettings);
+              updateStorewithInitialSettings(appsettings);
               resolve(appsettings);
           }).catch((ex)=>{
+              updateStorewithInitialSettings({
+                app_title : "Welcome",
+                support_categories: [],
+                donation_categories: []
+              });
               console.log(ex);
               reject();
           })    
